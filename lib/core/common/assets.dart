@@ -1,0 +1,5 @@
+class Assets {
+  static const String partenerImage = 'assets/images/partner.png';
+  static const String facebookImage = 'assets/images/facebook.png';
+  static const String instaImage = 'assets/images/insta.png';
+}

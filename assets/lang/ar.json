@@ -1,0 +1,26 @@
+{
+  "home": "الرئيسية",
+  "donate": "فرص التبرع",
+  "my_mosque": "مسجدي",
+  "from_mosque_to_mosque": "من مسجد الي مسجد",
+  "profile": "حسابي",
+  "remaining": "المتبقي",
+  "donate_now": "تبرع الأن" ,
+   "live_feed": "بث مباشر",
+   "sponsors": "الرعاة",
+   "resalty_in_numbers": "رسالتي في ارقام",
+   "nearest_mosques": "أقرب المساجد" ,
+   "direction": "اتجاة" ,
+   "do_not_have_account": "معندكش حساب؟ ",
+  "register_now": "سجل الان",
+  "user_name":"اسم المستخدم",
+  "password":"كلمة المرور",
+  "confirm_password":"تأكيد كلمة المرور ",
+  "name":"الاسم",
+  "email":"الايميل",
+  "already_have_account":"لدي حساب بالفعل",
+  "login":"تسجيل دخول"
+
+
+
+}

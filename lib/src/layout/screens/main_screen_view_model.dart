@@ -1,0 +1,12 @@
+import '../../../core/blocs/generic_cubit/generic_cubit.dart';
+
+class MainScreenViewModel {
+  MainScreenViewModel();
+  GenericCubit<int> screenIndex = GenericCubit<int>(0);
+  bool isOpenFromHome = false;
+  int? selectedCropID;
+  String selectedCropName = "";
+  screenIndexChanged({required int index}) {
+    screenIndex.onUpdateData(index);
+  }
+}

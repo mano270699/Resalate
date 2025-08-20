@@ -1,0 +1,25 @@
+{
+  "home": "Home",
+  "donate": "Donation",
+  "my_mosque": "My Mosque",
+  "from_mosque_to_mosque": "From Mosque to Mosque",
+  "profile": "Profile",
+  "remaining": "Remaining", 
+  "donate_now": "Donate Now" ,
+  "live_feed": "live feed" ,
+   "sponsors": "Sponsors",
+   "resalty_in_numbers": "Resalty in numbers" ,
+   "nearest_mosques": "Nearest mosques" ,
+   "direction": "Direction" ,
+   "register_now": "Register Now" ,
+   "do_not_have_account": "Don't Have An Account",
+  "user_name":"User Name",
+  "password":"password",
+  "confirm_password":"Confirm Password",
+  "name":"Name",
+  "email":"Email",
+  "already_have_account":"I already have account",
+  "login":"Login"
+
+
+}

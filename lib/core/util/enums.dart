@@ -1,0 +1,1 @@
+enum ResponseTypeEnum { json, bytes }
