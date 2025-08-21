@@ -2,58 +2,71 @@ class Validation {
   //-----------------------------------
   ///  Return KEYS FOR LOCALIZATION
   //-----------------------------------
-  static String? validateNationalId(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Invalid_National_ID_validation';
+  static String userEmailValidation(String? input) {
+    if (input == null || input.isEmpty) {
+      return 'field_cannot_be_empty';
     }
-    if (value.startsWith('2')) {
-      return 'national_id_validation_ksa';
+    if (!input.contains('@')) {
+      return 'email_must_contain_at';
     }
-    if (!value.startsWith('1')) {
-      return 'national_id_starts_with_one_validation';
+    if (!input.contains('.')) {
+      return 'email_must_contain_dot';
     }
 
-    if (value.length != 10) {
-      return 'Invalid_National_ID_validation';
+    if (!RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+$")
+        .hasMatch(input)) {
+      return 'email_is_invalid';
     }
-    if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-      return 'National_ID_must_be_digits_only_validation';
-    }
-    return null;
+    return "";
   }
 
-  static String? validateMobileNumber(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Mobile_number_is_invalid';
+  static String passwordValidation(String? input) {
+    if (input == null || input.isEmpty) {
+      return 'password_validation';
     }
-    if (!value.startsWith('5')) {
-      return 'Mobile_number_must_start_with_5';
-    }
-    if (value.length != 9) {
-      return 'Mobile_number_must_be_9_digits';
-    }
-    if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-      return 'Mobile_number_must_be_digits_only';
-    }
-    return null;
+    return "";
   }
 
-  static String? validateEmail(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Email_is_invalid';
+  static String passwordConfirmationValidation(String? input,
+      {required String passWord}) {
+    if (input == null || input.isEmpty) {
+      return 'field_cannot_be_empty';
     }
-    if (!value.contains('@')) {
-      return 'Email_must_contain_@';
-    }
-    if (!value.contains('.')) {
-      return 'Email_must_contain_.';
+    if (input != passWord) {
+      return 'passwords_must_match';
     }
 
-    if (!RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(value)) {
-      return 'Email_is_invalid';
+    return "";
+  }
+
+  static String fieldRequiredValidation(String? input) {
+    if (input == null || input.isEmpty) {
+      return 'field_cannot_be_empty';
     }
-    return null;
+    return "";
+  }
+
+  static String nationalNumberValidation(String? input) {
+    if (input == null || input.isEmpty) {
+      return 'field_cannot_be_empty';
+    }
+    if (input.length < 14) {
+      return 'national_number_must_be';
+    }
+    return "";
+  }
+
+  static String phoneNumberValidation(String? input) {
+    if (input == null || input.isEmpty) {
+      return 'field_cannot_be_empty';
+    }
+    if (!RegExp(r'^(?:\+20|0)?(10|11|12|15)\d{8}$').hasMatch(input)) {
+      return 'phone_is_invalid';
+    }
+    if (input.length < 11) {
+      return 'phone_is_invalid';
+    }
+
+    return "";
   }
 }

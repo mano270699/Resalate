@@ -1,17 +1,25 @@
+// import 'package:dio/dio.dart';
+
+// class Failure extends DioException {
+//   final String errorMessage;
+//   final int? code;
+//   Failure(this.errorMessage, {this.code})
+//       : super(requestOptions: RequestOptions(path: ''));
+
+//   @override
+//   String toString() {
+//     return errorMessage;
+//   }
+// }
+
 import 'package:dio/dio.dart';
 
 class Failure extends DioException {
-  final String code;
-
-  Failure(this.code) : super(requestOptions: RequestOptions(path: ''));
+  final String errorMessage;
+  Failure(this.errorMessage) : super(requestOptions: RequestOptions(path: ''));
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is Failure && other.code == code;
+  String toString() {
+    return errorMessage;
   }
-
-  @override
-  int get hashCode => code.hashCode;
 }

@@ -24,7 +24,7 @@ Future<void> init() async {
 
   // sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
 
-  sl.registerFactory(() => LocalizationCasheHelper());
+  sl.registerFactory(() => LocalizationCacheHelper());
 
   sl.registerFactory(() => LocalizationCubit(sl()));
 

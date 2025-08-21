@@ -1,23 +1,41 @@
 class ErrorModel {
-  final String referenceNumber;
   final String message;
-  final String code;
+  final String status;
 
   ErrorModel({
-    required this.referenceNumber,
     required this.message,
-    required this.code,
+    required this.status,
   });
 
   factory ErrorModel.fromJson(Map<String, dynamic> map) {
     return ErrorModel(
-      referenceNumber: map['errors'][0]['referenceNumber'] ?? '',
-      message: map['errors'][0]['message'] ?? '',
-      code: map['errors'][0]['errorCode'] ?? '',
+      message: map['message'] ?? '',
+      status: map['status'] ?? '',
     );
   }
   @override
   String toString() {
-    return 'ErrorModel(referenceNumber: $referenceNumber, message: $message, code: $code)';
+    return 'ErrorModel(message: $message, status: $status)';
+  }
+}
+
+class DefaultModel {
+  final String? message;
+  final String? status;
+
+  DefaultModel({
+    this.message,
+    this.status,
+  });
+
+  factory DefaultModel.fromJson(Map<String, dynamic> map) {
+    return DefaultModel(
+      message: map['message'] ?? '',
+      status: map['status'] ?? '',
+    );
+  }
+  @override
+  String toString() {
+    return 'DefaultModel(message: $message, status: $status)';
   }
 }

@@ -1,17 +1,14 @@
-import 'dart:io';
-
 import 'package:hive_flutter/adapters.dart';
 
 import '../../base/dependency_injection.dart';
 import 'models/localization_model.dart';
 
-class LocalizationCasheHelper {
+class LocalizationCacheHelper {
   String getLanguageCode() {
     final box = sl<Box>();
     LocalizationModel x = box.get(
       'localization',
-      defaultValue:
-          LocalizationModel(languageCode: Platform.localeName.split('_').first),
+      defaultValue: LocalizationModel(languageCode: 'en'),
     );
     return x.languageCode;
   }

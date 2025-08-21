@@ -58,7 +58,7 @@ class _MainBottomNavigationScreenState
         return Scaffold(
           body: screens[indexState.data],
           bottomNavigationBar: Container(
-            height: 71.h,
+            height: 86.h,
             decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(

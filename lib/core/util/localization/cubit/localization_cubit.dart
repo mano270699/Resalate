@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'localization_state.dart';
 
 class LocalizationCubit extends Cubit<LocalizationState> {
-  LocalizationCasheHelper localizationCasheHelper;
+  LocalizationCacheHelper localizationCasheHelper;
   LocalizationCubit(this.localizationCasheHelper)
       : super(LocalizationInitial());
 
