@@ -5,12 +5,10 @@ import 'package:crypto/crypto.dart';
 
 import 'package:dartz/dartz.dart';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../../core/blocs/generic_cubit/generic_cubit.dart';
 import '../../../core/common/models/error_model.dart';
@@ -174,7 +172,11 @@ class AuthViewModel {
     }
   }
 
-  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+      clientId:
+          "280879038347-996a0j758rs140kkkdg2fkk5827jp68i.apps.googleusercontent.com", // Web client ID
+
+      scopes: ['email']);
 
   GenericCubit<LoginResponse> googleLogin = GenericCubit(LoginResponse());
   Future<GoogleSignInAccount?> signInWithGoogle(BuildContext context) async {

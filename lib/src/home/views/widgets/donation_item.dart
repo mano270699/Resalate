@@ -15,6 +15,7 @@ class DonationItem extends StatelessWidget {
       {super.key,
       required this.image,
       required this.title,
+      required this.onTap,
       required this.desc,
       required this.percentage,
       required this.total,
@@ -27,12 +28,13 @@ class DonationItem extends StatelessWidget {
   final String total;
   final String remaining;
   final String currency;
+  final void Function()? onTap;
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsetsDirectional.only(start: 10.w),
       child: Container(
-        height: 300.h,
+        height: 340.h,
         width: MediaQuery.of(context).size.width - 32.w,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10), color: AppColors.white),
@@ -130,6 +132,12 @@ class DonationItem extends StatelessWidget {
                             text: AppLocalizations.of(context)!
                                 .translate('total'),
                             model: AppTextModel(
+                                textDirection: AppLocalizations.of(context)!
+                                            .locale
+                                            .languageCode ==
+                                        'en'
+                                    ? TextDirection.rtl
+                                    : TextDirection.ltr,
                                 style: AppFontStyleGlobal(
                                         AppLocalizations.of(context)!.locale)
                                     .subTitle1
@@ -159,6 +167,12 @@ class DonationItem extends StatelessWidget {
                             text:
                                 AppLocalizations.of(context)!.translate('paid'),
                             model: AppTextModel(
+                                textDirection: AppLocalizations.of(context)!
+                                            .locale
+                                            .languageCode ==
+                                        'en'
+                                    ? TextDirection.rtl
+                                    : TextDirection.ltr,
                                 style: AppFontStyleGlobal(
                                         AppLocalizations.of(context)!.locale)
                                     .subTitle1
@@ -183,25 +197,28 @@ class DonationItem extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w),
-                    decoration: BoxDecoration(
-                        color: AppColors.scondaryColor,
-                        borderRadius: BorderRadius.circular(20)),
-                    height: 40.h,
-                    // width: 100.w,
-                    child: Center(
-                      child: AppText(
-                        text: AppLocalizations.of(context)!
-                            .translate('donate_now'),
-                        model: AppTextModel(
-                            style: AppFontStyleGlobal(
-                                    AppLocalizations.of(context)!.locale)
-                                .subTitle2
-                                .copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.white,
-                                )),
+                  GestureDetector(
+                    onTap: onTap,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10.w),
+                      decoration: BoxDecoration(
+                          color: AppColors.scondaryColor,
+                          borderRadius: BorderRadius.circular(20)),
+                      height: 40.h,
+                      // width: 100.w,
+                      child: Center(
+                        child: AppText(
+                          text: AppLocalizations.of(context)!
+                              .translate('donate_now'),
+                          model: AppTextModel(
+                              style: AppFontStyleGlobal(
+                                      AppLocalizations.of(context)!.locale)
+                                  .subTitle2
+                                  .copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.white,
+                                  )),
+                        ),
                       ),
                     ),
                   )

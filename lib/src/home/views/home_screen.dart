@@ -20,6 +20,7 @@ import '../../../core/common/app_icon_svg.dart';
 import '../../../core/shared_components/app_text/app_text.dart';
 import '../../../core/shared_components/app_text/models/app_text_model.dart';
 import '../../../core/util/localization/app_localizations.dart';
+import '../../donation/view/donation_details_screen.dart';
 import '../../from_mosque_to_mosque/views/from_mosque_to_mosque_screen.dart';
 import '../../nearest_mosque/views/nearest_mosque.dart';
 import '../data/models/home_data_model.dart';
@@ -233,6 +234,16 @@ class HomePage extends StatelessWidget {
                               clipBehavior: Clip.none,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) => DonationItem(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, DonationDetailsScreen.routeName,
+                                      arguments: {
+                                        "id":
+                                            donationState.data.posts![index].id,
+                                        "donation_name": donationState
+                                            .data.posts![index].title
+                                      });
+                                },
                                 percentage: donationState
                                         .data.posts![index].donation?.percent
                                         .toString() ??

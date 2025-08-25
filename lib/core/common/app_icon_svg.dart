@@ -14,4 +14,5 @@ class AppIconSvg {
   static const String resalateLogo2 = 'assets/icons/Resalate-02.svg';
   static const String resalateLogo3 = 'assets/icons/Resalate-03.svg';
   static const String resalateLogo4 = 'assets/icons/Resalate-04.svg';
+  static const String paypal = 'assets/icons/paypal.svg';
 }

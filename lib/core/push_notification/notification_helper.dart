@@ -9,7 +9,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
-import 'package:permission_handler/permission_handler.dart';
+// import 'package:permission_handler/permission_handler.dart';
 // import 'package:url_launcher/url_launcher.dart';
 
 import '../common/config.dart'; // Ensure this path is correct
@@ -103,225 +103,82 @@ class NotificationHelper {
   //     debugPrint('❌ Invalid URL format for launch: $urlString');
   //   }
   // }
-
   static Future<void> initialize(
       FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
-    // --- Android Initialization ---
-    const AndroidInitializationSettings androidInitialize =
-        AndroidInitializationSettings('notification_icon'); // in res/drawable
-
-    // --- iOS Initialization ---
-    const DarwinInitializationSettings iOSInitialize =
-        DarwinInitializationSettings(
+    // --- Local Notifications Initialization ---
+    const androidInit = AndroidInitializationSettings('notification_icon');
+    const iOSInit = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: true,
     );
+    const initSettings =
+        InitializationSettings(android: androidInit, iOS: iOSInit);
 
-    const InitializationSettings initializationsSettings =
-        InitializationSettings(android: androidInitialize, iOS: iOSInitialize);
+    await flutterLocalNotificationsPlugin.initialize(initSettings,
+        onDidReceiveNotificationResponse: (response) async {
+      if (response.payload != null && response.payload!.isNotEmpty) {
+        final data = jsonDecode(response.payload!);
+        _handleNotificationTap(data);
+      }
+    });
 
-    // --- Initialize Local Notifications ---
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationsSettings,
-      onDidReceiveNotificationResponse: (NotificationResponse response) async {
-        debugPrint("🔔 Local Notification Tapped!");
-        if (response.payload != null && response.payload!.isNotEmpty) {
-          try {
-            Map<String, dynamic> data = jsonDecode(response.payload!);
-            _handleNotificationTap(data);
-          } catch (e, s) {
-            debugPrint('❌ Error decoding local notification payload: $e');
-            debugPrint('   Stack trace: $s');
-          }
-        }
-      },
-    );
-
-    // --- Explicit Android 13+ Notification Permission ---
-    if (Platform.isAndroid) {
-      final androidImpl =
-          flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>();
-      await androidImpl?.requestNotificationsPermission();
-    }
-
-    // --- Request FCM Permissions ---
-    if (Platform.isAndroid) {
-      PermissionStatus status = await Permission.notification.request();
-      if (kDebugMode) debugPrint("🔔 Android Notification Permission: $status");
-    } else if (Platform.isIOS) {
+    // --- iOS permission ---
+    if (Platform.isIOS) {
       final settings = await FirebaseMessaging.instance.requestPermission(
         alert: true,
         badge: true,
         sound: true,
       );
-      if (kDebugMode) {
-        debugPrint(
-            "📲 iOS Notification Permission: ${settings.authorizationStatus}");
+      debugPrint(
+          "📲 iOS Notification Permission: ${settings.authorizationStatus}");
+    }
+
+    // --- Wait for APNs token ---
+    if (Platform.isIOS) {
+      String? apnsToken;
+      int attempts = 0;
+      while (apnsToken == null && attempts < 20) {
+        // wait up to ~10s
+        apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+        await Future.delayed(const Duration(milliseconds: 500));
+        attempts++;
+      }
+
+      if (apnsToken == null) {
+        debugPrint("❌ Still no APNs token after waiting.");
+        return; // 🔴 Stop here, don’t call getToken()
+      } else {
+        debugPrint("✅ Got APNs token: $apnsToken");
       }
     }
 
-    // --- Get FCM Token (and retry APNs if iOS) ---
+    // --- Now safe to fetch FCM token ---
     try {
-      String? token;
-      if (Platform.isIOS) {
-        int attempts = 0;
-        String? apnsToken;
-        do {
-          apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-          if (kDebugMode) {
-            debugPrint("🔁 Waiting for APNs token... attempt ${attempts + 1}");
-          }
-          await Future.delayed(const Duration(milliseconds: 500));
-          attempts++;
-        } while (apnsToken == null && attempts < 10);
-
-        if (apnsToken == null) {
-          debugPrint("❌ APNs token not available.");
-        } else {
-          debugPrint("✅ APNs token: $apnsToken");
-        }
-        token = await FirebaseMessaging.instance.getToken();
-      } else {
-        token = await FirebaseMessaging.instance.getToken();
-      }
-
-      if (kDebugMode) debugPrint("🔥 FCM Token: $token");
-
+      final token = await FirebaseMessaging.instance.getToken();
+      debugPrint("🔥 FCM Token: $token");
       if (token != null) {
         FCMTokenUtil.saveFCMToken(token);
-        if (kDebugMode)
-          debugPrint(
-              "🔥 Saved FCM Token: ${await FCMTokenUtil.getFCMTokenFromMemory()}");
-        // await _sendTokenToServer(token); // 🔥 send API request
       }
-    } catch (e, stack) {
+
+      // Subscribe only when token exists
+      await FirebaseMessaging.instance.subscribeToTopic("general");
+    } catch (e, s) {
       debugPrint("❌ Error getting FCM token: $e");
-      FirebaseCrashlytics.instance.recordError(e, stack);
+      FirebaseCrashlytics.instance.recordError(e, s);
     }
 
-    // --- Subscribe to Topic ---
-    await FirebaseMessaging.instance.subscribeToTopic("general");
-
-    // --- Foreground Messages ---
+    // --- FCM Listeners ---
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      debugPrint('🟢 [onMessage] Foreground message received!');
-      debugPrint('   Message data: ${message.data}');
-      if (message.notification != null) {
-        debugPrint('   Notification: ${message.notification!.title}');
-      }
-      NotificationHelper.showNotification(
-          message, flutterLocalNotificationsPlugin, false);
+      debugPrint('🟢 Foreground message: ${message.data}');
+      showNotification(message, flutterLocalNotificationsPlugin, false);
     });
 
-    // --- Background (app in background) ---
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      debugPrint('🟡 [onMessageOpenedApp] Message clicked!');
+      debugPrint('🟡 Message clicked!');
       _handleNotificationTap(message.data);
     });
   }
-
-  /// Send FCM token to your server
-  // static Future<void> _sendTokenToServer(String token) async {
-  //   try {
-  //     final response = await http.post(
-  //       Uri.parse(
-  //           "https://masjid.super-coding.com/wp-json/collections/save-fcm-token?user_id=${await UserIdUtil.getUserIdFromMemory()}&fcm_token=$token"),
-  //       body: {},
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       debugPrint("✅ FCM token updated on server");
-  //     } else {
-  //       debugPrint("❌ Failed to update FCM token: ${response.body}");
-  //     }
-  //   } catch (e) {
-  //     debugPrint("❌ Exception sending FCM token to server: $e");
-  //   }
-  // }
-
-  // static Future<void> initialize(
-  //     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
-  //   // --- Android Initialization ---
-  //   const AndroidInitializationSettings androidInitialize =
-  //       AndroidInitializationSettings(
-  //           'notification_icon'); // Ensure this icon exists in res/drawable
-
-  //   // --- iOS Initialization ---
-  //   const DarwinInitializationSettings iOSInitialize =
-  //       DarwinInitializationSettings(
-  //     requestAlertPermission: true, // Request permissions when initializing
-  //     requestBadgePermission: true,
-  //     requestSoundPermission: true,
-  //     // onDidReceiveLocalNotification: onDidReceiveLocalNotification // Optional: for older iOS foreground
-  //   );
-
-  //   const InitializationSettings initializationsSettings =
-  //       InitializationSettings(android: androidInitialize, iOS: iOSInitialize);
-
-  //   // --- Request Android 13+ Permission Explicitly (if not done in main) ---
-  //   // Consider doing this earlier (like in main.dart) for better UX
-  //   if (Platform.isAndroid) {
-  //     final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
-  //         flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-  //             AndroidFlutterLocalNotificationsPlugin>();
-  //     await androidImplementation?.requestNotificationsPermission();
-  //   }
-
-  //   // --- Initialize Local Notifications Plugin ---
-  //   await flutterLocalNotificationsPlugin.initialize(
-  //     initializationsSettings,
-  //     // --- Handler for when a user taps a LOCAL notification shown by this plugin ---
-  //     onDidReceiveNotificationResponse: (NotificationResponse response) async {
-  //       debugPrint("🔔 Local Notification Tapped!");
-  //       debugPrint("   Payload: ${response.payload}");
-  //       if (response.payload != null && response.payload!.isNotEmpty) {
-  //         try {
-  //           Map<String, dynamic> data = jsonDecode(response.payload!);
-  //           _handleNotificationTap(data); // Use the common handler
-  //         } catch (e, s) {
-  //           debugPrint('❌ Error decoding local notification payload: $e');
-  //           debugPrint('   Stack trace: $s');
-  //         }
-  //       } else {
-  //         debugPrint(
-  //             "   Local notification tapped, but payload was empty or null.");
-  //       }
-  //     },
-  //     // --- Handler for older iOS versions when app is in foreground ---
-  //     // onDidReceiveBackgroundNotificationResponse: (details) { ... } // For background actions
-  //   );
-
-  //   await FirebaseMessaging.instance.subscribeToTopic("general");
-
-  //   // --- FCM Listeners ---
-  //   // --- Listener for FOREGROUND messages ---
-  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-  //     debugPrint('🟢 [onMessage] Foreground message received!');
-  //     debugPrint('   Message data: ${message.data}');
-  //     if (message.notification != null) {
-  //       debugPrint(
-  //           '   Message also contained a notification: ${message.notification!.title}');
-  //     }
-
-  //     // --- Show a local notification when app is in foreground ---
-  //     // Decide if you want this on iOS too. If yes, remove the Platform check.
-  //     // if (!Platform.isIOS) {  // REMOVE THIS if you want foreground notifications on iOS too
-  //     NotificationHelper.showNotification(message,
-  //         flutterLocalNotificationsPlugin, false); // Pass plugin instance
-  //     // } else {
-  //     //    debugPrint("   (iOS foreground: Not showing local notification via helper due to Platform check)");
-  //     // }
-  //   });
-
-  //   // --- Listener for messages clicked when app is in BACKGROUND (not terminated) ---
-  //   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-  //     debugPrint('🟡 [onMessageOpenedApp] Message clicked!');
-  //     debugPrint('   Message data: ${message.data}');
-  //     _handleNotificationTap(message.data); // Use the common handler
-  //   });
-  // }
 
   // --- Function to display the local notification ---
   static Future<void> showNotification(RemoteMessage message,
@@ -581,25 +438,3 @@ class NotificationHelper {
     }
   }
 }
-
-// --- Model remains the same (ensure it exists) ---
-// class NotificationBody {
-//   final String? url;
-//   final int? courseId;
-
-//   NotificationBody({this.url, this.courseId});
-
-//   factory NotificationBody.fromJson(Map<String, dynamic> json) {
-//     return NotificationBody(
-//       url: json['url'] as String?,
-//       courseId: json['course_id'] as int?, // Adjust parsing if needed
-//     );
-//   }
-
-//   Map<String, dynamic> toJson() {
-//     return {
-//       'url': url,
-//       'course_id': courseId,
-//     };
-//   }
-// }

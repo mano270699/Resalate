@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../src/Auth/data/repository/auth_repository.dart';
 import '../../src/Auth/logic/auth_view_model.dart';
 import '../../src/donation/data/repository/donetatio_repository.dart';
+import '../../src/donation/logic/donations_view_model.dart';
 import '../../src/home/data/repository/home_repository.dart';
 import '../../src/home/logic/home_view_model.dart';
 import '../../src/layout/screens/main_screen_view_model.dart';
@@ -55,6 +56,7 @@ Future<void> init() async {
   sl.registerFactory(() => MainScreenViewModel());
   sl.registerFactory(() => AuthViewModel(authRepositoryImpl: sl()));
   sl.registerFactory(() => HomeViewModel(sl()));
+  sl.registerFactory(() => DonationsViewModel(donetatioRepositoryImpl: sl()));
 
   /// USECASES
 

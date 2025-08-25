@@ -5,6 +5,7 @@ import '../../src/Auth/login/view/forget_password_screen.dart';
 import '../../src/Auth/login/view/login_screen.dart';
 import '../../src/Auth/login/view/register_screen.dart';
 import '../../src/Auth/login/view/reset_password_screen.dart';
+import '../../src/donation/view/donation_details_screen.dart';
 import '../../src/from_mosque_to_mosque/views/from_mosque_to_mosque_screen.dart';
 import '../../src/layout/screens/user_bottom_navigation_screen.dart';
 import '../../src/nearest_mosque/views/nearest_mosque.dart';
@@ -43,11 +44,20 @@ class RouteGenerator {
                 ));
       case RegesterScreen.routeName:
         return MaterialPageRoute(builder: (_) => const RegesterScreen());
+
       case FromMosqueToMosqueScreen.routeName:
         return MaterialPageRoute(
             builder: (_) => const FromMosqueToMosqueScreen());
       case NearestMosque.routeName:
         return MaterialPageRoute(builder: (_) => const NearestMosque());
+      case DonationDetailsScreen.routeName:
+        final args = settings.arguments as Map;
+
+        return MaterialPageRoute(
+            builder: (_) => DonationDetailsScreen(
+                  donationId: args["id"],
+                  donationName: args["donation_name"],
+                ));
 
       default:
         return _errorRoute();
