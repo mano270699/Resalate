@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "280879038347",
+    "project_id": "resalate-a3ad0",
+    "storage_bucket": "resalate-a3ad0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:280879038347:android:23cb334a7b89242790f98e",
+        "android_client_info": {
+          "package_name": "com.resalate.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "280879038347-bivg671g0dt41ddf8cg6n9keavk32c28.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.resalate.app",
+            "certificate_hash": "db40bfd8a8d376a4a93533ac7d4c5b5da4da99a9"
+          }
+        },
+        {
+          "client_id": "280879038347-8b488inbe46ot3h2u5s6jsh80fmtvt0m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBi9he1qhMHxJB1oY0UkuM0WtKEPe6OVAw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "280879038347-8b488inbe46ot3h2u5s6jsh80fmtvt0m.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "280879038347-996a0j758rs140kkkdg2fkk5827jp68i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.resalate.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

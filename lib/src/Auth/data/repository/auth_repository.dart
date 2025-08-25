@@ -9,20 +9,17 @@ import '../../../../core/common/error/error_handler.dart';
 import '../../../../core/common/models/error_model.dart';
 import '../../../../core/util/localization/localization_cache_helper.dart';
 import '../../../../core/util/network_service.dart';
+
 import '../../../../core/util/token_util.dart';
-import '../models/complete_regester_model.dart';
-import '../models/drop_down_list_model.dart';
+import '../models/fcm_model.dart';
 import '../models/register_model.dart';
+import '../models/reset_password_model.dart';
 
 abstract class AuthRepository {
   Future<Either<String, RegisterModel>> register({
     required String name,
-    required String userName,
     required String email,
     required String phone,
-    required String dateOfBirth,
-    required String university,
-    required String province,
     required String password,
     required String confirmPassword,
   });
@@ -30,20 +27,22 @@ abstract class AuthRepository {
     required String userNameEmail,
     required String password,
   });
-  Future<Either<ErrorModel, SocialLoginResponse>> googleLogin({
+  Future<Either<ErrorModel, LoginResponse>> googleLogin({
     required String googleToken,
   });
   Future<Either<ErrorModel, SocialLoginResponse>> appleLogin({
     required String appleToken,
   });
   Future<Either<String, DefaultModel>> forgetPassword({required String email});
-  Future<Either<String, CompleteRegisterModel>> completeRegisteration({
-    required String phoneNumber,
-    required String dateOfBirth,
-    required String university,
-    required String province,
-  });
-  Future<Either<String, DropDownListValuesModel>> getDropDownListValues();
+  Future<Either<String, DefaultModel>> verifyOtp(
+      {required String email, required String code});
+  Future<Either<String, ResetPasswordResponse>> resetPassword(
+      {required String email,
+      required String code,
+      required String password,
+      required String confirmPassword});
+
+  Future<Either<String, FCMTokenModel>> updateFCMToken();
 }
 
 class AuthRepositoryImpl extends AuthRepository {
@@ -54,29 +53,11 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   Future<Either<String, RegisterModel>> register({
     required String name,
-    required String userName,
     required String email,
     required String phone,
     required String password,
-    required String dateOfBirth,
-    required String university,
-    required String province,
     required String confirmPassword,
   }) async {
-    // Validate Password (Client-Side) -  Moved here for clarity
-    if (password.length < 8) {
-      return Left("Password must be at least 8 characters long.");
-    }
-    if (!password.contains(RegExp(r'[A-Z]'))) {
-      return Left("Password must contain at least one uppercase letter.");
-    }
-    if (!password.contains(RegExp(r'[a-z]'))) {
-      return Left("Password must contain at least one lowercase letter.");
-    }
-    if (!password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-      return Left(
-          "Password must contain at least one special character (e.g., @, #, \$, %, &, etc.).");
-    }
     if (password != confirmPassword) {
       return Left("Passwords do not match.");
     }
@@ -85,19 +66,13 @@ class AuthRepositoryImpl extends AuthRepository {
       LocalizationCacheHelper localizationCacheHelper =
           LocalizationCacheHelper();
       final response = await _networkService.post(
-          "register-student?lang=${localizationCacheHelper.getLanguageCode()}",
+          "register?lang=${localizationCacheHelper.getLanguageCode()}",
           jsonEncode({
-            // Use jsonEncode instead of json.encode
             "name": name,
-            "username": userName,
             "email": email,
-            "phone_number": phone,
-            "date_of_birth": dateOfBirth,
-            "university": university,
-            "province": province,
+            "phone": phone,
             "password": password,
-            "confirm_password":
-                confirmPassword // Use confirmPassword here!  Important fix!
+            "password2": confirmPassword
           }));
 
       if (kDebugMode) {
@@ -106,34 +81,9 @@ class AuthRepositoryImpl extends AuthRepository {
       }
 
       // Assuming response has a status code and data field
-      if (response.statusCode == 200) {
-        RegisterModel registerModel = RegisterModel.fromJson(response.data);
-        return Right(registerModel);
-      } else {
-        if (kDebugMode) {
-          print("error::${response.data} ");
-        }
 
-        if (response.data != null &&
-            response.data
-                is Map<String, dynamic> && // Check that response.data is a Map
-            response.data.containsKey("errors") &&
-            response.data["errors"] is List &&
-            response.data["errors"].isNotEmpty) {
-          // Handle the error messages as a list.  Return a concatenated string, or just the first error.
-          // Option 1: Return the first error:
-          // return Left(response.data["errors"][0].toString());
-
-          // Option 2: Concatenate all errors:
-          final errors = (response.data["errors"] as List<dynamic>)
-              .cast<String>()
-              .join(". ");
-          return Left(errors);
-        } else {
-          return Left(
-              "Registration failed: Unknown error. Status Code: ${response.statusCode}"); // Handle unexpected error structure
-        }
-      }
+      RegisterModel registerModel = RegisterModel.fromJson(response.data);
+      return Right(registerModel);
     } catch (e, t) {
       if (kDebugMode) {
         print("catch::${e.toString()} ,,, trace $t");
@@ -151,11 +101,8 @@ class AuthRepositoryImpl extends AuthRepository {
       LocalizationCacheHelper localizationCacheHelper =
           LocalizationCacheHelper();
       final response = await _networkService.post(
-          "login-student?lang=${localizationCacheHelper.getLanguageCode()}",
-          jsonEncode({
-            "username": userNameEmail,
-            "password": password,
-          }));
+          "login?username=$userNameEmail&password=$password&lang=${localizationCacheHelper.getLanguageCode()}",
+          {});
 
       debugPrint("response.statusCode::${response.statusCode}");
       if (response.statusCode == 200) {
@@ -188,91 +135,29 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
-  Future<Either<ErrorModel, SocialLoginResponse>> googleLogin(
+  Future<Either<ErrorModel, LoginResponse>> googleLogin(
       {required String googleToken}) async {
     try {
       LocalizationCacheHelper localizationCacheHelper =
           LocalizationCacheHelper();
 
       final response = await _networkService.post(
-          "google-login-register?lang=${localizationCacheHelper.getLanguageCode()}",
-          {
-            "google_token": googleToken,
-          });
+          "google-login?lang=${localizationCacheHelper.getLanguageCode()}", {
+        "id_token": googleToken,
+      });
       // Assuming response has a status code and data field
       if (response.statusCode == 200) {
-        SocialLoginResponse loginResponse =
-            SocialLoginResponse.fromJson(response.data);
+        LoginResponse loginResponse = LoginResponse.fromJson(response.data);
         return Right(loginResponse);
       } else {
         // Convert error response to ErrorModel if status is not 200
         ErrorModel errorModel = ErrorModel.fromJson(response.data);
         return Left(ResponseError.getMessage(errorModel.message));
       }
-    } catch (e) {
-      debugPrint("error::$e");
+    } catch (e, t) {
+      debugPrint("Error::${e}--- trace::$t}");
       // Catch any exception and return it as ErrorModel
       return Left(ErrorModel(message: e.toString(), status: "Error"));
-    }
-  }
-
-  @override
-  Future<Either<String, DropDownListValuesModel>>
-      getDropDownListValues() async {
-    try {
-      LocalizationCacheHelper localizationCacheHelper =
-          LocalizationCacheHelper();
-      final response = await _networkService.get(
-        "additional-information?lang=${localizationCacheHelper.getLanguageCode()}",
-      );
-      DropDownListValuesModel res =
-          DropDownListValuesModel.fromJson(response.data);
-      return Right(res);
-    } catch (e, t) {
-      debugPrint("error:$e-- trace $t");
-      return Left(ResponseError.getMessage(e));
-    }
-  }
-
-  @override
-  Future<Either<String, CompleteRegisterModel>> completeRegisteration(
-      {required String phoneNumber,
-      required String dateOfBirth,
-      required String university,
-      required String province}) async {
-    try {
-      LocalizationCacheHelper localizationCacheHelper =
-          LocalizationCacheHelper();
-      final response = await _networkService.post(
-          "additional-form?lang=${localizationCacheHelper.getLanguageCode()}", {
-        "phone_number": phoneNumber,
-        "date_of_birth": dateOfBirth,
-        "university": university,
-        "province": province
-      },
-          headers: {
-            "Authorization": "Bearer ${await TokenUtil.getTokenFromMemory()}"
-          });
-      // Assuming response has a status code and data field
-
-      debugPrint("response.statusCode::${response.statusCode}");
-      if (response.statusCode == 200) {
-        CompleteRegisterModel loginResponse =
-            CompleteRegisterModel.fromJson(response.data);
-        return Right(loginResponse);
-      } else {
-        print("Data::${response.data}");
-        // Convert error response to ErrorModel if status is not 200
-
-        return Left(response.data["error"]);
-      }
-    } catch (e) {
-      debugPrint("response.statusCode::${e.toString()}");
-
-      // Catch any exception and return it as ErrorModel
-      return Left(e.toString());
-      // return Left(
-      //     ErrorModel(message: ResponseError.getMessage(e), status: "Error"));
     }
   }
 
@@ -283,13 +168,13 @@ class AuthRepositoryImpl extends AuthRepository {
       LocalizationCacheHelper localizationCacheHelper =
           LocalizationCacheHelper();
       final response = await _networkService.post(
-          "forgot-password?lang=${localizationCacheHelper.getLanguageCode()}",
-          {"user_identifier": email});
+          "forget-password?email=$email&lang=${localizationCacheHelper.getLanguageCode()}",
+          {});
       DefaultModel res = DefaultModel.fromJson(response.data);
       return Right(res);
     } catch (e, t) {
       debugPrint("error:$e-- trace $t");
-      return Left(ResponseError.getMessage(e));
+      return Left(e.toString());
     }
   }
 
@@ -319,6 +204,61 @@ class AuthRepositoryImpl extends AuthRepository {
       debugPrint("error::$e");
       // Catch any exception and return it as ErrorModel
       return Left(ErrorModel(message: e.toString(), status: "Error"));
+    }
+  }
+
+  @override
+  Future<Either<String, DefaultModel>> verifyOtp(
+      {required String email, required String code}) async {
+    try {
+      LocalizationCacheHelper localizationCacheHelper =
+          LocalizationCacheHelper();
+      final response = await _networkService.post(
+          "verify-otp?email=$email&otp=$code&lang=${localizationCacheHelper.getLanguageCode()}",
+          {});
+      DefaultModel res = DefaultModel.fromJson(response.data);
+      return Right(res);
+    } catch (e, t) {
+      debugPrint("error:$e-- trace $t");
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, ResetPasswordResponse>> resetPassword(
+      {required String email,
+      required String code,
+      required String password,
+      required String confirmPassword}) async {
+    try {
+      LocalizationCacheHelper localizationCacheHelper =
+          LocalizationCacheHelper();
+      final response = await _networkService.post(
+          "reset-password?lang=${localizationCacheHelper.getLanguageCode()}", {
+        "email": email,
+        "otp": code,
+        "password": password,
+        "password2": confirmPassword
+      });
+      ResetPasswordResponse res = ResetPasswordResponse.fromJson(response.data);
+      return Right(res);
+    } catch (e, t) {
+      debugPrint("error:$e-- trace $t");
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, FCMTokenModel>> updateFCMToken() async {
+    try {
+      final response = await _networkService.post(
+          "save-fcm-token?user_id=${await UserIdUtil.getUserIdFromMemory()}&fcm_token=${await FCMTokenUtil.getFCMTokenFromMemory()}",
+          {});
+      FCMTokenModel res = FCMTokenModel.fromJson(response.data);
+      return Right(res);
+    } catch (e, t) {
+      debugPrint("error:$e-- trace $t");
+      return Left(e.toString());
     }
   }
 }

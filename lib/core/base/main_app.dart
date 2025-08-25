@@ -6,13 +6,14 @@ import 'package:resalate/src/splash_screen/view/splash_screen.dart';
 
 // import '../../src/main_screen/view/main_screen.dart';
 import '../common/app_colors/app_colors.dart';
+import '../util/environment/environment.dart';
 import '../util/localization/app_localizations.dart';
 import '../util/localization/cubit/localization_cubit.dart';
 import 'dependency_injection.dart';
 import 'route_genrator.dart';
 
 class MainApp extends StatefulWidget {
-  const MainApp({Key? key}) : super(key: key);
+  const MainApp({super.key});
 
   @override
   State<MainApp> createState() => _MainAppState();
@@ -36,6 +37,7 @@ class _MainAppState extends State<MainApp> {
                 splitScreenMode: true,
                 builder: (context, child) {
                   return MaterialApp(
+                    navigatorKey: Environment.navigatorKey,
                     debugShowCheckedModeBanner: false,
                     title: 'Resalate',
                     theme: ThemeData(
@@ -50,8 +52,8 @@ class _MainAppState extends State<MainApp> {
                     ),
                     locale: state.locale,
                     supportedLocales: const [
-                      Locale('en', 'US'),
                       Locale('ar', 'SA'),
+                      Locale('en', 'US'),
                     ],
                     localizationsDelegates: const [
                       AppLocalizations.delegate,

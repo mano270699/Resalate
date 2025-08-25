@@ -1,6 +1,8 @@
 {
   "home": "Home",
   "donate": "Donation",
+  "lessons": "Lessons",
+  "funerals": "Funerals",
   "my_mosque": "My Mosque",
   "from_mosque_to_mosque": "From Mosque to Mosque",
   "profile": "Profile",
@@ -18,8 +20,24 @@
   "confirm_password":"Confirm Password",
   "name":"Name",
   "email":"Email",
+   "phone":"Phone Number",
   "already_have_account":"I already have account",
-  "login":"Login"
+  "login":"Login",
+  "Forget_Password":"Forget Password?",
+  "continue":"Continue",
+  "verify":"Verify",
+  "resend_otp":"Resend OTP",
+  "change":"Change",
+  "paid":"Paid: ",
+  "total":"Total : ",
+  "field_cannot_be_empty":"This field cannot be left blank",
+  "email_must_contain_at":"Email must contain @",
+  "email_must_contain_dot":"Email must contain .",
+  "password_validation": "The password is incorrect. Try again*",
+  "passwords_must_match": "The password confirmation does not match the password. Please try again*",
+   "or":"Or",
+  "continue_with_google":"Continue with Google",
+  "continue_with_Apple":"Continue with Apple"
 
 
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:resalate/core/common/app_icon_svg.dart';
 
 import '../../../../core/common/app_colors/app_colors.dart';
 import '../../../../core/common/app_font_style/app_font_style_global.dart';
@@ -9,9 +11,22 @@ import '../../../../core/shared_components/app_text/models/app_text_model.dart';
 import '../../../../core/util/localization/app_localizations.dart';
 
 class DonationItem extends StatelessWidget {
-  const DonationItem({super.key, required this.image, required this.title});
+  const DonationItem(
+      {super.key,
+      required this.image,
+      required this.title,
+      required this.desc,
+      required this.percentage,
+      required this.total,
+      required this.remaining,
+      required this.currency});
   final String image;
   final String title;
+  final String desc;
+  final String percentage;
+  final String total;
+  final String remaining;
+  final String currency;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -33,10 +48,12 @@ class DonationItem extends StatelessWidget {
                   child: SizedBox(
                       height: 150.h,
                       width: MediaQuery.of(context).size.width,
-                      child: Image.network(
-                        image,
-                        fit: BoxFit.cover,
-                      ))),
+                      child: image.isNotEmpty
+                          ? Image.network(
+                              image,
+                              fit: BoxFit.cover,
+                            )
+                          : SvgPicture.asset(AppIconSvg.splashLogo))),
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: 30.h,
@@ -55,9 +72,10 @@ class DonationItem extends StatelessWidget {
                     lineHeight: 30.h,
 
                     padding: EdgeInsets.zero,
-                    percent: 0.5, // 50% progress
+                    percent: double.parse((int.parse(percentage) / 100)
+                        .toString()), // 50% progress
                     center: AppText(
-                      text: "50%",
+                      text: "$percentage%",
                       model: AppTextModel(
                           style: AppFontStyleGlobal(
                                   AppLocalizations.of(context)!.locale)
@@ -76,12 +94,26 @@ class DonationItem extends StatelessWidget {
               AppText(
                 text: title,
                 model: AppTextModel(
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style:
                         AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
                             .headingMedium2
                             .copyWith(
                               fontWeight: FontWeight.w600,
                               color: AppColors.primaryColor,
+                            )),
+              ),
+              AppText(
+                text: title,
+                model: AppTextModel(
+                    style:
+                        AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
+                            .headingMedium2
+                            .copyWith(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.gray,
                             )),
               ),
               10.h.verticalSpace,
@@ -91,28 +123,63 @@ class DonationItem extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      AppText(
-                        text: AppLocalizations.of(context)!
-                            .translate('remaining'),
-                        model: AppTextModel(
-                            style: AppFontStyleGlobal(
-                                    AppLocalizations.of(context)!.locale)
-                                .subTitle1
-                                .copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.primaryColor,
-                                )),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AppText(
+                            text: AppLocalizations.of(context)!
+                                .translate('total'),
+                            model: AppTextModel(
+                                style: AppFontStyleGlobal(
+                                        AppLocalizations.of(context)!.locale)
+                                    .subTitle1
+                                    .copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.primaryColor,
+                                    )),
+                          ),
+                          AppText(
+                            text: "${double.parse(total)} $currency",
+                            model: AppTextModel(
+                                style: AppFontStyleGlobal(
+                                        AppLocalizations.of(context)!.locale)
+                                    .smallTab
+                                    .copyWith(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.scondaryColor,
+                                    )),
+                          ),
+                        ],
                       ),
-                      AppText(
-                        text: "22,5260 SAR",
-                        model: AppTextModel(
-                            style: AppFontStyleGlobal(
-                                    AppLocalizations.of(context)!.locale)
-                                .smallTab
-                                .copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.scondaryColor,
-                                )),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AppText(
+                            text:
+                                AppLocalizations.of(context)!.translate('paid'),
+                            model: AppTextModel(
+                                style: AppFontStyleGlobal(
+                                        AppLocalizations.of(context)!.locale)
+                                    .subTitle1
+                                    .copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.primaryColor,
+                                    )),
+                          ),
+                          AppText(
+                            text: "${double.parse(remaining)} $currency",
+                            model: AppTextModel(
+                                style: AppFontStyleGlobal(
+                                        AppLocalizations.of(context)!.locale)
+                                    .smallTab
+                                    .copyWith(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.scondaryColor,
+                                    )),
+                          ),
+                        ],
                       ),
                     ],
                   ),

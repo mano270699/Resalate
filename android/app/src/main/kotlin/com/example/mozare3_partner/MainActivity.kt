@@ -1,4 +1,4 @@
-package com.example.resalate
+package com.resalate.app
 
 import io.flutter.embedding.android.FlutterActivity
 

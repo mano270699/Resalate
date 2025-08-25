@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:resalate/core/shared_components/app_text/app_text.dart';
+import 'package:resalate/core/util/constants.dart';
 
 import '../../../../core/common/app_colors/app_colors.dart';
 import '../../../../core/common/app_font_style/app_font_style_global.dart';
@@ -11,8 +12,11 @@ import '../../../../core/shared_components/app_text/models/app_text_model.dart';
 import '../../../../core/util/localization/app_localizations.dart';
 
 class PartenerSection extends StatelessWidget {
-  const PartenerSection({super.key});
-
+  const PartenerSection(
+      {super.key, required this.title, required this.desc, required this.url});
+  final String title;
+  final String desc;
+  final String url;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -40,7 +44,7 @@ class PartenerSection extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   AppText(
-                    text: "Partener Organization",
+                    text: title,
                     model: AppTextModel(
                         style: AppFontStyleGlobal(
                                 AppLocalizations.of(context)!.locale)
@@ -56,11 +60,16 @@ class PartenerSection extends StatelessWidget {
                   SizedBox(
                     width: 200,
                     child: AppText(
-                      text:
-                          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+                      text: desc,
                       model: AppTextModel(
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
+                          textDirection: AppLocalizations.of(context)!
+                                      .locale
+                                      .languageCode ==
+                                  'en'
+                              ? TextDirection.ltr
+                              : TextDirection.rtl,
                           style: AppFontStyleGlobal(
                                   AppLocalizations.of(context)!.locale)
                               .bodyLight1
@@ -86,23 +95,28 @@ class PartenerSection extends StatelessWidget {
                   ),
                   Align(
                       alignment: Alignment.center,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20)),
-                        height: 40.h,
-                        child: Center(
-                          child: AppText(
-                            text: "learn more",
-                            model: AppTextModel(
-                                style: AppFontStyleGlobal(
-                                        AppLocalizations.of(context)!.locale)
-                                    .subTitle2
-                                    .copyWith(
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.primaryColor,
-                                    )),
+                      child: GestureDetector(
+                        onTap: () {
+                          Constants.launcherUrl(uri: url);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10.w),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20)),
+                          height: 40.h,
+                          child: Center(
+                            child: AppText(
+                              text: "learn more",
+                              model: AppTextModel(
+                                  style: AppFontStyleGlobal(
+                                          AppLocalizations.of(context)!.locale)
+                                      .subTitle2
+                                      .copyWith(
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.primaryColor,
+                                      )),
+                            ),
                           ),
                         ),
                       ))

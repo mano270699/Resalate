@@ -70,52 +70,54 @@ class Data {
 class LoginResponse {
   String? status;
   String? message;
-  int? userId;
-  String? username;
-  String? email;
   String? token;
-  String? phoneNumber;
-  String? dateOfBirth;
-  String? university;
-  String? province;
+  User? user;
 
-  LoginResponse(
-      {this.status,
-      this.message,
-      this.userId,
-      this.username,
-      this.email,
-      this.token,
-      this.phoneNumber,
-      this.dateOfBirth,
-      this.university,
-      this.province});
+  LoginResponse({this.status, this.message, this.token, this.user});
 
   LoginResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    userId = json['user_id'];
-    username = json['username'];
-    email = json['email'];
     token = json['token'];
-    phoneNumber = json['phone_number'];
-    dateOfBirth = json['date_of_birth'];
-    university = json['university'];
-    province = json['province'];
+    user = json['user'] != null ? new User.fromJson(json['user']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['status'] = status;
-    data['message'] = message;
-    data['user_id'] = userId;
-    data['username'] = username;
-    data['email'] = email;
-    data['token'] = token;
-    data['phone_number'] = phoneNumber;
-    data['date_of_birth'] = dateOfBirth;
-    data['university'] = university;
-    data['province'] = province;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
+    data['message'] = this.message;
+    data['token'] = this.token;
+    if (this.user != null) {
+      data['user'] = this.user!.toJson();
+    }
+    return data;
+  }
+}
+
+class User {
+  int? id;
+  String? username;
+  String? email;
+  String? name;
+  List<String>? roles;
+
+  User({this.id, this.username, this.email, this.name, this.roles});
+
+  User.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    username = json['username'];
+    email = json['email'];
+    name = json['name'];
+    roles = json['roles'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['username'] = this.username;
+    data['email'] = this.email;
+    data['name'] = this.name;
+    data['roles'] = this.roles;
     return data;
   }
 }

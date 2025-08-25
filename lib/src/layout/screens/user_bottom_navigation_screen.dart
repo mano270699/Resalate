@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import '../../../core/base/dependency_injection.dart';
 import '../../../core/blocs/generic_cubit/generic_cubit.dart';
 import '../../../core/common/app_colors/app_colors.dart';
+import '../../../core/common/app_font_style/app_font_style_global.dart';
 import '../../../core/common/app_icon_svg.dart';
 import '../../../core/util/localization/app_localizations.dart';
-import '../../home/views/donation_list.dart';
+import '../../donation/view/donation_list.dart';
 import '../../home/views/home_screen.dart';
 import '../../my_mosque/views/my_mosque_screen.dart';
 import '../../profile/views/profile_screen.dart';
@@ -31,7 +31,7 @@ class _MainBottomNavigationScreenState
   @override
   Widget build(BuildContext context) {
     final viewModel = sl<MainScreenViewModel>();
-    List<Widget> screens = const [
+    List<Widget> screens = [
       HomePage(),
       DonationListScreen(),
       MyMosqueScreen(),
@@ -66,10 +66,14 @@ class _MainBottomNavigationScreenState
                     topRight: Radius.circular(8.r))),
             child: BottomNavigationBar(
                 selectedItemColor: AppColors.primaryColor,
-                selectedLabelStyle: const TextStyle(
-                    color: AppColors.primaryColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700),
+                selectedLabelStyle:
+                    AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
+                        .subTitle2
+                        .copyWith(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.primaryColor,
+                        ),
                 unselectedFontSize: 14,
                 type: BottomNavigationBarType.fixed,
                 currentIndex: indexState.data,
@@ -77,6 +81,14 @@ class _MainBottomNavigationScreenState
                   viewModel.isOpenFromHome = false;
                   viewModel.screenIndexChanged(index: value);
                 },
+                unselectedLabelStyle:
+                    AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
+                        .subTitle2
+                        .copyWith(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.gray,
+                        ),
                 items: List.generate(bottomBarItems.length, (index) {
                   return BottomNavigationBarItem(
                       label: bottomBarItems[index].title,

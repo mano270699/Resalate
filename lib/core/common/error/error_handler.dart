@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/widgets.dart';
 
 class ResponseError {
   static dynamic getMessage(error) {
@@ -13,12 +14,12 @@ class ResponseError {
         case DioException.connectionError:
           if (error.response?.data['errors'] != null) {
             final e = error.response?.data['errors'];
-            if (e is List) {
-              errorDescription = e[0]['message'];
-            } else {
-              errorDescription = 'Something went wrong, please try again';
-            }
+            debugPrint("Error_ Message::${e['message']}");
+            errorDescription = e['message'];
           } else {
+            debugPrint(
+                "Error_ Message Else::${error.response?.data.toString()}");
+
             errorDescription = 'Something went wrong, please try again';
           }
         case DioExceptionType.badCertificate:
@@ -39,14 +40,15 @@ class ResponseError {
           errorDescription = "Request to API server was cancelled";
           break;
         case DioExceptionType.connectionError:
-          errorDescription = "Something went wrong, please try again";
+          errorDescription =
+              "Something went wrong, please try again connectionError";
           break;
         case DioExceptionType.unknown:
-          errorDescription = "Something went wrong, please try again!";
+          errorDescription = "Something went wrong, please try again! unknown";
           break;
       }
     } else {
-      errorDescription = "Something went wrong, please try again!";
+      errorDescription = "Something went wrong, please try again!  kkksks";
     }
 
     return errorDescription;

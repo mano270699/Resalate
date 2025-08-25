@@ -384,7 +384,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.resalate.RunnerTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.resalate.app.RunnerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/mozare3_partner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/mozare3_partner";
@@ -398,7 +398,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.resalate.RunnerTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.resalate.app.RunnerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/mozare3_partner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/mozare3_partner";
@@ -412,7 +412,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.resalate.RunnerTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.resalate.app.RunnerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/mozare3_partner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/mozare3_partner";

@@ -1,21 +1,63 @@
 class RegisterModel {
   String? status;
   String? message;
-  int? userId;
+  String? token;
+  User? user;
 
-  RegisterModel({this.status, this.message, this.userId});
+  RegisterModel({
+    this.status,
+    this.message,
+    this.token,
+    this.user,
+  });
 
-  RegisterModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    message = json['message'];
-    userId = json['user_id'];
+  factory RegisterModel.fromJson(Map<String, dynamic> json) {
+    return RegisterModel(
+      status: json['status'],
+      message: json['message'],
+      token: json['token'],
+      user: json['user'] != null ? User.fromJson(json['user']) : null,
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['status'] = status;
-    data['message'] = message;
-    data['user_id'] = userId;
-    return data;
+    return {
+      'status': status,
+      'message': message,
+      'token': token,
+      if (user != null) 'user': user!.toJson(),
+    };
+  }
+}
+
+class User {
+  int? id;
+  String? username;
+  String? email;
+  String? phone;
+
+  User({
+    this.id,
+    this.username,
+    this.email,
+    this.phone,
+  });
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'],
+      username: json['username'],
+      email: json['email'],
+      phone: json['phone'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'username': username,
+      'email': email,
+      'phone': phone,
+    };
   }
 }

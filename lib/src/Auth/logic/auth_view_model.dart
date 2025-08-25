@@ -1,4 +1,5 @@
 // import 'package:dartz/dartz.dart';
+import 'dart:async';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 
@@ -8,7 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:intl/intl.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../../core/blocs/generic_cubit/generic_cubit.dart';
@@ -17,14 +18,10 @@ import '../../../core/common/models/failure.dart';
 import '../../../core/util/token_util.dart';
 import '../../../core/util/validation.dart';
 import '../../layout/screens/user_bottom_navigation_screen.dart';
-import '../data/models/drop_down_list_model.dart';
-// import '../data/models/error_model.dart';
 import '../data/models/login_model.dart';
 import '../data/models/register_model.dart';
+import '../data/models/reset_password_model.dart';
 import '../data/repository/auth_repository.dart';
-import '../login/view/login_screen.dart';
-
-// import '../../../core/blocs/generic_cubit/generic_cubit.dart';
 
 class AuthViewModel {
   AuthViewModel({required this.authRepositoryImpl});
@@ -34,14 +31,14 @@ class AuthViewModel {
   TextEditingController email = TextEditingController();
   TextEditingController name = TextEditingController();
   TextEditingController phone = TextEditingController();
-  TextEditingController userName = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
-  TextEditingController dateOfBirth = TextEditingController();
 
   GenericCubit<String> emailValidation = GenericCubit('');
   GenericCubit<String> emailFogetPasswordValidation = GenericCubit('');
-  GenericCubit<String> dateOfBirthValidation = GenericCubit('');
+  GenericCubit<String> resetPasswordValidation = GenericCubit('');
+  GenericCubit<String> confirmResetPasswordValidation = GenericCubit('');
+
   GenericCubit<String> nameValidation = GenericCubit('');
   GenericCubit<String> phoneNumberValidation = GenericCubit('');
   GenericCubit<String> userNameValidation = GenericCubit('');
@@ -49,6 +46,8 @@ class AuthViewModel {
   GenericCubit<String> confirmValidation = GenericCubit('');
 
   TextEditingController emailForgetPassword = TextEditingController();
+  TextEditingController resetPassword = TextEditingController();
+  TextEditingController confirmRestPassword = TextEditingController();
 
   TextEditingController userNameEmail = TextEditingController();
   TextEditingController loginPassword = TextEditingController();
@@ -58,18 +57,20 @@ class AuthViewModel {
 
   GenericCubit<RegisterModel> registerResponse = GenericCubit(RegisterModel());
   GenericCubit<LoginResponse> loginResponse = GenericCubit(LoginResponse());
-  GenericCubit<SocialLoginResponse> socialLoginResponse =
-      GenericCubit(SocialLoginResponse());
-
-  GenericCubit<DropDownListValuesModel> dropDownListRes =
-      GenericCubit(DropDownListValuesModel());
+  GenericCubit<LoginResponse> socialLoginResponse =
+      GenericCubit(LoginResponse());
 
   GenericCubit<DefaultModel> forgetPasswordRes = GenericCubit(DefaultModel());
+  GenericCubit<ResetPasswordResponse> resetPasswordRes =
+      GenericCubit(ResetPasswordResponse());
+  GenericCubit<DefaultModel> resendOtpRes = GenericCubit(DefaultModel());
+  TextEditingController controller = TextEditingController();
 
-  GenericCubit<String> selectedSelectedProvinceState = GenericCubit('');
-  String selectedProvince = '';
-  GenericCubit<String> selectedSelectedUniverstyState = GenericCubit('');
-  String selectedUniversty = '';
+  StreamController<ErrorAnimationType>? errorController;
+  final formKey = GlobalKey<FormState>();
+
+  GenericCubit<DefaultModel> sendOtpResponse = GenericCubit(DefaultModel());
+  GenericCubit<DefaultModel> confirmOtpResponse = GenericCubit(DefaultModel());
 
   Future<void> register({
     required BuildContext context,
@@ -77,45 +78,27 @@ class AuthViewModel {
     nameValidation.onUpdateData(Validation.fieldRequiredValidation(name.text));
     phoneNumberValidation
         .onUpdateData(Validation.fieldRequiredValidation(phone.text));
-    userNameValidation
-        .onUpdateData(Validation.fieldRequiredValidation(userName.text));
     emailValidation
         .onUpdateData(Validation.fieldRequiredValidation(email.text));
-    dateOfBirthValidation
-        .onUpdateData(Validation.fieldRequiredValidation(dateOfBirth.text));
+
     confirmValidation.onUpdateData(Validation.passwordConfirmationValidation(
         confirmPassword.text,
         passWord: password.text));
     passwordValidation
         .onUpdateData(Validation.passwordValidation(password.text));
-    selectedSelectedProvinceState
-        .onUpdateData(Validation.fieldRequiredValidation(selectedProvince));
-    selectedSelectedUniverstyState
-        .onUpdateData(Validation.fieldRequiredValidation(selectedUniversty));
-
-    print(selectedProvince);
-    print(selectedUniversty);
 
     if ((emailValidation.state.data.isEmpty) &&
         (confirmValidation.state.data.isEmpty) &&
-        (userNameValidation.state.data.isEmpty) &&
         (phoneNumberValidation.state.data.isEmpty) &&
-        (selectedSelectedProvinceState.state.data.isEmpty) &&
-        (selectedSelectedUniverstyState.state.data.isEmpty) &&
         (nameValidation.state.data.isEmpty) &&
-        (dateOfBirthValidation.state.data.isEmpty) &&
         (passwordValidation.state.data.isEmpty)) {
       try {
         registerResponse.onLoadingState();
         Either<String, RegisterModel> response =
             await authRepositoryImpl.register(
-                province: selectedProvince,
-                university: selectedUniversty,
-                dateOfBirth: dateOfBirth.text,
                 email: email.text,
                 phone: phone.text,
                 name: name.text,
-                userName: userName.text,
                 password: password.text,
                 confirmPassword: confirmPassword.text);
 
@@ -125,18 +108,15 @@ class AuthViewModel {
             registerResponse.onErrorState(Failure(failure));
           },
           (user) async {
+            await authRepositoryImpl.updateFCMToken();
+            TokenUtil.saveToken(user.token ?? "");
+            UserIdUtil.saveUserId(user.user!.id.toString());
             registerResponse.onUpdateData(user);
 
             password.clear();
             confirmPassword.clear();
             email.clear();
             name.clear();
-            userName.clear();
-            await Future.delayed(const Duration(seconds: 0))
-                .whenComplete(() => Navigator.pushNamed(
-                      context,
-                      LoginScreen.routeName,
-                    ));
           },
         );
       } on Failure catch (e, s) {
@@ -144,11 +124,6 @@ class AuthViewModel {
         registerResponse.onErrorState(Failure('$e'));
       }
     } else {
-      print(" province: ${selectedSelectedProvinceState.state.data}");
-      print(" university: ${selectedSelectedUniverstyState.state.data}");
-      print(" dateOfBirth: ${dateOfBirth.text}");
-      print(" email: ${email.text}");
-
       print("in Loading state");
 
       return;
@@ -180,8 +155,9 @@ class AuthViewModel {
             loginResponse.onErrorState(Failure(failure));
           },
           (user) async {
+            await authRepositoryImpl.updateFCMToken();
             TokenUtil.saveToken(user.token ?? "");
-            UserIdUtil.saveUserId(user.userId.toString());
+            UserIdUtil.saveUserId(user.user!.id.toString());
             userNameEmail.clear();
             loginPassword.clear();
             loginResponse.onUpdateData(user);
@@ -193,29 +169,8 @@ class AuthViewModel {
       }
     } else {
       print("in Loading state");
-      passwordValidation
-          .onUpdateData(Validation.passwordValidation(password.text));
+
       return;
-    }
-  }
-
-  Future<void> selectDate(BuildContext context) async {
-    DateTime currentDate = DateTime.now();
-    DateTime firstDate = DateTime(1900);
-    DateTime lastDate = DateTime(currentDate.year - 5); // Min age: 10 years
-
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: lastDate,
-      firstDate: firstDate,
-      lastDate: lastDate,
-      helpText: "Select Date of Birth",
-    );
-
-    if (pickedDate != null) {
-      // setState(() {
-      dateOfBirth.text = DateFormat('yyyy-MM-dd').format(pickedDate);
-      // });
     }
   }
 
@@ -260,7 +215,7 @@ class AuthViewModel {
       }
 
       // --- Continue with your existing logic ---
-      Either<ErrorModel, SocialLoginResponse> response =
+      Either<ErrorModel, LoginResponse> response =
           await authRepositoryImpl.googleLogin(
               googleToken:
                   googleAuth.idToken!); // Use ! because we checked for null
@@ -274,8 +229,8 @@ class AuthViewModel {
         },
         (user) async {
           socialLoginResponse.onUpdateData(user);
-          TokenUtil.saveToken(user.data!.token.toString());
-          UserIdUtil.saveUserId(user.data!.userId.toString());
+          TokenUtil.saveToken(user.token ?? "");
+          UserIdUtil.saveUserId(user.user!.id.toString());
 
           debugPrint(
               "UserID::${await UserIdUtil.getUserIdFromMemory()} token::${await TokenUtil.getTokenFromMemory()}");
@@ -283,22 +238,14 @@ class AuthViewModel {
           // Sign out *after* successful backend login and token storage
           await _googleSignIn.signOut();
 
-          if ((user.data!.dateOfBirth!.isNotEmpty &&
-              user.data!.phoneNumber!.isNotEmpty &&
-              user.data!.university!.isNotEmpty &&
-              user.data!.province!.isNotEmpty)) {
-            // Use mounted check for safety with async gaps
-            if (!context.mounted) return;
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              MainBottomNavigationScreen.routeName,
-              arguments: {"index": 0},
-              (route) => false,
-            );
-          } else {
-            if (!context.mounted) return;
-            Navigator.pop(context);
-          }
+          // Use mounted check for safety with async gaps
+          if (!context.mounted) return;
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            MainBottomNavigationScreen.routeName,
+            arguments: {"index": 0},
+            (route) => false,
+          );
         },
       );
 
@@ -332,69 +279,69 @@ class AuthViewModel {
     return digest.toString();
   }
 
-  signInWithApple(BuildContext context) async {
-    final rawNonce = generateNonce();
-    final nonce = sha256ofString(rawNonce);
-    final credential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-      webAuthenticationOptions: WebAuthenticationOptions(
-        clientId: 'de.lunaone.flutter.signinwithappleexample.service',
-        redirectUri: kIsWeb
-            ? Uri.parse("https://dentopia.app")
-            : Uri.parse(
-                'https://dentopia.app',
-              ),
-      ),
-      nonce: nonce,
-    );
+  // signInWithApple(BuildContext context) async {
+  //   final rawNonce = generateNonce();
+  //   final nonce = sha256ofString(rawNonce);
+  //   final credential = await SignInWithApple.getAppleIDCredential(
+  //     scopes: [
+  //       AppleIDAuthorizationScopes.email,
+  //       AppleIDAuthorizationScopes.fullName,
+  //     ],
+  //     webAuthenticationOptions: WebAuthenticationOptions(
+  //       clientId: 'de.lunaone.flutter.signinwithappleexample.service',
+  //       redirectUri: kIsWeb
+  //           ? Uri.parse("https://dentopia.app")
+  //           : Uri.parse(
+  //               'https://dentopia.app',
+  //             ),
+  //     ),
+  //     nonce: nonce,
+  //   );
 
-    debugPrint("$credential");
-    socialLoginResponse.onLoadingState();
-    Either<ErrorModel, SocialLoginResponse> response =
-        await authRepositoryImpl.appleLogin(
-            appleToken: credential.identityToken ??
-                ""); // Use ! because we checked for null
+  //   debugPrint("$credential");
+  //   socialLoginResponse.onLoadingState();
+  //   Either<ErrorModel, SocialLoginResponse> response =
+  //       await authRepositoryImpl.appleLogin(
+  //           appleToken: credential.identityToken ??
+  //               ""); // Use ! because we checked for null
 
-    response.fold(
-      (failure) {
-        debugPrint("failure.message ${failure.message}");
-        socialLoginResponse.onErrorState(Failure(failure.message));
-        // Maybe sign out on backend failure too? Depends on desired UX.
-        // await _googleSignIn.signOut();
-      },
-      (user) async {
-        socialLoginResponse.onUpdateData(user);
-        TokenUtil.saveToken(user.data!.token.toString());
-        UserIdUtil.saveUserId(user.data!.userId.toString());
+  //   response.fold(
+  //     (failure) {
+  //       debugPrint("failure.message ${failure.message}");
+  //       socialLoginResponse.onErrorState(Failure(failure.message));
+  //       // Maybe sign out on backend failure too? Depends on desired UX.
+  //       // await _googleSignIn.signOut();
+  //     },
+  //     (user) async {
+  //       socialLoginResponse.onUpdateData(user);
+  //       TokenUtil.saveToken(user.data!.token.toString());
+  //       UserIdUtil.saveUserId(user.data!.userId.toString());
 
-        debugPrint(
-            "UserID::${await UserIdUtil.getUserIdFromMemory()} token::${await TokenUtil.getTokenFromMemory()}");
+  //       debugPrint(
+  //           "UserID::${await UserIdUtil.getUserIdFromMemory()} token::${await TokenUtil.getTokenFromMemory()}");
 
-        await _googleSignIn.signOut();
+  //       await _googleSignIn.signOut();
 
-        if (!context.mounted) return;
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          MainBottomNavigationScreen.routeName,
-          arguments: {"index": 0},
-          (route) => false,
-        );
-      },
-    );
+  //       if (!context.mounted) return;
+  //       Navigator.pushNamedAndRemoveUntil(
+  //         context,
+  //         MainBottomNavigationScreen.routeName,
+  //         arguments: {"index": 0},
+  //         (route) => false,
+  //       );
+  //     },
+  //   );
 
-    // if (context.mounted) {
-    //   socialLogin(
-    //       context,
-    //       "apple",
-    //       "${credential.givenName ?? ""} ${credential.familyName ?? ""}",
-    //       credential.email ?? "",
-    //       credential.userIdentifier ?? "",
-    //       accessToken: credential.identityToken ?? "");
-    // }
-  }
+  //   // if (context.mounted) {
+  //   //   socialLogin(
+  //   //       context,
+  //   //       "apple",
+  //   //       "${credential.givenName ?? ""} ${credential.familyName ?? ""}",
+  //   //       credential.email ?? "",
+  //   //       credential.userIdentifier ?? "",
+  //   //       accessToken: credential.identityToken ?? "");
+  //   // }
+  // }
 
   Future<void> signOut() async {
     await _googleSignIn.signOut();
@@ -425,24 +372,117 @@ class AuthViewModel {
     }
   }
 
-  getAllDropDownList() async {
-    dropDownListRes.onLoadingState();
-
+  resendOtp({required String email}) async {
     try {
-      Either<String, DropDownListValuesModel> response =
-          await authRepositoryImpl.getDropDownListValues();
+      resendOtpRes.onLoadingState();
+      Either<String, DefaultModel> response =
+          await authRepositoryImpl.forgetPassword(email: email);
       debugPrint("Response::$response");
       response.fold(
         (failure) {
-          dropDownListRes.onErrorState(Failure(failure));
+          resendOtpRes.onErrorState(Failure(failure));
         },
         (res) async {
-          dropDownListRes.onUpdateData(res);
+          startTimer();
+          resendOtpRes.onUpdateData(res);
         },
       );
     } on Failure catch (e, s) {
       debugPrint("lllllllllllll:$s");
-      dropDownListRes.onErrorState(Failure('$e'));
+      resendOtpRes.onErrorState(Failure('$e'));
+    }
+  }
+
+  GenericCubit<String> timerCubit = GenericCubit("2:00");
+  GenericCubit<bool> showTimer = GenericCubit(false);
+
+  Timer? timer;
+  int _start = 120; // 2 minutes in seconds
+  String get timerText {
+    final minutes = (_start ~/ 60).toString().padLeft(1, '0');
+    final seconds = (_start % 60).toString().padLeft(2, '0');
+    return "$minutes:$seconds";
+  }
+
+  void startTimer() {
+    _start = 120;
+    timerCubit.onUpdateData(timerText);
+    showTimer.onUpdateData(true); // Show the timer
+
+    timer?.cancel();
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_start == 0) {
+        timer.cancel();
+        showTimer.onUpdateData(false); // Hide the timer when finished
+      } else {
+        _start--;
+        timerCubit.onUpdateData(timerText);
+      }
+    });
+  }
+
+  Future<void> confirmOtp({
+    required BuildContext context,
+    required String email,
+  }) async {
+    confirmOtpResponse.onLoadingState();
+    try {
+      Either<String, DefaultModel> response = await authRepositoryImpl
+          .verifyOtp(code: controller.text, email: email);
+
+      response.fold(
+        (failure) {
+          confirmOtpResponse.onErrorState(Failure(failure));
+        },
+        (user) async {
+          confirmOtpResponse.onUpdateData(user);
+        },
+      );
+    } on Failure catch (e, s) {
+      debugPrint("lllllllllllll:$s");
+      confirmOtpResponse.onErrorState(Failure('$e'));
+    }
+  }
+
+  Future<void> resetUserPassword({
+    required BuildContext context,
+    required String email,
+    required String code,
+  }) async {
+    confirmResetPasswordValidation.onUpdateData(
+        Validation.passwordConfirmationValidation(confirmRestPassword.text,
+            passWord: resetPassword.text));
+    resetPasswordValidation
+        .onUpdateData(Validation.passwordValidation(resetPassword.text));
+
+    if ((confirmResetPasswordValidation.state.data.isEmpty) &&
+        (resetPasswordValidation.state.data.isEmpty)) {
+      try {
+        resetPasswordRes.onLoadingState();
+        Either<String, ResetPasswordResponse> response =
+            await authRepositoryImpl.resetPassword(
+                email: email,
+                code: code,
+                password: resetPassword.text,
+                confirmPassword: confirmRestPassword.text);
+
+        response.fold(
+          (failure) {
+            debugPrint("failure::${failure}");
+            resetPasswordRes.onErrorState(Failure(failure));
+          },
+          (user) async {
+            resetPasswordRes.onUpdateData(user);
+          },
+        );
+      } on Failure catch (e, s) {
+        debugPrint("lllllllllllll:$s");
+        resetPasswordRes.onErrorState(Failure('$e'));
+      }
+    } else {
+      print("in Loading state");
+
+      return;
     }
   }
 }

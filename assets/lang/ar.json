@@ -1,6 +1,8 @@
 {
   "home": "الرئيسية",
   "donate": "فرص التبرع",
+  "lessons": "دروس",
+   "funerals": "الجنازات",
   "my_mosque": "مسجدي",
   "from_mosque_to_mosque": "من مسجد الي مسجد",
   "profile": "حسابي",
@@ -18,8 +20,24 @@
   "confirm_password":"تأكيد كلمة المرور ",
   "name":"الاسم",
   "email":"الايميل",
+  "phone":"رقم الهاتف",
   "already_have_account":"لدي حساب بالفعل",
-  "login":"تسجيل دخول"
+  "login":"تسجيل دخول",
+  "continue":"إستمر",
+  "verify":"تأكيد",
+  "change":"تغيير",
+  "paid":"مدفوع: ",
+  "total":"الإجمالي : ",
+  "resend_otp":"إعادة إرسال OTP",
+  "Forget_Password":"هل نسيت كلمة المرور؟",
+   "field_cannot_be_empty": "هذا الحقل لا يمكن تركه فارغاً",
+  "email_must_contain_at": "يجب أن يحتوي البريد الإلكتروني على @",
+  "email_must_contain_dot": "يجب أن يحتوي البريد الإلكتروني على .",
+  "password_validation": "كلمة المرور غير صحيحة. حاول مرة أخرى*",
+  "passwords_must_match": "تأكيد كلمة المرور لا يتطابق مع كلمة المرور. يرجى المحاولة مرة أخرى*",
+    "or": "أو",
+  "continue_with_google": "المتابعة باستخدام جوجل",
+  "continue_with_Apple": "المتابعة باستخدام آبل"
 
 
 

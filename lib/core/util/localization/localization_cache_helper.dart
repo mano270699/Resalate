@@ -8,7 +8,7 @@ class LocalizationCacheHelper {
     final box = sl<Box>();
     LocalizationModel x = box.get(
       'localization',
-      defaultValue: LocalizationModel(languageCode: 'en'),
+      defaultValue: LocalizationModel(languageCode: 'ar'),
     );
     return x.languageCode;
   }

@@ -3,26 +3,28 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/common/app_colors/app_colors.dart';
+import '../../data/models/home_data_model.dart';
 
 // ignore: must_be_immutable
 class CustomBannerSlider extends StatefulWidget {
-  CustomBannerSlider({
+  const CustomBannerSlider({
     super.key,
+    required this.images,
   });
-
+  final List<Gallery> images;
   @override
-  _CustomBannerSliderState createState() => _CustomBannerSliderState();
+  CustomBannerSliderState createState() => CustomBannerSliderState();
 }
 
-class _CustomBannerSliderState extends State<CustomBannerSlider> {
+class CustomBannerSliderState extends State<CustomBannerSlider> {
   int _currentIndex = 0;
-  List<String> list = [
-    "https://images.pexels.com/photos/337904/pexels-photo-337904.jpeg?cs=srgb&dl=pexels-pashal-337904.jpg&fm=jpg",
-    "https://storage.needpix.com/rsynced_images/al-aqsa-mosque-3911093_1280.jpg",
-    "https://st.depositphotos.com/1007905/1312/i/950/depositphotos_13129284-stock-photo-inside-manavgat-mosque.jpg"
-        "https://www.shutterstock.com/image-photo/dome-rock-alaqsa-mosque-600nw-1703179267.jpg",
-    "https://st2.depositphotos.com/1007905/6234/i/450/depositphotos_62346979-stock-photo-warm-mosque-interior.jpg"
-  ];
+  // List<String> list = [
+  //   "https://images.pexels.com/photos/337904/pexels-photo-337904.jpeg?cs=srgb&dl=pexels-pashal-337904.jpg&fm=jpg",
+  //   "https://storage.needpix.com/rsynced_images/al-aqsa-mosque-3911093_1280.jpg",
+  //   "https://st.depositphotos.com/1007905/1312/i/950/depositphotos_13129284-stock-photo-inside-manavgat-mosque.jpg"
+  //       "https://www.shutterstock.com/image-photo/dome-rock-alaqsa-mosque-600nw-1703179267.jpg",
+  //   "https://st2.depositphotos.com/1007905/6234/i/450/depositphotos_62346979-stock-photo-warm-mosque-interior.jpg"
+  // ];
   @override
   Widget build(BuildContext context) {
     return CarouselSlider(
@@ -43,7 +45,7 @@ class _CustomBannerSliderState extends State<CustomBannerSlider> {
               _currentIndex = index;
             });
           }),
-      items: list.map((i) {
+      items: widget.images.map((i) {
         return Builder(
           builder: (BuildContext context) {
             return Stack(
@@ -58,7 +60,7 @@ class _CustomBannerSliderState extends State<CustomBannerSlider> {
                               const BorderRadius.all(Radius.circular(6)),
                           child: FadeInImage.assetNetwork(
                             placeholder: 'assets/images/placeholder.jpg',
-                            image: i,
+                            image: i.url ?? "",
                             height: 200,
                             fit: BoxFit.fill,
                           ))),
@@ -69,8 +71,8 @@ class _CustomBannerSliderState extends State<CustomBannerSlider> {
                   left: 50,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: list.map((url) {
-                      int index = list.indexOf(url);
+                    children: widget.images.map((url) {
+                      int index = widget.images.indexOf(url);
                       return Container(
                         width: 7.0,
                         height: 7.0,

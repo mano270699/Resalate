@@ -31,7 +31,7 @@ class ComponentStyle {
       );
   static ButtonStyle get buttonStyle => ButtonStyle(
         fixedSize: MaterialStateProperty.all(
-          Size(323.w, 56.h),
+          Size(325.w, 45.h),
         ),
         shape: MaterialStateProperty.all(
           RoundedRectangleBorder(
