@@ -1,847 +1,32 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import '../../../core/common/app_colors/app_colors.dart';
-// import '../../../core/common/app_font_style/app_font_style_global.dart';
-// import '../../../core/shared_components/app_text/app_text.dart';
-// import '../../../core/shared_components/app_text/models/app_text_model.dart';
-// import '../../../core/util/localization/app_localizations.dart';
-// import 'widgets/donation_item.dart';
-// // import 'widgets/expantion_till.dart';
-// import 'widgets/funerals_item.dart';
-// import 'widgets/live_feed.dart';
-
-// class MyMosqueScreen extends StatefulWidget {
-//   const MyMosqueScreen({super.key});
-
-//   @override
-//   State<MyMosqueScreen> createState() => _MyMosqueScreenState();
-// }
-
-// class _MyMosqueScreenState extends State<MyMosqueScreen>
-//     with SingleTickerProviderStateMixin {
-//   late TabController _tabController;
-//   late ScrollController _scrollController;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _tabController = TabController(length: 4, vsync: this);
-//     _scrollController = ScrollController();
-//   }
-
-//   @override
-//   void dispose() {
-//     _tabController.dispose();
-//     _scrollController.dispose();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: CustomScrollView(
-//         controller: _scrollController,
-//         slivers: [
-//           SliverToBoxAdapter(
-//             child: Image.network(
-//               "https://images.pexels.com/photos/337904/pexels-photo-337904.jpeg",
-//               height: 250.h,
-//               fit: BoxFit.cover,
-//               width: MediaQuery.of(context).size.width,
-//             ),
-//           ),
-//           SliverPadding(
-//             padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 16.w),
-//             sliver: SliverToBoxAdapter(
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   AppText(
-//                     text: "Mosque Name",
-//                     model: AppTextModel(
-//                       style: AppFontStyleGlobal(
-//                               AppLocalizations.of(context)!.locale)
-//                           .headingMedium2
-//                           .copyWith(
-//                             fontWeight: FontWeight.w700,
-//                             color: AppColors.black,
-//                           ),
-//                     ),
-//                   ),
-//                   5.h.verticalSpace,
-//                   AppText(
-//                     text: "Mosque full location",
-//                     model: AppTextModel(
-//                       style: AppFontStyleGlobal(
-//                               AppLocalizations.of(context)!.locale)
-//                           .subTitle2
-//                           .copyWith(
-//                             fontWeight: FontWeight.w500,
-//                             color: AppColors.gray,
-//                           ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//           SliverPadding(
-//             padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 16.w),
-//             sliver: SliverToBoxAdapter(
-//               child: Row(
-//                 children: [
-//                   Expanded(
-//                     child: Column(
-//                       children: [
-//                         Container(
-//                           height: 60.h,
-//                           decoration: BoxDecoration(
-//                             borderRadius: BorderRadius.circular(10.r),
-//                             color: AppColors.white,
-//                           ),
-//                           child: Row(
-//                             mainAxisAlignment: MainAxisAlignment.center,
-//                             children: [
-//                               AppText(
-//                                 text: "Friday Sermon: ",
-//                                 model: AppTextModel(
-//                                   style: AppFontStyleGlobal(
-//                                           AppLocalizations.of(context)!.locale)
-//                                       .subTitle1
-//                                       .copyWith(
-//                                         fontSize: 14.sp,
-//                                         fontWeight: FontWeight.w500,
-//                                         color: AppColors.black,
-//                                       ),
-//                                 ),
-//                               ),
-//                               AppText(
-//                                 text: "No",
-//                                 model: AppTextModel(
-//                                   style: AppFontStyleGlobal(
-//                                           AppLocalizations.of(context)!.locale)
-//                                       .subTitle1
-//                                       .copyWith(
-//                                         fontSize: 14.sp,
-//                                         fontWeight: FontWeight.w500,
-//                                         color: AppColors.primaryColor,
-//                                       ),
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                         5.h.verticalSpace,
-//                         Container(
-//                           height: 60.h,
-//                           decoration: BoxDecoration(
-//                             borderRadius: BorderRadius.circular(10.r),
-//                             color: AppColors.white,
-//                           ),
-//                           child: Row(
-//                             mainAxisAlignment: MainAxisAlignment.center,
-//                             children: [
-//                               AppText(
-//                                 text: "Washing the deceased: ",
-//                                 model: AppTextModel(
-//                                   style: AppFontStyleGlobal(
-//                                           AppLocalizations.of(context)!.locale)
-//                                       .subTitle1
-//                                       .copyWith(
-//                                         fontSize: 12.sp,
-//                                         fontWeight: FontWeight.w500,
-//                                         color: AppColors.black,
-//                                       ),
-//                                 ),
-//                               ),
-//                               AppText(
-//                                 text: "No",
-//                                 model: AppTextModel(
-//                                   style: AppFontStyleGlobal(
-//                                           AppLocalizations.of(context)!.locale)
-//                                       .subTitle1
-//                                       .copyWith(
-//                                         fontSize: 14.sp,
-//                                         fontWeight: FontWeight.w500,
-//                                         color: AppColors.primaryColor,
-//                                       ),
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                         5.h.verticalSpace,
-//                         Container(
-//                           height: 60.h,
-//                           decoration: BoxDecoration(
-//                             borderRadius: BorderRadius.circular(10.r),
-//                             color: AppColors.white,
-//                           ),
-//                           child: Row(
-//                             mainAxisAlignment: MainAxisAlignment.center,
-//                             children: [
-//                               AppText(
-//                                 text: "Prayer for women: ",
-//                                 model: AppTextModel(
-//                                   style: AppFontStyleGlobal(
-//                                           AppLocalizations.of(context)!.locale)
-//                                       .subTitle1
-//                                       .copyWith(
-//                                         fontSize: 14.sp,
-//                                         fontWeight: FontWeight.w500,
-//                                         color: AppColors.black,
-//                                       ),
-//                                 ),
-//                               ),
-//                               AppText(
-//                                 text: "Yes",
-//                                 model: AppTextModel(
-//                                   style: AppFontStyleGlobal(
-//                                           AppLocalizations.of(context)!.locale)
-//                                       .subTitle1
-//                                       .copyWith(
-//                                         fontSize: 14.sp,
-//                                         fontWeight: FontWeight.w500,
-//                                         color: AppColors.primaryColor,
-//                                       ),
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                   5.w.horizontalSpace,
-//                   Expanded(
-//                     child: Container(
-//                       height: 190.h,
-//                       decoration: BoxDecoration(
-//                         borderRadius: BorderRadius.circular(10.r),
-//                         color: AppColors.white,
-//                       ),
-//                       child: Padding(
-//                         padding: EdgeInsets.symmetric(vertical: 20.h),
-//                         child: Column(
-//                           mainAxisAlignment: MainAxisAlignment.start,
-//                           children: [
-//                             AppText(
-//                               text: "Types of lessons: ",
-//                               model: AppTextModel(
-//                                 style: AppFontStyleGlobal(
-//                                         AppLocalizations.of(context)!.locale)
-//                                     .subTitle1
-//                                     .copyWith(
-//                                       fontSize: 14.sp,
-//                                       fontWeight: FontWeight.w500,
-//                                       color: AppColors.black,
-//                                     ),
-//                               ),
-//                             ),
-//                             5.h.verticalSpace,
-//                             AppText(
-//                               text: "-Lessons1",
-//                               model: AppTextModel(
-//                                 style: AppFontStyleGlobal(
-//                                         AppLocalizations.of(context)!.locale)
-//                                     .subTitle1
-//                                     .copyWith(
-//                                       fontSize: 14.sp,
-//                                       fontWeight: FontWeight.w500,
-//                                       color: AppColors.primaryColor,
-//                                     ),
-//                               ),
-//                             ),
-//                             5.h.verticalSpace,
-//                             AppText(
-//                               text: "-Lessons2",
-//                               model: AppTextModel(
-//                                 style: AppFontStyleGlobal(
-//                                         AppLocalizations.of(context)!.locale)
-//                                     .subTitle1
-//                                     .copyWith(
-//                                       fontSize: 14.sp,
-//                                       fontWeight: FontWeight.w500,
-//                                       color: AppColors.primaryColor,
-//                                     ),
-//                               ),
-//                             ),
-//                             AppText(
-//                               text: "-Lessons3",
-//                               model: AppTextModel(
-//                                 style: AppFontStyleGlobal(
-//                                         AppLocalizations.of(context)!.locale)
-//                                     .subTitle1
-//                                     .copyWith(
-//                                       fontSize: 14.sp,
-//                                       fontWeight: FontWeight.w500,
-//                                       color: AppColors.primaryColor,
-//                                     ),
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-//                     ),
-//                   )
-//                 ],
-//               ),
-//             ),
-//           ),
-//           SliverToBoxAdapter(
-//             child: Center(
-//               child: TabBar(
-//                 isScrollable: true,
-//                 controller: _tabController,
-//                 tabs: const [
-//                   Tab(text: "حالات التبرع"),
-//                   Tab(text: "الجنازات"),
-//                   Tab(text: "البث المباشر"),
-//                   Tab(text: "الدروس"),
-//                 ],
-//               ),
-//             ),
-//           ),
-//           SliverFillRemaining(
-//             child: TabBarView(
-//               controller: _tabController,
-//               children: [
-//                 Padding(
-//                   padding:
-//                       EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-//                   child: GridView.builder(
-//                     padding: EdgeInsets.zero,
-//                     itemCount: 10,
-//                     gridDelegate:
-//                         const SliverGridDelegateWithFixedCrossAxisCount(
-//                             childAspectRatio: 0.99,
-//                             crossAxisCount: 2,
-//                             crossAxisSpacing: 0,
-//                             mainAxisSpacing: 10),
-//                     itemBuilder: (BuildContext context, int index) {
-//                       return const DonationItem(
-//                           image:
-//                               "https://t4.ftcdn.net/jpg/05/73/50/41/360_F_573504195_W4F7DYZo34RU1mXDiS1L3jGtW1KJlJFJ.jpg",
-//                           title: "Donation title");
-//                     },
-//                   ),
-//                 ),
-//                 Padding(
-//                   padding:
-//                       EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-//                   child: GridView.builder(
-//                     padding: EdgeInsets.zero,
-//                     itemCount: 10,
-//                     gridDelegate:
-//                         const SliverGridDelegateWithFixedCrossAxisCount(
-//                             childAspectRatio: 0.99,
-//                             crossAxisCount: 2,
-//                             crossAxisSpacing: 0,
-//                             mainAxisSpacing: 10),
-//                     itemBuilder: (BuildContext context, int index) {
-//                       return const FuneralsItem(
-//                         title: "صلاة الظهر",
-//                         time: "12:00 pm",
-//                         subTitle:
-//                             "انا لله وأنا اليه راجعون توفي الي رحمة الله تعالي المرحوم..... والدفنة عقب صلاة الظهر",
-//                       );
-//                     },
-//                   ),
-//                 ),
-//                 Padding(
-//                   padding:
-//                       EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-//                   child: GridView.builder(
-//                     padding: EdgeInsets.zero,
-//                     itemCount: 10,
-//                     gridDelegate:
-//                         const SliverGridDelegateWithFixedCrossAxisCount(
-//                             childAspectRatio: 1.8,
-//                             crossAxisCount: 1,
-//                             crossAxisSpacing: 0,
-//                             mainAxisSpacing: 10),
-//                     itemBuilder: (BuildContext context, int index) {
-//                       return const LiveFeedItem(
-//                         title: "تبرع لبناء جامع",
-//                         image:
-//                             "https://cdn.pixabay.com/photo/2021/06/26/18/11/live-6366830_1280.png",
-//                         desc: "بث مباشر لجمع تبرعات كذا كذا",
-//                       );
-//                     },
-//                   ),
-//                 ),
-//                 Padding(
-//                   padding: EdgeInsets.symmetric(horizontal: 20.w),
-//                   child: SingleChildScrollView(
-//                     child: Column(
-//                       children: [
-//                         10.h.verticalSpace,
-//                         Card(
-//                           elevation: 0,
-//                           shape: RoundedRectangleBorder(
-//                             borderRadius: BorderRadius.circular(8),
-//                           ),
-//                           clipBehavior: Clip.antiAlias,
-//                           margin: EdgeInsets.zero,
-//                           child: ExpansionTile(
-//                             childrenPadding: EdgeInsets.symmetric(
-//                                 horizontal: 20.w, vertical: 10.h),
-//                             collapsedBackgroundColor: Colors.white,
-//                             collapsedShape: const Border(),
-//                             shape: const Border(),
-//                             backgroundColor: Colors.white,
-//                             title: AppText(
-//                               text: "●	حلقات تحفيظ القرأن الكريم للصغار ",
-//                               model: AppTextModel(
-//                                   style: AppFontStyleGlobal(
-//                                           AppLocalizations.of(context)!.locale)
-//                                       .bodyMedium2
-//                                       .copyWith(
-//                                         fontWeight: FontWeight.w600,
-//                                         fontSize: 18,
-//                                         color: AppColors.primaryColor,
-//                                       )),
-//                             ),
-//                             children: [
-//                               AppText(
-//                                 text:
-//                                     "المواعيد من 12/7 الي 20/8 من الساعه 6 ص الي 10 ص من كل يوم -",
-//                                 model: AppTextModel(
-//                                     style: AppFontStyleGlobal(
-//                                             AppLocalizations.of(context)!
-//                                                 .locale)
-//                                         .subTitle1
-//                                         .copyWith(
-//                                           fontWeight: FontWeight.w600,
-//                                           color: AppColors.scondaryColor,
-//                                         )),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                         20.h.verticalSpace,
-//                         Card(
-//                           elevation: 0,
-//                           shape: RoundedRectangleBorder(
-//                             borderRadius: BorderRadius.circular(8),
-//                           ),
-//                           clipBehavior: Clip.antiAlias,
-//                           margin: EdgeInsets.zero,
-//                           child: ExpansionTile(
-//                             expandedCrossAxisAlignment:
-//                                 CrossAxisAlignment.start,
-//                             collapsedBackgroundColor: Colors.white,
-//                             collapsedShape: const Border(),
-//                             shape: const Border(),
-//                             backgroundColor: Colors.white,
-//                             title: AppText(
-//                               text: "●	محاضرات عن الاسلام ",
-//                               model: AppTextModel(
-//                                   style: AppFontStyleGlobal(
-//                                           AppLocalizations.of(context)!.locale)
-//                                       .bodyMedium2
-//                                       .copyWith(
-//                                         fontWeight: FontWeight.w600,
-//                                         fontSize: 18,
-//                                         color: AppColors.primaryColor,
-//                                       )),
-//                             ),
-//                             childrenPadding: EdgeInsets.symmetric(
-//                                 horizontal: 20.w, vertical: 10.h),
-//                             children: [
-//                               AppText(
-//                                 text: "رجال",
-//                                 model: AppTextModel(
-//                                     style: AppFontStyleGlobal(
-//                                             AppLocalizations.of(context)!
-//                                                 .locale)
-//                                         .bodyMedium2
-//                                         .copyWith(
-//                                           fontWeight: FontWeight.w600,
-//                                           fontSize: 18,
-//                                           color: AppColors.primaryColor,
-//                                         )),
-//                               ),
-//                               10.h.verticalSpace,
-//                               AppText(
-//                                 text:
-//                                     "المواعيد من 12/7 الي 20/8 من الساعه 6 ص الي 10 ص من كل يوم -",
-//                                 model: AppTextModel(
-//                                     style: AppFontStyleGlobal(
-//                                             AppLocalizations.of(context)!
-//                                                 .locale)
-//                                         .subTitle1
-//                                         .copyWith(
-//                                           fontWeight: FontWeight.w600,
-//                                           color: AppColors.scondaryColor,
-//                                         )),
-//                               ),
-//                               20.h.verticalSpace,
-//                               AppText(
-//                                 text: "نساء",
-//                                 model: AppTextModel(
-//                                     style: AppFontStyleGlobal(
-//                                             AppLocalizations.of(context)!
-//                                                 .locale)
-//                                         .bodyMedium2
-//                                         .copyWith(
-//                                           fontWeight: FontWeight.w600,
-//                                           fontSize: 18,
-//                                           color: AppColors.primaryColor,
-//                                         )),
-//                               ),
-//                               10.h.verticalSpace,
-//                               AppText(
-//                                 text:
-//                                     "المواعيد من 12/7 الي 20/8 من الساعه 6 ص الي 10 ص من كل يوم -",
-//                                 model: AppTextModel(
-//                                     style: AppFontStyleGlobal(
-//                                             AppLocalizations.of(context)!
-//                                                 .locale)
-//                                         .subTitle1
-//                                         .copyWith(
-//                                           fontWeight: FontWeight.w600,
-//                                           color: AppColors.scondaryColor,
-//                                         )),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                         20.h.verticalSpace,
-//                         Card(
-//                           elevation: 0,
-//                           shape: RoundedRectangleBorder(
-//                             borderRadius: BorderRadius.circular(8),
-//                           ),
-//                           clipBehavior: Clip.antiAlias,
-//                           margin: EdgeInsets.zero,
-//                           child: ExpansionTile(
-//                             expandedCrossAxisAlignment:
-//                                 CrossAxisAlignment.start,
-//                             collapsedBackgroundColor: Colors.white,
-//                             collapsedShape: const Border(),
-//                             shape: const Border(),
-//                             backgroundColor: Colors.white,
-//                             title: AppText(
-//                               text: "●	دروس تعليميه ",
-//                               model: AppTextModel(
-//                                   style: AppFontStyleGlobal(
-//                                           AppLocalizations.of(context)!.locale)
-//                                       .bodyMedium2
-//                                       .copyWith(
-//                                         fontWeight: FontWeight.w600,
-//                                         fontSize: 18,
-//                                         color: AppColors.primaryColor,
-//                                       )),
-//                             ),
-//                             childrenPadding: EdgeInsets.symmetric(
-//                                 horizontal: 20.w, vertical: 10.h),
-//                             children: [
-//                               AppText(
-//                                 text: "عربي ",
-//                                 model: AppTextModel(
-//                                     style: AppFontStyleGlobal(
-//                                             AppLocalizations.of(context)!
-//                                                 .locale)
-//                                         .bodyMedium2
-//                                         .copyWith(
-//                                           fontWeight: FontWeight.w600,
-//                                           fontSize: 18,
-//                                           color: AppColors.primaryColor,
-//                                         )),
-//                               ),
-//                               10.h.verticalSpace,
-//                               AppText(
-//                                 text:
-//                                     "المواعيد من 12/7 الي 20/8 من الساعه 6 ص الي 10 ص من كل يوم -",
-//                                 model: AppTextModel(
-//                                     style: AppFontStyleGlobal(
-//                                             AppLocalizations.of(context)!
-//                                                 .locale)
-//                                         .subTitle1
-//                                         .copyWith(
-//                                           fontWeight: FontWeight.w600,
-//                                           color: AppColors.scondaryColor,
-//                                         )),
-//                               ),
-//                               20.h.verticalSpace,
-//                               AppText(
-//                                 text: "سويدي ",
-//                                 model: AppTextModel(
-//                                     style: AppFontStyleGlobal(
-//                                             AppLocalizations.of(context)!
-//                                                 .locale)
-//                                         .bodyMedium2
-//                                         .copyWith(
-//                                           fontWeight: FontWeight.w600,
-//                                           fontSize: 18,
-//                                           color: AppColors.primaryColor,
-//                                         )),
-//                               ),
-//                               10.h.verticalSpace,
-//                               AppText(
-//                                 text:
-//                                     "المواعيد من 12/7 الي 20/8 من الساعه 6 ص الي 10 ص من كل يوم -",
-//                                 model: AppTextModel(
-//                                     style: AppFontStyleGlobal(
-//                                             AppLocalizations.of(context)!
-//                                                 .locale)
-//                                         .subTitle1
-//                                         .copyWith(
-//                                           fontWeight: FontWeight.w600,
-//                                           color: AppColors.scondaryColor,
-//                                         )),
-//                               ),
-//                               20.h.verticalSpace,
-//                               AppText(
-//                                 text: "أخري",
-//                                 model: AppTextModel(
-//                                     style: AppFontStyleGlobal(
-//                                             AppLocalizations.of(context)!
-//                                                 .locale)
-//                                         .bodyMedium2
-//                                         .copyWith(
-//                                           fontWeight: FontWeight.w600,
-//                                           fontSize: 18,
-//                                           color: AppColors.primaryColor,
-//                                         )),
-//                               ),
-//                               10.h.verticalSpace,
-//                               AppText(
-//                                 text:
-//                                     "المواعيد من 12/7 الي 20/8 من الساعه 6 ص الي 10 ص من كل يوم -",
-//                                 model: AppTextModel(
-//                                     style: AppFontStyleGlobal(
-//                                             AppLocalizations.of(context)!
-//                                                 .locale)
-//                                         .subTitle1
-//                                         .copyWith(
-//                                           fontWeight: FontWeight.w600,
-//                                           color: AppColors.scondaryColor,
-//                                         )),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                         20.h.verticalSpace,
-//                         Card(
-//                           elevation: 0,
-//                           shape: RoundedRectangleBorder(
-//                             borderRadius: BorderRadius.circular(8),
-//                           ),
-//                           clipBehavior: Clip.antiAlias,
-//                           margin: EdgeInsets.zero,
-//                           child: ExpansionTile(
-//                             expandedCrossAxisAlignment:
-//                                 CrossAxisAlignment.start,
-//                             collapsedBackgroundColor: Colors.white,
-//                             collapsedShape: const Border(),
-//                             shape: const Border(),
-//                             backgroundColor: Colors.white,
-//                             title: AppText(
-//                               text: "●	المسابقات الثقافيه والموسميه ",
-//                               model: AppTextModel(
-//                                   style: AppFontStyleGlobal(
-//                                           AppLocalizations.of(context)!.locale)
-//                                       .bodyMedium2
-//                                       .copyWith(
-//                                         fontWeight: FontWeight.w600,
-//                                         fontSize: 18,
-//                                         color: AppColors.primaryColor,
-//                                       )),
-//                             ),
-//                             childrenPadding: EdgeInsets.symmetric(
-//                                 horizontal: 20.w, vertical: 10.h),
-//                             children: [
-//                               AppText(
-//                                 text:
-//                                     "المواعيد من 12/7 الي 20/8 من الساعه 6 ص الي 10 ص من كل يوم -",
-//                                 model: AppTextModel(
-//                                     style: AppFontStyleGlobal(
-//                                             AppLocalizations.of(context)!
-//                                                 .locale)
-//                                         .subTitle1
-//                                         .copyWith(
-//                                           fontWeight: FontWeight.w600,
-//                                           color: AppColors.scondaryColor,
-//                                         )),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                         20.h.verticalSpace,
-//                         Card(
-//                           elevation: 0,
-//                           shape: RoundedRectangleBorder(
-//                             borderRadius: BorderRadius.circular(8),
-//                           ),
-//                           clipBehavior: Clip.antiAlias,
-//                           margin: EdgeInsets.zero,
-//                           child: ExpansionTile(
-//                             expandedCrossAxisAlignment:
-//                                 CrossAxisAlignment.start,
-//                             collapsedBackgroundColor: Colors.white,
-//                             collapsedShape: const Border(),
-//                             shape: const Border(),
-//                             backgroundColor: Colors.white,
-//                             title: AppText(
-//                               text: "●	المخيم الصيفي ",
-//                               model: AppTextModel(
-//                                   style: AppFontStyleGlobal(
-//                                           AppLocalizations.of(context)!.locale)
-//                                       .bodyMedium2
-//                                       .copyWith(
-//                                         fontWeight: FontWeight.w600,
-//                                         fontSize: 18,
-//                                         color: AppColors.primaryColor,
-//                                       )),
-//                             ),
-//                             childrenPadding: EdgeInsets.symmetric(
-//                                 horizontal: 20.w, vertical: 10.h),
-//                             children: [
-//                               AppText(
-//                                 text:
-//                                     "المواعيد من 12/7 الي 20/8 من الساعه 6 ص الي 10 ص من كل يوم -",
-//                                 model: AppTextModel(
-//                                     style: AppFontStyleGlobal(
-//                                             AppLocalizations.of(context)!
-//                                                 .locale)
-//                                         .subTitle1
-//                                         .copyWith(
-//                                           fontWeight: FontWeight.w600,
-//                                           color: AppColors.scondaryColor,
-//                                         )),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                         20.h.verticalSpace,
-//                         Card(
-//                           elevation: 0,
-//                           shape: RoundedRectangleBorder(
-//                             borderRadius: BorderRadius.circular(8),
-//                           ),
-//                           clipBehavior: Clip.antiAlias,
-//                           margin: EdgeInsets.zero,
-//                           child: ExpansionTile(
-//                             expandedCrossAxisAlignment:
-//                                 CrossAxisAlignment.start,
-//                             collapsedBackgroundColor: Colors.white,
-//                             collapsedShape: const Border(),
-//                             shape: const Border(),
-//                             backgroundColor: Colors.white,
-//                             title: AppText(
-//                               text: "●	دوره تعليميه ",
-//                               model: AppTextModel(
-//                                   style: AppFontStyleGlobal(
-//                                           AppLocalizations.of(context)!.locale)
-//                                       .bodyMedium2
-//                                       .copyWith(
-//                                         fontWeight: FontWeight.w600,
-//                                         fontSize: 18,
-//                                         color: AppColors.primaryColor,
-//                                       )),
-//                             ),
-//                             childrenPadding: EdgeInsets.symmetric(
-//                                 horizontal: 20.w, vertical: 10.h),
-//                             children: [
-//                               AppText(
-//                                 text:
-//                                     "المواعيد من 12/7 الي 20/8 من الساعه 6 ص الي 10 ص من كل يوم -",
-//                                 model: AppTextModel(
-//                                     style: AppFontStyleGlobal(
-//                                             AppLocalizations.of(context)!
-//                                                 .locale)
-//                                         .subTitle1
-//                                         .copyWith(
-//                                           fontWeight: FontWeight.w600,
-//                                           color: AppColors.scondaryColor,
-//                                         )),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-
-//   Widget _buildInfoCard(String label, String value) {
-//     return Container(
-//       height: 60.h,
-//       decoration: BoxDecoration(
-//         borderRadius: BorderRadius.circular(10.r),
-//         color: AppColors.white,
-//       ),
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           AppText(
-//             text: label,
-//             model: AppTextModel(
-//               style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-//                   .subTitle1
-//                   .copyWith(
-//                     fontSize: 14.sp,
-//                     fontWeight: FontWeight.w500,
-//                     color: AppColors.black,
-//                   ),
-//             ),
-//           ),
-//           AppText(
-//             text: value,
-//             model: AppTextModel(
-//               style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-//                   .subTitle1
-//                   .copyWith(
-//                     fontSize: 14.sp,
-//                     fontWeight: FontWeight.w500,
-//                     color: AppColors.primaryColor,
-//                   ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-
-//   Widget _buildGrid(int crossAxisCount, Widget item) {
-//     return GridView.builder(
-//       padding: EdgeInsets.zero,
-//       itemCount: 10,
-//       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//         childAspectRatio: 0.99,
-//         crossAxisCount: crossAxisCount,
-//         crossAxisSpacing: 0,
-//         mainAxisSpacing: 10,
-//       ),
-//       itemBuilder: (BuildContext context, int index) {
-//         return item;
-//       },
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:resalate/core/blocs/generic_cubit/generic_cubit.dart';
+import 'package:resalate/core/util/token_util.dart';
+import 'package:resalate/src/my_mosque/logic/masjed_view_model.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import '../../../core/base/dependency_injection.dart';
 import '../../../core/common/app_colors/app_colors.dart';
 import '../../../core/common/app_font_style/app_font_style_global.dart';
 import '../../../core/shared_components/app_text/app_text.dart';
 import '../../../core/shared_components/app_text/models/app_text_model.dart';
 import '../../../core/util/localization/app_localizations.dart';
+import '../data/models/masjed_details_model.dart';
+import 'widgets/custom_expantion_tile.dart';
 import 'widgets/donation_item.dart';
+import 'widgets/from_masjed_to_masjed.dart';
 import 'widgets/funerals_item.dart';
+import 'widgets/lesson_item.dart';
 import 'widgets/live_feed.dart';
+import 'widgets/memorization_date.dart';
+import 'widgets/payment_section_option.dart';
+import 'widgets/social_media_item.dart';
 
 class MyMosqueScreen extends StatefulWidget {
-  const MyMosqueScreen({super.key});
+  const MyMosqueScreen({super.key, required this.id});
+  final int id;
+  static const String routeName = 'MyMosqueScreen';
 
   @override
   State<MyMosqueScreen> createState() => _MyMosqueScreenState();
@@ -850,11 +35,13 @@ class MyMosqueScreen extends StatefulWidget {
 class _MyMosqueScreenState extends State<MyMosqueScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final viewModel = sl<MasjedViewModel>();
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    viewModel.getMasjedsDetails(id: widget.id);
+    _tabController = TabController(length: 5, vsync: this);
   }
 
   @override
@@ -865,164 +52,474 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            /// Image + flexible app bar
-            SliverAppBar(
-              pinned: true,
-              expandedHeight: 250.h,
-              backgroundColor: Colors.white,
-              flexibleSpace: FlexibleSpaceBar(
-                background: Image.network(
-                  "https://images.pexels.com/photos/337904/pexels-photo-337904.jpeg",
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                ),
-              ),
-            ),
+    return Directionality(
+      textDirection: AppLocalizations.of(context)!.locale.languageCode == 'en'
+          ? TextDirection.ltr
+          : TextDirection.rtl,
+      child: Scaffold(
+        body: BlocBuilder<GenericCubit<MasjidDetailsResponse>,
+            GenericCubitState<MasjidDetailsResponse>>(
+          bloc: viewModel.masjedDetailsRes,
+          builder: (context, state) {
+            return Skeletonizer(
+              enabled: state is GenericLoadingState,
+              child: NestedScrollView(
+                headerSliverBuilder: (context, innerBoxIsScrolled) {
+                  return [
+                    SliverAppBar(
+                      pinned: true,
+                      expandedHeight: 250,
+                      backgroundColor: Colors.white,
+                      automaticallyImplyLeading: false,
+                      flexibleSpace: LayoutBuilder(
+                        builder: (context, constraints) {
+                          final collapsed =
+                              constraints.maxHeight <= kToolbarHeight + 50;
 
-            /// Mosque name + location
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.all(16.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AppText(
-                      text: "Mosque Name",
-                      model: AppTextModel(
-                        style: AppFontStyleGlobal(
-                                AppLocalizations.of(context)!.locale)
-                            .headingMedium2
-                            .copyWith(
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.black,
-                            ),
+                          return Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              // Background image
+                              Image.network(
+                                "${state.data.masjid?.cover}",
+                                fit: BoxFit.cover,
+                              ),
+
+                              FlexibleSpaceBar(
+                                collapseMode: CollapseMode.pin,
+                                title: collapsed
+                                    ? AppText(
+                                        text: "${state.data.masjid?.name}",
+                                        model: AppTextModel(
+                                          style: AppFontStyleGlobal(
+                                                  AppLocalizations.of(context)!
+                                                      .locale)
+                                              .headingMedium2
+                                              .copyWith(
+                                                fontWeight: FontWeight.w700,
+                                                color: AppColors.white,
+                                              ),
+                                        ),
+                                      )
+                                    : null,
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                      // Default back button (only visible when collapsed)
+
+                      leadingWidth: 40.w,
+                      leading: Builder(
+                        builder: (context) {
+                          return LayoutBuilder(
+                            builder: (context, constraints) {
+                              final collapsed =
+                                  constraints.maxHeight <= kToolbarHeight + 50;
+                              return collapsed
+                                  ? Padding(
+                                      padding: const EdgeInsetsDirectional.only(
+                                          start: 5),
+                                      child: CircleAvatar(
+                                        backgroundColor: Colors.white,
+                                        radius: 15,
+                                        child: IconButton(
+                                          color: AppColors.white,
+                                          icon: const Icon(Icons.arrow_back,
+                                              color: Colors.black),
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                        ),
+                                      ),
+                                    )
+                                  : const SizedBox.shrink();
+                            },
+                          );
+                        },
                       ),
                     ),
-                    5.h.verticalSpace,
-                    AppText(
-                      text: "Mosque full location",
-                      model: AppTextModel(
-                        style: AppFontStyleGlobal(
-                                AppLocalizations.of(context)!.locale)
-                            .subTitle2
-                            .copyWith(
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.gray,
+
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: EdgeInsets.all(16.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 20,
+                                      backgroundImage: NetworkImage(
+                                          "${state.data.masjid?.image}"),
+                                    ),
+                                    SizedBox(width: 8.w),
+                                    AppText(
+                                      text: "${state.data.masjid?.name}",
+                                      model: AppTextModel(
+                                        style: AppFontStyleGlobal(
+                                                AppLocalizations.of(context)!
+                                                    .locale)
+                                            .headingMedium2
+                                            .copyWith(
+                                              fontWeight: FontWeight.w700,
+                                              color: AppColors.black,
+                                            ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                FutureBuilder(
+                                    future: UserIdUtil.getUserIdFromMemory(),
+                                    builder: (context, asyncSnapshot) {
+                                      final isUser = asyncSnapshot.data;
+                                      return isUser?.isNotEmpty ?? false
+                                          ? BlocBuilder<GenericCubit<bool>,
+                                              GenericCubitState<bool>>(
+                                              bloc:
+                                                  viewModel.isUserFollowMasjed,
+                                              builder: (context, isFollow) {
+                                                return GestureDetector(
+                                                  onTap: () {
+                                                    if (isFollow.data) {
+                                                      viewModel.unfollowMasjed(
+                                                          masjedId: state.data
+                                                                  .masjid?.id ??
+                                                              0);
+                                                    } else {
+                                                      viewModel.followMasjed(
+                                                          masjedId: state.data
+                                                                  .masjid?.id ??
+                                                              0);
+                                                    }
+                                                  },
+                                                  child: Container(
+                                                    height: 35.h,
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 16.w),
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(16.r),
+                                                        color: AppColors.error),
+                                                    child: Center(
+                                                      child: AppText(
+                                                        text: isFollow.data
+                                                            ? "Unfollow"
+                                                            : "Follow",
+                                                        model: AppTextModel(
+                                                          style: AppFontStyleGlobal(
+                                                                  AppLocalizations.of(
+                                                                          context)!
+                                                                      .locale)
+                                                              .subTitle2
+                                                              .copyWith(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: AppColors
+                                                                    .white,
+                                                              ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            )
+                                          : SizedBox();
+                                    })
+                              ],
                             ),
+                            5.h.verticalSpace,
+                            AppText(
+                              text:
+                                  "${state.data.masjid?.city}, ${state.data.masjid?.province}, ${state.data.masjid?.country}",
+                              model: AppTextModel(
+                                style: AppFontStyleGlobal(
+                                        AppLocalizations.of(context)!.locale)
+                                    .subTitle2
+                                    .copyWith(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.gray,
+                                    ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
+                    SliverToBoxAdapter(
+                      child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                          ),
+                          child: SocialMediaItem(
+                            socialMedia:
+                                state.data.masjid?.socialMedia ?? SocialMedia(),
+                          )),
+                    ),
+                    SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: 20.h,
+                      ),
+                    ),
 
-            /// Services cards
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-                child: Row(
-                  children: [
-                    Expanded(child: _buildInfoCard("Friday Sermon: ", "No")),
-                    10.w.horizontalSpace,
-                    Expanded(
-                        child: _buildInfoCard("Prayer for women: ", "Yes")),
-                  ],
-                ),
-              ),
-            ),
+                    /// Services cards
+                    SliverToBoxAdapter(
+                        child: CustomExpansionTile(
+                      content: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                          ),
+                          child: MemorizationLessonDates(
+                            memorizationDates:
+                                state.data.masjid?.memorizationDates ?? [],
+                          )),
+                      title: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                        ),
+                        child: AppText(
+                          text: "Memorization & Lesson Dates",
+                          model: AppTextModel(
+                            style: AppFontStyleGlobal(
+                                    AppLocalizations.of(context)!.locale)
+                                .subTitle2
+                                .copyWith(
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.scondaryColor,
+                                ),
+                          ),
+                        ),
+                      ),
+                      animationDuration: Duration(milliseconds: 200),
+                      initiallyExpanded: false,
+                    )),
+                    SliverToBoxAdapter(
+                        child: CustomExpansionTile(
+                      content: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                        ),
+                        child: GridView.count(
+                          shrinkWrap: true,
+                          physics:
+                              NeverScrollableScrollPhysics(), // let parent scroll
+                          crossAxisCount: 2, // 2 per row
+                          mainAxisSpacing: 10.h,
+                          crossAxisSpacing: 10.w,
+                          childAspectRatio: 3, // adjust height/width
+                          children: state.data.masjid?.services
+                                  ?.map((service) => _buildInfoCard(
+                                        " ${service.label}",
+                                        "",
+                                      ))
+                                  .toList() ??
+                              [],
+                        ),
+                      ),
+                      title: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                        ),
+                        child: AppText(
+                          text: "Services",
+                          model: AppTextModel(
+                            style: AppFontStyleGlobal(
+                                    AppLocalizations.of(context)!.locale)
+                                .subTitle2
+                                .copyWith(
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.scondaryColor,
+                                ),
+                          ),
+                        ),
+                      ),
+                      animationDuration: Duration(milliseconds: 200),
+                      initiallyExpanded: false,
+                    )),
+                    SliverToBoxAdapter(
+                        child: CustomExpansionTile(
+                      content: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                          ),
+                          child: PaymentOptionsSection(
+                            paymentInfo:
+                                state.data.masjid?.paymentInfo ?? PaymentInfo(),
+                          )),
+                      title: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                        ),
+                        child: AppText(
+                          text: "Payment Information",
+                          model: AppTextModel(
+                            style: AppFontStyleGlobal(
+                                    AppLocalizations.of(context)!.locale)
+                                .subTitle2
+                                .copyWith(
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.scondaryColor,
+                                ),
+                          ),
+                        ),
+                      ),
+                      animationDuration: Duration(milliseconds: 200),
+                      initiallyExpanded: false,
+                    )),
 
-            /// Sticky TabBar
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: _SliverTabBarDelegate(
-                TabBar(
+                    SliverToBoxAdapter(
+                        child: CustomExpansionTile(
+                      content: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 16.w, vertical: 16.h),
+                        child: SizedBox(
+                          height: 200.h,
+                          child: BlocBuilder<GenericCubit<WebViewController>,
+                              GenericCubitState<WebViewController>>(
+                            bloc: viewModel.controllerCubit,
+                            builder: (context, state) {
+                              return WebViewWidget(controller: state.data);
+                            },
+                          ),
+                        ),
+                      ),
+                      title: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                        ),
+                        child: AppText(
+                          text: "Location",
+                          model: AppTextModel(
+                            style: AppFontStyleGlobal(
+                                    AppLocalizations.of(context)!.locale)
+                                .subTitle2
+                                .copyWith(
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.scondaryColor,
+                                ),
+                          ),
+                        ),
+                      ),
+                      animationDuration: Duration(milliseconds: 200),
+                      initiallyExpanded: false,
+                    )),
+                    SliverPersistentHeader(
+                      pinned: true,
+                      delegate: _SliverTabBarDelegate(
+                        TabBar(
+                          controller: _tabController,
+                          isScrollable: true,
+                          indicatorColor: AppColors.primaryColor,
+                          labelColor: AppColors.primaryColor,
+                          unselectedLabelColor: Colors.grey,
+                          dividerColor: Colors.transparent,
+                          indicatorSize: TabBarIndicatorSize.label,
+                          tabAlignment: TabAlignment.center,
+                          labelStyle: AppFontStyleGlobal(
+                                  AppLocalizations.of(context)!.locale)
+                              .subTitle1
+                              .copyWith(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14.sp,
+                                color: AppColors.scondaryColor,
+                              ),
+                          tabs: const [
+                            Tab(text: "حالات التبرع"),
+                            Tab(text: "من مسجد لمسجد"),
+                            Tab(text: "الجنازات"),
+                            Tab(text: "البث المباشر"),
+                            Tab(text: "الدروس"),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ];
+                },
+                body: TabBarView(
                   controller: _tabController,
-                  isScrollable: true,
-                  indicatorColor: AppColors.primaryColor,
-                  labelColor: AppColors.primaryColor,
-                  unselectedLabelColor: Colors.grey,
-                  tabs: const [
-                    Tab(text: "حالات التبرع"),
-                    Tab(text: "الجنازات"),
-                    Tab(text: "البث المباشر"),
-                    Tab(text: "الدروس"),
+                  children: [
+                    GridView.builder(
+                      padding: EdgeInsets.all(12.w),
+                      itemCount: state.data.posts?.donations?.length ?? 0,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.95,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                      ),
+                      itemBuilder: (_, index) => DonationItem(
+                        donation:
+                            state.data.posts?.donations?[index] ?? Donation(),
+                      ),
+                    ),
+                    GridView.builder(
+                      padding: EdgeInsets.all(5.w),
+                      itemCount: state.data.posts?.masjidToMasjid?.length ?? 0,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.68,
+                        mainAxisSpacing: 5,
+                      ),
+                      itemBuilder: (_, index) => FromMasjedToMasjed(
+                        postItem: state.data.posts?.masjidToMasjid?[index] ??
+                            PostItem(),
+                        whatsAppLink:
+                            state.data.masjid?.socialMedia?.whatsappUrl ?? "",
+                      ),
+                    ),
+
+                    /// Funerals
+                    GridView.builder(
+                      padding: EdgeInsets.all(12.w),
+                      itemCount: state.data.posts?.funerals?.length ?? 0,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.70,
+                        mainAxisSpacing: 5,
+                      ),
+                      itemBuilder: (_, index) => FuneralsItem(
+                        postItem:
+                            state.data.posts?.funerals?[index] ?? PostItem(),
+                      ),
+                    ),
+
+                    /// Live feed
+                    ListView.separated(
+                      padding: EdgeInsets.all(12.w),
+                      itemCount: state.data.posts?.liveFeed?.length ?? 0,
+                      itemBuilder: (_, index) => LiveFeedItem(
+                        postItem:
+                            state.data.posts?.liveFeed?[index] ?? PostItem(),
+                      ),
+                      separatorBuilder: (_, __) => 20.h.verticalSpace,
+                    ),
+                    ListView.separated(
+                      padding: EdgeInsets.all(12.w),
+                      itemCount: state.data.posts?.lessons?.length ?? 0,
+                      itemBuilder: (_, index) => LessonItem(
+                        lesson: state.data.posts?.lessons?[index] ?? Lesson(),
+                      ),
+                      separatorBuilder: (_, __) => 20.h.verticalSpace,
+                    ),
                   ],
                 ),
               ),
-            ),
-          ];
-        },
-
-        /// Tab content (scrollable independently)
-        body: TabBarView(
-          controller: _tabController,
-          children: [
-            /// Donations
-            GridView.builder(
-              padding: EdgeInsets.all(12.w),
-              itemCount: 10,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.95,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-              ),
-              itemBuilder: (_, __) => const DonationItem(
-                image:
-                    "https://t4.ftcdn.net/jpg/05/73/50/41/360_F_573504195_W4F7DYZo34RU1mXDiS1L3jGtW1KJlJFJ.jpg",
-                title: "Donation title",
-              ),
-            ),
-
-            /// Funerals
-            GridView.builder(
-              padding: EdgeInsets.all(12.w),
-              itemCount: 10,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.95,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-              ),
-              itemBuilder: (_, __) => const FuneralsItem(
-                title: "صلاة الظهر",
-                time: "12:00 pm",
-                subTitle:
-                    "انا لله وأنا اليه راجعون توفي المرحوم..... والدفنة عقب صلاة الظهر",
-              ),
-            ),
-
-            /// Live feed
-            ListView.separated(
-              padding: EdgeInsets.all(12.w),
-              itemCount: 10,
-              itemBuilder: (_, __) => const LiveFeedItem(
-                title: "تبرع لبناء جامع",
-                image:
-                    "https://cdn.pixabay.com/photo/2021/06/26/18/11/live-6366830_1280.png",
-                desc: "بث مباشر لجمع تبرعات كذا كذا",
-              ),
-              separatorBuilder: (_, __) => 20.h.verticalSpace,
-            ),
-
-            /// Lessons (your expansion tiles)
-            ListView(
-              padding: EdgeInsets.all(12.w),
-              children: [
-                _buildLessonTile("● حلقات تحفيظ القرأن الكريم للصغار",
-                    "المواعيد من 12/7 الي 20/8 من 6 ص الي 10 ص"),
-                20.h.verticalSpace,
-                _buildLessonTile(
-                    "● محاضرات عن الاسلام", "رجال ونساء - مواعيد ..."),
-                20.h.verticalSpace,
-                _buildLessonTile("● دروس تعليميه", "عربي - سويدي - ..."),
-              ],
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
@@ -1039,16 +536,22 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AppText(
-              text: label,
-              model: AppTextModel(
-                style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                    .subTitle1
-                    .copyWith(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.black,
-                    ),
+            SizedBox(
+              width: 150.w,
+              child: AppText(
+                text: label,
+                model: AppTextModel(
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style:
+                      AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
+                          .subTitle1
+                          .copyWith(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.black,
+                          ),
+                ),
               ),
             ),
             AppText(
@@ -1065,43 +568,6 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildLessonTile(String title, String desc) {
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child: ExpansionTile(
-        title: AppText(
-          text: title,
-          model: AppTextModel(
-            style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                .bodyMedium2
-                .copyWith(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 18,
-                  color: AppColors.primaryColor,
-                ),
-          ),
-        ),
-        children: [
-          Padding(
-            padding: EdgeInsets.all(12.w),
-            child: AppText(
-              text: desc,
-              model: AppTextModel(
-                style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                    .subTitle1
-                    .copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.scondaryColor,
-                    ),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

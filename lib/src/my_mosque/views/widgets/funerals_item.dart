@@ -6,16 +6,14 @@ import '../../../../core/common/app_font_style/app_font_style_global.dart';
 import '../../../../core/shared_components/app_text/app_text.dart';
 import '../../../../core/shared_components/app_text/models/app_text_model.dart';
 import '../../../../core/util/localization/app_localizations.dart';
+import '../../data/models/masjed_details_model.dart';
 
 class FuneralsItem extends StatelessWidget {
-  const FuneralsItem(
-      {super.key,
-      required this.title,
-      required this.subTitle,
-      required this.time});
-  final String title;
-  final String subTitle;
-  final String time;
+  const FuneralsItem({
+    super.key,
+    required this.postItem,
+  });
+  final PostItem postItem;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -30,37 +28,50 @@ class FuneralsItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: AppText(
-                  text: title,
-                  model: AppTextModel(
-                      style: AppFontStyleGlobal(
-                              AppLocalizations.of(context)!.locale)
-                          .heading1
-                          .copyWith(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.primaryColor,
-                          )),
-                ),
+              ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10)),
+                  child: SizedBox(
+                      height: 100.h,
+                      width: MediaQuery.of(context).size.width,
+                      child: Image.network(
+                        postItem.image ?? "",
+                        fit: BoxFit.cover,
+                      ))),
+              10.h.verticalSpace,
+              AppText(
+                text: "${postItem.title}",
+                model: AppTextModel(
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style:
+                        AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
+                            .heading1
+                            .copyWith(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.primaryColor,
+                            )),
               ),
               10.h.verticalSpace,
               AppText(
-                text: subTitle,
+                text: "${postItem.excerpt}",
                 model: AppTextModel(
-                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style:
                         AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
                             .subTitle1
                             .copyWith(
-                              fontSize: 14.sp,
+                              fontSize: 12.sp,
                               fontWeight: FontWeight.w600,
                               color: AppColors.gray,
                             )),
               ),
               10.h.verticalSpace,
               AppText(
-                text: time,
+                text: postItem.date ?? "",
                 model: AppTextModel(
                     style:
                         AppFontStyleGlobal(AppLocalizations.of(context)!.locale)

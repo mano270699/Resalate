@@ -17,16 +17,15 @@ class GenericInitialState<T> extends GenericCubitState<T> {
 }
 
 class GenericLoadingState<T> extends GenericCubitState<T> {
-  const GenericLoadingState({required T data, required bool changed})
-      : super(data: data, changed: changed);
+  const GenericLoadingState({required super.data, required super.changed});
 
   @override
   List<Object> get props => [changed];
 }
 
 class GenericDimissLoadingState<T> extends GenericCubitState<T> {
-  const GenericDimissLoadingState({required T data, required bool changed})
-      : super(data: data, changed: changed);
+  const GenericDimissLoadingState(
+      {required super.data, required super.changed});
 
   @override
   List<Object> get props => [changed];
@@ -41,9 +40,12 @@ class GenericUpdatedState<T> extends GenericCubitState<T> {
 }
 
 class GenericErrorState<T> extends GenericCubitState<T> {
+  // ignore: use_super_parameters
   const GenericErrorState(
-      {required data, required Failure responseError, required bool changed})
-      : super(data: data, changed: changed, responseError: responseError);
+      {required data,
+      required Failure super.responseError,
+      required super.changed})
+      : super(data: data);
   @override
   List<Object> get props => [changed];
 }

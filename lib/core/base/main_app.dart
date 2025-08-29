@@ -41,6 +41,8 @@ class _MainAppState extends State<MainApp> {
                     debugShowCheckedModeBanner: false,
                     title: 'Resalate',
                     theme: ThemeData(
+                      fontFamily: "Noto Sans Arabic",
+                      fontFamilyFallback: ["Noto Sans Arabic"],
                       scaffoldBackgroundColor:
                           AppColors.scaffoldBackgroundColor,
                       appBarTheme: const AppBarTheme(

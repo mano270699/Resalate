@@ -229,7 +229,7 @@ class HomePage extends StatelessWidget {
                         return Skeletonizer(
                           enabled: donationState is GenericLoadingState,
                           child: SizedBox(
-                            height: 340.h,
+                            height: 342.h,
                             child: ListView.separated(
                               clipBehavior: Clip.none,
                               scrollDirection: Axis.horizontal,
@@ -503,25 +503,58 @@ class HomePage extends StatelessWidget {
                     SizedBox(
                       height: 100.h,
                       child: ListView.separated(
-                          clipBehavior: Clip.none,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) => ClipRRect(
+                        clipBehavior: Clip.none,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: state.data.home?.sponser.length ?? 0,
+                        separatorBuilder: (context, index) =>
+                            SizedBox(width: 8.w),
+                        itemBuilder: (context, index) {
+                          final sponsor = state.data.home?.sponser[index];
+                          final url = sponsor?.url ?? "";
+
+                          return Padding(
+                            padding: EdgeInsetsDirectional.only(
+                                start: 10.w, end: 10.w),
+                            child: ClipRRect(
                               borderRadius: BorderRadius.circular(12.r),
-                              child: Padding(
-                                padding:
-                                    EdgeInsetsDirectional.only(start: 10.w),
-                                child: SizedBox(
-                                    height: 100.h,
-                                    width: 100.w,
-                                    child: Image.network(
-                                      "https://st2.depositphotos.com/1561359/7281/v/950/depositphotos_72813803-stock-illustration-stamp-sponsors-in-red.jpg",
-                                      fit: BoxFit.cover,
-                                    )),
-                              )),
-                          separatorBuilder: (context, index) => SizedBox(
-                                width: 5.w,
+                              child: SizedBox(
+                                height: 100.h,
+                                width: 100.w,
+                                child: url.toLowerCase().endsWith(".svg")
+                                    ? SvgPicture.network(
+                                        url,
+                                        fit: BoxFit.contain,
+                                        placeholderBuilder: (context) => Center(
+                                          child: CircularProgressIndicator(
+                                              strokeWidth: 2),
+                                        ),
+                                      )
+                                    : Image.network(
+                                        url,
+                                        fit: BoxFit.cover,
+                                        loadingBuilder:
+                                            (context, child, loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child;
+                                          }
+                                          return Center(
+                                            child: CircularProgressIndicator(
+                                                strokeWidth: 2),
+                                          );
+                                        },
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                Icon(
+                                          Icons.broken_image,
+                                          size: 40,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
                               ),
-                          itemCount: 10),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                     20.h.verticalSpace,
                     Padding(

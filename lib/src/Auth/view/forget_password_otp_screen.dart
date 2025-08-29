@@ -6,24 +6,24 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-import '../../../../core/base/dependency_injection.dart';
-import '../../../../core/blocs/generic_cubit/generic_cubit.dart';
-import '../../../../core/common/app_colors/app_colors.dart';
-import '../../../../core/common/app_component_style/component_style.dart';
-import '../../../../core/common/app_font_style/app_font_style_global.dart';
-import '../../../../core/common/app_icon_svg.dart';
-import '../../../../core/common/models/error_model.dart';
-import '../../../../core/shared_components/app_button/app_button.dart';
-import '../../../../core/shared_components/app_button/models/app_button_model.dart';
-import '../../../../core/shared_components/app_pin_code_text_field/app_pin_code_text_field.dart';
-import '../../../../core/shared_components/app_pin_code_text_field/models/app_pin_code_model.dart';
-import '../../../../core/shared_components/app_snack_bar/app_snack_bar.dart';
-import '../../../../core/shared_components/app_text/app_text.dart';
-import '../../../../core/shared_components/app_text/models/app_text_model.dart';
+import '../../../core/base/dependency_injection.dart';
+import '../../../core/blocs/generic_cubit/generic_cubit.dart';
+import '../../../core/common/app_colors/app_colors.dart';
+import '../../../core/common/app_component_style/component_style.dart';
+import '../../../core/common/app_font_style/app_font_style_global.dart';
+import '../../../core/common/app_icon_svg.dart';
+import '../../../core/common/models/error_model.dart';
+import '../../../core/shared_components/app_button/app_button.dart';
+import '../../../core/shared_components/app_button/models/app_button_model.dart';
+import '../../../core/shared_components/app_pin_code_text_field/app_pin_code_text_field.dart';
+import '../../../core/shared_components/app_pin_code_text_field/models/app_pin_code_model.dart';
+import '../../../core/shared_components/app_snack_bar/app_snack_bar.dart';
+import '../../../core/shared_components/app_text/app_text.dart';
+import '../../../core/shared_components/app_text/models/app_text_model.dart';
 
-import '../../../../core/util/loading.dart';
-import '../../../../core/util/localization/app_localizations.dart';
-import '../../logic/auth_view_model.dart';
+import '../../../core/util/loading.dart';
+import '../../../core/util/localization/app_localizations.dart';
+import '../logic/auth_view_model.dart';
 import 'reset_password_screen.dart';
 
 class ForgetPasswordOTPScreen extends StatefulWidget {

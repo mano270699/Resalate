@@ -10,7 +10,7 @@ import '../../../core/common/app_icon_svg.dart';
 import '../../../core/util/localization/app_localizations.dart';
 import '../../donation/view/donation_list.dart';
 import '../../home/views/home_screen.dart';
-import '../../my_mosque/views/my_mosque_screen.dart';
+import '../../my_mosque/views/mosque_screen.dart';
 import '../../profile/views/profile_screen.dart';
 import '../data/model/bottom_bar_model.dart';
 import 'main_screen_view_model.dart';
@@ -26,15 +26,13 @@ class MainBottomNavigationScreen extends StatefulWidget {
 
 class _MainBottomNavigationScreenState
     extends State<MainBottomNavigationScreen> {
-  int currentIndex = 0;
-
+  final viewModel = sl<MainScreenViewModel>();
   @override
   Widget build(BuildContext context) {
-    final viewModel = sl<MainScreenViewModel>();
     List<Widget> screens = [
       HomePage(),
       DonationListScreen(),
-      MyMosqueScreen(),
+      MasjedListScreen(),
       ProfileScreen()
     ];
     List<BottomBarItem> bottomBarItems = [
@@ -53,7 +51,6 @@ class _MainBottomNavigationScreenState
     ];
     return BlocBuilder<GenericCubit<int>, GenericCubitState<int>>(
       bloc: viewModel.screenIndex,
-      buildWhen: (previous, current) => current is GenericUpdatedState,
       builder: (context, indexState) {
         return Scaffold(
           body: screens[indexState.data],
@@ -78,7 +75,6 @@ class _MainBottomNavigationScreenState
                 type: BottomNavigationBarType.fixed,
                 currentIndex: indexState.data,
                 onTap: (value) {
-                  viewModel.isOpenFromHome = false;
                   viewModel.screenIndexChanged(index: value);
                 },
                 unselectedLabelStyle:

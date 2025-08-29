@@ -108,16 +108,16 @@ class User {
     username = json['username'];
     email = json['email'];
     name = json['name'];
-    roles = json['roles'];
+    roles = json['roles'] != null ? List<String>.from(json['roles']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['username'] = this.username;
-    data['email'] = this.email;
-    data['name'] = this.name;
-    data['roles'] = this.roles;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['username'] = username;
+    data['email'] = email;
+    data['name'] = name;
+    data['roles'] = roles;
     return data;
   }
 }

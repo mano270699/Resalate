@@ -1,295 +1,300 @@
 class HomeDataModel {
-  String? logo;
-  String? primaryColor;
-  ContactData? contactData;
-  PrivacyPolicy? privacyPolicy;
-  PrivacyPolicy? terms;
-  AboutMobilePage? aboutMobilePage;
-  List<Faq>? faq;
-  Home? home;
+  final String logo;
+  final String primaryColor;
+  final ContactData? contactData;
+  final Policy? privacyPolicy;
+  final Policy? terms;
+  final AboutPage? aboutMobilePage;
+  final List<Faq> faq;
+  final HomeSection? home;
 
   HomeDataModel({
-    this.logo,
-    this.primaryColor,
+    this.logo = "",
+    this.primaryColor = "",
     this.contactData,
     this.privacyPolicy,
     this.terms,
     this.aboutMobilePage,
-    this.faq,
+    this.faq = const [],
     this.home,
   });
 
-  HomeDataModel.fromJson(Map<String, dynamic> json) {
-    logo = json['logo'];
-    primaryColor = json['primary_color'];
-    contactData = json['contact_data'] != null
-        ? ContactData.fromJson(json['contact_data'])
-        : null;
-    privacyPolicy = json['privacy_policy'] != null
-        ? PrivacyPolicy.fromJson(json['privacy_policy'])
-        : null;
-    terms =
-        json['terms'] != null ? PrivacyPolicy.fromJson(json['terms']) : null;
-    aboutMobilePage = json['about_mobile_page'] != null
-        ? AboutMobilePage.fromJson(json['about_mobile_page'])
-        : null;
-    if (json['faq'] != null) {
-      faq = (json['faq'] as List).map((v) => Faq.fromJson(v)).toList();
-    }
-    home = json['home'] != null ? Home.fromJson(json['home']) : null;
+  factory HomeDataModel.fromJson(Map<String, dynamic> json) {
+    return HomeDataModel(
+      logo: json["logo"] ?? "",
+      primaryColor: json["primary_color"] ?? "",
+      contactData: json["contact_data"] != null
+          ? ContactData.fromJson(json["contact_data"])
+          : null,
+      privacyPolicy: json["privacy_policy"] != null
+          ? Policy.fromJson(json["privacy_policy"])
+          : null,
+      terms: json["terms"] != null ? Policy.fromJson(json["terms"]) : null,
+      aboutMobilePage: json["about_mobile_page"] != null
+          ? AboutPage.fromJson(json["about_mobile_page"])
+          : null,
+      faq: (json["faq"] as List<dynamic>?)
+              ?.map((e) => Faq.fromJson(e))
+              .toList() ??
+          [],
+      home: json["home"] != null ? HomeSection.fromJson(json["home"]) : null,
+    );
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    data['logo'] = logo;
-    data['primary_color'] = primaryColor;
-    if (contactData != null) data['contact_data'] = contactData!.toJson();
-    if (privacyPolicy != null) data['privacy_policy'] = privacyPolicy!.toJson();
-    if (terms != null) data['terms'] = terms!.toJson();
-    if (aboutMobilePage != null) {
-      data['about_mobile_page'] = aboutMobilePage!.toJson();
-    }
-    if (faq != null) data['faq'] = faq!.map((v) => v.toJson()).toList();
-    if (home != null) data['home'] = home!.toJson();
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+        "logo": logo,
+        "primary_color": primaryColor,
+        "contact_data": contactData?.toJson(),
+        "privacy_policy": privacyPolicy?.toJson(),
+        "terms": terms?.toJson(),
+        "about_mobile_page": aboutMobilePage?.toJson(),
+        "faq": faq.map((e) => e.toJson()).toList(),
+        "home": home?.toJson(),
+      };
 }
 
 class ContactData {
-  String? phoneEn;
-  String? whatsappEn;
-  String? emailEn;
+  final String phoneEn;
+  final String whatsappEn;
+  final String emailEn;
 
-  ContactData({this.phoneEn, this.whatsappEn, this.emailEn});
+  ContactData({
+    this.phoneEn = "",
+    this.whatsappEn = "",
+    this.emailEn = "",
+  });
 
-  ContactData.fromJson(Map<String, dynamic> json) {
-    phoneEn = json['phone_en'];
-    whatsappEn = json['whatsapp_en'];
-    emailEn = json['email_en'];
+  factory ContactData.fromJson(Map<String, dynamic> json) {
+    return ContactData(
+      phoneEn: json["phone_en"] ?? "",
+      whatsappEn: json["whatsapp_en"] ?? "",
+      emailEn: json["email_en"] ?? "",
+    );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'phone_en': phoneEn,
-      'whatsapp_en': whatsappEn,
-      'email_en': emailEn,
-    };
-  }
+  Map<String, dynamic> toJson() => {
+        "phone_en": phoneEn,
+        "whatsapp_en": whatsappEn,
+        "email_en": emailEn,
+      };
 }
 
-class PrivacyPolicy {
-  String? url;
-  int? id;
-  String? content;
+class Policy {
+  final String url;
+  final int id;
+  final String content;
 
-  PrivacyPolicy({this.url, this.id, this.content});
+  Policy({
+    this.url = "",
+    this.id = 0,
+    this.content = "",
+  });
 
-  PrivacyPolicy.fromJson(Map<String, dynamic> json) {
-    url = json['url'];
-    id = json['id'];
-    content = json['content'];
+  factory Policy.fromJson(Map<String, dynamic> json) {
+    return Policy(
+      url: json["url"] ?? "",
+      id: json["id"] ?? 0,
+      content: json["content"] ?? "",
+    );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'url': url,
-      'id': id,
-      'content': content,
-    };
-  }
+  Map<String, dynamic> toJson() => {
+        "url": url,
+        "id": id,
+        "content": content,
+      };
 }
 
-class AboutMobilePage {
-  int? id;
-  String? url;
-  String? title;
+class AboutPage {
+  final int id;
+  final String url;
+  final String title;
 
-  AboutMobilePage({this.id, this.url, this.title});
+  AboutPage({
+    this.id = 0,
+    this.url = "",
+    this.title = "",
+  });
 
-  AboutMobilePage.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    url = json['url'];
-    title = json['title'];
+  factory AboutPage.fromJson(Map<String, dynamic> json) {
+    return AboutPage(
+      id: json["id"] ?? 0,
+      url: json["url"] ?? "",
+      title: json["title"] ?? "",
+    );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'url': url,
-      'title': title,
-    };
-  }
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "url": url,
+        "title": title,
+      };
 }
 
 class Faq {
-  String? question;
-  String? answer;
+  final String question;
+  final String answer;
 
-  Faq({this.question, this.answer});
-
-  Faq.fromJson(Map<String, dynamic> json) {
-    question = json['question'];
-    answer = json['answer'];
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'question': question,
-      'answer': answer,
-    };
-  }
-}
-
-class Home {
-  List<Gallery>? gallery;
-  List<Sponsor>? sponsor;
-  String? ayah1;
-  AboutSection? aboutSection;
-  Numbers? numbers;
-  String? ayah2;
-
-  Home({
-    this.gallery,
-    this.sponsor,
-    this.ayah1,
-    this.aboutSection,
-    this.numbers,
-    this.ayah2,
+  Faq({
+    this.question = "",
+    this.answer = "",
   });
 
-  Home.fromJson(Map<String, dynamic> json) {
-    if (json['gallery'] != null) {
-      gallery =
-          (json['gallery'] as List).map((v) => Gallery.fromJson(v)).toList();
-    }
-    if (json['sponser'] != null) {
-      sponsor =
-          (json['sponser'] as List).map((v) => Sponsor.fromJson(v)).toList();
-    }
-    ayah1 = json['ayah_1'];
-    aboutSection = json['about_section'] != null
-        ? AboutSection.fromJson(json['about_section'])
-        : null;
-    numbers =
-        json['numbers'] != null ? Numbers.fromJson(json['numbers']) : null;
-    ayah2 = json['ayah_2'];
+  factory Faq.fromJson(Map<String, dynamic> json) {
+    return Faq(
+      question: json["question"] ?? "",
+      answer: json["answer"] ?? "",
+    );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'gallery': gallery?.map((v) => v.toJson()).toList(),
-      'sponser': sponsor?.map((v) => v.toJson()).toList(),
-      'ayah_1': ayah1,
-      'about_section': aboutSection?.toJson(),
-      'numbers': numbers?.toJson(),
-      'ayah_2': ayah2,
-    };
-  }
+  Map<String, dynamic> toJson() => {
+        "question": question,
+        "answer": answer,
+      };
 }
 
-class Gallery {
-  int? id;
-  String? url;
-  String? alt;
+class HomeSection {
+  final List<MediaItem> gallery;
+  final List<MediaItem> sponser;
+  final String ayah1;
+  final AboutSection? aboutSection;
+  final Numbers? numbers;
+  final String ayah2;
 
-  Gallery({this.id, this.url, this.alt});
+  HomeSection({
+    this.gallery = const [],
+    this.sponser = const [],
+    this.ayah1 = "",
+    this.aboutSection,
+    this.numbers,
+    this.ayah2 = "",
+  });
 
-  Gallery.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    url = json['url'];
-    alt = json['alt'];
+  factory HomeSection.fromJson(Map<String, dynamic> json) {
+    return HomeSection(
+      gallery: (json["gallery"] as List<dynamic>?)
+              ?.map((e) => MediaItem.fromJson(e))
+              .toList() ??
+          [],
+      sponser: (json["sponser"] as List<dynamic>?)
+              ?.map((e) => MediaItem.fromJson(e))
+              .toList() ??
+          [],
+      ayah1: json["ayah_1"] ?? "",
+      aboutSection: json["about_section"] != null
+          ? AboutSection.fromJson(json["about_section"])
+          : null,
+      numbers:
+          json["numbers"] != null ? Numbers.fromJson(json["numbers"]) : null,
+      ayah2: json["ayah_2"] ?? "",
+    );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'url': url,
-      'alt': alt,
-    };
+  Map<String, dynamic> toJson() => {
+        "gallery": gallery.map((e) => e.toJson()).toList(),
+        "sponser": sponser.map((e) => e.toJson()).toList(),
+        "ayah_1": ayah1,
+        "about_section": aboutSection?.toJson(),
+        "numbers": numbers?.toJson(),
+        "ayah_2": ayah2,
+      };
+}
+
+class MediaItem {
+  final int id;
+  final String url;
+  final String alt;
+
+  MediaItem({
+    this.id = 0,
+    this.url = "",
+    this.alt = "",
+  });
+
+  factory MediaItem.fromJson(Map<String, dynamic> json) {
+    return MediaItem(
+      id: json["id"] ?? 0,
+      url: json["url"] ?? "",
+      alt: json["alt"] ?? "",
+    );
   }
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "url": url,
+        "alt": alt,
+      };
 }
 
 class AboutSection {
-  String? title;
-  String? description;
-  String? link;
+  final String title;
+  final String description;
+  final String link;
 
-  AboutSection({this.title, this.description, this.link});
+  AboutSection({
+    this.title = "",
+    this.description = "",
+    this.link = "",
+  });
 
-  AboutSection.fromJson(Map<String, dynamic> json) {
-    title = json['title'];
-    description = json['description'];
-    link = json['link'];
+  factory AboutSection.fromJson(Map<String, dynamic> json) {
+    return AboutSection(
+      title: json["title"] ?? "",
+      description: json["description"] ?? "",
+      link: json["link"] ?? "",
+    );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'title': title,
-      'description': description,
-      'link': link,
-    };
-  }
+  Map<String, dynamic> toJson() => {
+        "title": title,
+        "description": description,
+        "link": link,
+      };
 }
 
 class Numbers {
-  String? title;
-  List<NumberItem>? list;
+  final String title;
+  final List<NumberItem> list;
 
-  Numbers({this.title, this.list});
+  Numbers({
+    this.title = "",
+    this.list = const [],
+  });
 
-  Numbers.fromJson(Map<String, dynamic> json) {
-    title = json['title'];
-    if (json['list'] != null) {
-      list = (json['list'] as List).map((v) => NumberItem.fromJson(v)).toList();
-    }
+  factory Numbers.fromJson(Map<String, dynamic> json) {
+    return Numbers(
+      title: json["title"] ?? "",
+      list: (json["list"] as List<dynamic>?)
+              ?.map((e) => NumberItem.fromJson(e))
+              .toList() ??
+          [],
+    );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'title': title,
-      'list': list?.map((v) => v.toJson()).toList(),
-    };
-  }
+  Map<String, dynamic> toJson() => {
+        "title": title,
+        "list": list.map((e) => e.toJson()).toList(),
+      };
 }
 
-/// ✅ Renamed from `List` to avoid Dart conflict
 class NumberItem {
-  String? value;
-  String? label;
+  final String value;
+  final String label;
 
-  NumberItem({this.value, this.label});
+  NumberItem({
+    this.value = "",
+    this.label = "",
+  });
 
-  NumberItem.fromJson(Map<String, dynamic> json) {
-    value = json['value'];
-    label = json['label'];
+  factory NumberItem.fromJson(Map<String, dynamic> json) {
+    return NumberItem(
+      value: json["value"] ?? "",
+      label: json["label"] ?? "",
+    );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'value': value,
-      'label': label,
-    };
-  }
-}
-
-class Sponsor {
-  int? id;
-  String? name;
-  String? logo;
-
-  Sponsor({this.id, this.name, this.logo});
-
-  Sponsor.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    logo = json['logo'];
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'logo': logo,
-    };
-  }
+  Map<String, dynamic> toJson() => {
+        "value": value,
+        "label": label,
+      };
 }

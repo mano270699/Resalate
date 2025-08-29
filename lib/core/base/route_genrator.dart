@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 
-import '../../src/Auth/login/view/forget_password_otp_screen.dart';
-import '../../src/Auth/login/view/forget_password_screen.dart';
-import '../../src/Auth/login/view/login_screen.dart';
-import '../../src/Auth/login/view/register_screen.dart';
-import '../../src/Auth/login/view/reset_password_screen.dart';
+import '../../src/Auth/view/forget_password_otp_screen.dart';
+import '../../src/Auth/view/forget_password_screen.dart';
+import '../../src/Auth/view/login_screen.dart';
+import '../../src/Auth/view/register_screen.dart';
+import '../../src/Auth/view/reset_password_screen.dart';
 import '../../src/donation/view/donation_details_screen.dart';
 import '../../src/from_mosque_to_mosque/views/from_mosque_to_mosque_screen.dart';
 import '../../src/layout/screens/user_bottom_navigation_screen.dart';
+import '../../src/my_mosque/views/my_mosque_screen.dart';
 import '../../src/nearest_mosque/views/nearest_mosque.dart';
+import '../../src/notification/view/notification_screen.dart';
+import '../../src/profile/views/edit_profile_screen.dart';
+import '../../src/profile/views/faq_screen.dart';
+import '../../src/profile/views/web_view_page.dart';
 import '../../src/splash_screen/view/splash_screen.dart';
 
 class RouteGenerator {
@@ -44,10 +49,11 @@ class RouteGenerator {
                 ));
       case RegesterScreen.routeName:
         return MaterialPageRoute(builder: (_) => const RegesterScreen());
+      case FaqScreen.routeName:
+        return MaterialPageRoute(builder: (_) => FaqScreen());
 
       case FromMosqueToMosqueScreen.routeName:
-        return MaterialPageRoute(
-            builder: (_) => const FromMosqueToMosqueScreen());
+        return MaterialPageRoute(builder: (_) => FromMosqueToMosqueScreen());
       case NearestMosque.routeName:
         return MaterialPageRoute(builder: (_) => const NearestMosque());
       case DonationDetailsScreen.routeName:
@@ -58,6 +64,29 @@ class RouteGenerator {
                   donationId: args["id"],
                   donationName: args["donation_name"],
                 ));
+      case WebViewPage.routeName:
+        final args = settings.arguments as Map;
+        return MaterialPageRoute(
+            builder: (_) => WebViewPage(
+                  title: args["title"],
+                  url: args["url"],
+                ));
+      case MyMosqueScreen.routeName:
+        final args = settings.arguments as Map;
+
+        return MaterialPageRoute(
+            builder: (_) => MyMosqueScreen(
+                  id: args["id"],
+                ));
+      case EditProfileScreen.routeName:
+        final args = settings.arguments as Map;
+
+        return MaterialPageRoute(
+            builder: (_) => EditProfileScreen(
+                  viewModel: args["viewModel"],
+                ));
+      case NotificationScreen.routeName:
+        return MaterialPageRoute(builder: (_) => NotificationScreen());
 
       default:
         return _errorRoute();

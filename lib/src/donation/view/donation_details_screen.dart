@@ -17,6 +17,7 @@ import '../../../core/common/assets.dart';
 import '../../../core/shared_components/app_text/app_text.dart';
 import '../../../core/shared_components/app_text/models/app_text_model.dart';
 import '../../../core/util/localization/app_localizations.dart';
+import '../../my_mosque/views/widgets/custom_expantion_tile.dart';
 import '../data/models/donation_details_model.dart';
 
 class DonationDetailsScreen extends StatefulWidget {
@@ -67,6 +68,16 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
           bloc: viewModel.donationDetailsResponse,
           builder: (context, state) {
             final data = state.data.post;
+
+            if (state is GenericLoadingState) {
+              return Padding(
+                  padding: EdgeInsets.only(top: 150.h),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.primaryColor,
+                    ),
+                  ));
+            }
 
             if (data == null && state is GenericUpdatedState) {
               return Center(
@@ -276,7 +287,30 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
           ],
         ),
         const SizedBox(height: 20),
-        if (masjid.paymentInfo != null) _buildPaymentInfo(masjid.paymentInfo!),
+        if (masjid.paymentInfo != null)
+          CustomExpansionTile(
+            content: _buildPaymentInfo(masjid.paymentInfo!),
+            title: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 16.w,
+              ),
+              child: AppText(
+                text: "Payment Options",
+                model: AppTextModel(
+                  style:
+                      AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
+                          .subTitle2
+                          .copyWith(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.scondaryColor,
+                          ),
+                ),
+              ),
+            ),
+            animationDuration: Duration(milliseconds: 200),
+            initiallyExpanded: false,
+          ),
       ],
     );
   }
@@ -287,19 +321,19 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppText(
-          text: "Payment Options",
-          model: AppTextModel(
-            style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                .headingMedium2
-                .copyWith(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.black,
-                ),
-          ),
-        ),
-        const SizedBox(height: 12),
+        // AppText(
+        //   text: "Payment Options",
+        //   model: AppTextModel(
+        //     style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
+        //         .headingMedium2
+        //         .copyWith(
+        //           fontSize: 16,
+        //           fontWeight: FontWeight.bold,
+        //           color: AppColors.black,
+        //         ),
+        //   ),
+        // ),
+        // const SizedBox(height: 12),
 
         /// Paypal
         if ((info.paypalUser ?? "").isNotEmpty)

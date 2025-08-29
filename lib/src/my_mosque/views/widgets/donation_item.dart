@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../../../core/common/app_colors/app_colors.dart';
 import '../../../../core/common/app_font_style/app_font_style_global.dart';
+import '../../../../core/common/app_icon_svg.dart';
 import '../../../../core/shared_components/app_text/app_text.dart';
 import '../../../../core/shared_components/app_text/models/app_text_model.dart';
 import '../../../../core/util/localization/app_localizations.dart';
+import '../../data/models/masjed_details_model.dart';
 
 class DonationItem extends StatelessWidget {
-  const DonationItem({super.key, required this.image, required this.title});
-  final String image;
-  final String title;
+  const DonationItem({super.key, required this.donation});
+  final Donation donation;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -33,10 +35,12 @@ class DonationItem extends StatelessWidget {
                   child: SizedBox(
                       height: 70.h,
                       width: MediaQuery.of(context).size.width,
-                      child: Image.network(
-                        image,
-                        fit: BoxFit.cover,
-                      ))),
+                      child: donation.image != null
+                          ? Image.network(
+                              donation.image ?? "",
+                              fit: BoxFit.cover,
+                            )
+                          : SvgPicture.asset(AppIconSvg.splashLogo))),
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: 15.h,
@@ -57,7 +61,8 @@ class DonationItem extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     percent: 0.5, // 50% progress
                     center: AppText(
-                      text: "50%",
+                      text:
+                          "${(double.parse(donation.amountPaid.toString()) / double.parse(donation.totalAmount.toString())) * 100} %",
                       model: AppTextModel(
                           style: AppFontStyleGlobal(
                                   AppLocalizations.of(context)!.locale)
@@ -74,8 +79,10 @@ class DonationItem extends StatelessWidget {
               ),
               5.h.verticalSpace,
               AppText(
-                text: title,
+                text: donation.title ?? "",
                 model: AppTextModel(
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style:
                         AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
                             .subTitle1
@@ -105,7 +112,8 @@ class DonationItem extends StatelessWidget {
                                 )),
                       ),
                       AppText(
-                        text: "22,5260 SAR",
+                        text:
+                            "${double.parse(donation.totalAmount.toString()) - double.parse(donation.amountPaid.toString())} ${donation.currency}",
                         model: AppTextModel(
                             style: AppFontStyleGlobal(
                                     AppLocalizations.of(context)!.locale)

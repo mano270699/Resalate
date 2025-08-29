@@ -34,7 +34,7 @@ class DonationItem extends StatelessWidget {
     return Padding(
       padding: EdgeInsetsDirectional.only(start: 10.w),
       child: Container(
-        height: 340.h,
+        height: 342.h,
         width: MediaQuery.of(context).size.width - 32.w,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10), color: AppColors.white),
@@ -63,14 +63,14 @@ class DonationItem extends StatelessWidget {
                     borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(10),
                         bottomRight: Radius.circular(10)),
-                    color: Colors.amber.withOpacity(0.2)),
+                    color: Colors.amber.withValues(alpha: 0.2)),
                 child: ClipRRect(
                   borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(10),
                       bottomRight: Radius.circular(10)),
                   child: LinearPercentIndicator(
                     // barRadius: const Radius.circular(10),
-                    fillColor: AppColors.primaryColor.withOpacity(0.5),
+                    fillColor: AppColors.primaryColor.withValues(alpha: 0.5),
                     lineHeight: 30.h,
 
                     padding: EdgeInsets.zero,
@@ -136,8 +136,8 @@ class DonationItem extends StatelessWidget {
                                             .locale
                                             .languageCode ==
                                         'en'
-                                    ? TextDirection.rtl
-                                    : TextDirection.ltr,
+                                    ? TextDirection.ltr
+                                    : TextDirection.rtl,
                                 style: AppFontStyleGlobal(
                                         AppLocalizations.of(context)!.locale)
                                     .subTitle1
@@ -171,8 +171,8 @@ class DonationItem extends StatelessWidget {
                                             .locale
                                             .languageCode ==
                                         'en'
-                                    ? TextDirection.rtl
-                                    : TextDirection.ltr,
+                                    ? TextDirection.ltr
+                                    : TextDirection.rtl,
                                 style: AppFontStyleGlobal(
                                         AppLocalizations.of(context)!.locale)
                                     .subTitle1

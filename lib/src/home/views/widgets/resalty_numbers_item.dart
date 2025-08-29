@@ -34,7 +34,7 @@ class ResaltyNumbersWidgets extends StatelessWidget {
           child: Column(
             children: [
               AppText(
-                text: numbers.title ?? "",
+                text: numbers.title,
                 model: AppTextModel(
                     style:
                         AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
@@ -47,7 +47,7 @@ class ResaltyNumbersWidgets extends StatelessWidget {
               30.h.verticalSpace,
 
               ...List.generate(
-                numbers.list?.length ?? 0,
+                numbers.list.length,
                 (index) => Padding(
                   padding: EdgeInsets.only(bottom: 20.h),
                   child: Container(
@@ -61,7 +61,7 @@ class ResaltyNumbersWidgets extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         AppText(
-                          text: numbers.list![index].label ?? "",
+                          text: numbers.list[index].label,
                           model: AppTextModel(
                             style: AppFontStyleGlobal(
                                     AppLocalizations.of(context)!.locale)
@@ -74,7 +74,7 @@ class ResaltyNumbersWidgets extends StatelessWidget {
                         ),
                         10.h.verticalSpace,
                         AppText(
-                          text: "${numbers.list![index].value}",
+                          text: numbers.list[index].value,
                           model: AppTextModel(
                             style: AppFontStyleGlobal(
                                     AppLocalizations.of(context)!.locale)
