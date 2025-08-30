@@ -208,8 +208,16 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                                                     child: Center(
                                                       child: AppText(
                                                         text: isFollow.data
-                                                            ? "Unfollow"
-                                                            : "Follow",
+                                                            ? AppLocalizations
+                                                                    .of(
+                                                                        context)!
+                                                                .translate(
+                                                                    "unfollow")
+                                                            : AppLocalizations
+                                                                    .of(
+                                                                        context)!
+                                                                .translate(
+                                                                    "follow"),
                                                         model: AppTextModel(
                                                           style: AppFontStyleGlobal(
                                                                   AppLocalizations.of(
@@ -285,7 +293,8 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                           horizontal: 16.w,
                         ),
                         child: AppText(
-                          text: "Memorization & Lesson Dates",
+                          text: AppLocalizations.of(context)!
+                              .translate("Memorization_Lesson_Dates"),
                           model: AppTextModel(
                             style: AppFontStyleGlobal(
                                     AppLocalizations.of(context)!.locale)
@@ -329,7 +338,8 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                           horizontal: 16.w,
                         ),
                         child: AppText(
-                          text: "Services",
+                          text: AppLocalizations.of(context)!
+                              .translate("services"),
                           model: AppTextModel(
                             style: AppFontStyleGlobal(
                                     AppLocalizations.of(context)!.locale)
@@ -360,7 +370,8 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                           horizontal: 16.w,
                         ),
                         child: AppText(
-                          text: "Payment Information",
+                          text: AppLocalizations.of(context)!
+                              .translate("Payment_Information"),
                           model: AppTextModel(
                             style: AppFontStyleGlobal(
                                     AppLocalizations.of(context)!.locale)
@@ -398,7 +409,8 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                           horizontal: 16.w,
                         ),
                         child: AppText(
-                          text: "Location",
+                          text: AppLocalizations.of(context)!
+                              .translate("location"),
                           model: AppTextModel(
                             style: AppFontStyleGlobal(
                                     AppLocalizations.of(context)!.locale)
@@ -434,12 +446,22 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                                 fontSize: 14.sp,
                                 color: AppColors.scondaryColor,
                               ),
-                          tabs: const [
-                            Tab(text: "حالات التبرع"),
-                            Tab(text: "من مسجد لمسجد"),
-                            Tab(text: "الجنازات"),
-                            Tab(text: "البث المباشر"),
-                            Tab(text: "الدروس"),
+                          tabs: [
+                            Tab(
+                                text: AppLocalizations.of(context)!
+                                    .translate("Donation_cases")),
+                            Tab(
+                                text: AppLocalizations.of(context)!
+                                    .translate("From_Mosque_To_Mosque")),
+                            Tab(
+                                text: AppLocalizations.of(context)!
+                                    .translate("funerals")),
+                            Tab(
+                                text: AppLocalizations.of(context)!
+                                    .translate("live_feed")),
+                            Tab(
+                                text: AppLocalizations.of(context)!
+                                    .translate("lessons")),
                           ],
                         ),
                       ),

@@ -2,28 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:resalate/core/blocs/generic_cubit/generic_cubit.dart';
-import 'package:resalate/src/donation/data/models/donation_model.dart';
-import 'package:resalate/src/donation/logic/donations_view_model.dart';
-import 'package:resalate/src/donation/view/donation_details_screen.dart';
+import 'package:resalate/src/home/logic/home_view_model.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../core/base/dependency_injection.dart';
 import '../../../core/common/app_colors/app_colors.dart';
-import '../../../core/common/app_font_style/app_font_style_global.dart';
+import '../../../core/common/app_font_style/app_font_style_global.dart'
+    show AppFontStyleGlobal;
 import '../../../core/shared_components/app_text/app_text.dart';
 import '../../../core/shared_components/app_text/models/app_text_model.dart';
 import '../../../core/util/localization/app_localizations.dart';
-import '../../home/views/widgets/donation_item.dart';
+import '../data/models/funerial_model.dart';
+import 'widgets/funeral_item.dart';
 
-class DonationListScreen extends StatefulWidget {
-  const DonationListScreen({super.key});
+class AllFuneralsScreen extends StatefulWidget {
+  const AllFuneralsScreen({super.key});
+  static const String routeName = 'AllFuneralsScreen';
 
   @override
-  State<DonationListScreen> createState() => _DonationListScreenState();
+  State<AllFuneralsScreen> createState() => _AllFuneralsScreenState();
 }
 
-class _DonationListScreenState extends State<DonationListScreen> {
-  final viewModel = sl<DonationsViewModel>()..getDonationsData(1);
+//
+
+class _AllFuneralsScreenState extends State<AllFuneralsScreen> {
+  final viewModel = sl<HomeViewModel>()..getAllFunerals(1);
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -34,7 +37,7 @@ class _DonationListScreenState extends State<DonationListScreen> {
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 200) {
         // Load next page when 200px near the bottom
-        viewModel.loadNextPage();
+        viewModel.loadNextPageFunerals();
       }
     });
   }
@@ -53,9 +56,8 @@ class _DonationListScreenState extends State<DonationListScreen> {
           : TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,
           title: AppText(
-            text: AppLocalizations.of(context)!.translate("donate"),
+            text: AppLocalizations.of(context)!.translate("funerals"),
             model: AppTextModel(
               style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
                   .bodyMedium1
@@ -65,41 +67,35 @@ class _DonationListScreenState extends State<DonationListScreen> {
             ),
           ),
         ),
-        body: BlocBuilder<GenericCubit<DonationsResponse>,
-            GenericCubitState<DonationsResponse>>(
-          bloc: viewModel.donationResponse,
-          builder: (context, donationState) {
+        body: BlocBuilder<GenericCubit<FuneralsResponse>,
+            GenericCubitState<FuneralsResponse>>(
+          bloc: viewModel.allFuneralsRes,
+          builder: (context, funeralsState) {
             // if (donationState is GenericLoadingState) {
             //   return const Center(child: CircularProgressIndicator());
             // }
 
-            if (donationState is GenericErrorState) {
+            if (funeralsState is GenericErrorState) {
               return Center(
-                  child: Text(donationState.responseError!.errorMessage));
+                  child: Text(funeralsState.responseError!.errorMessage));
             }
 
-            final posts = donationState.data.posts;
+            final posts = funeralsState.data.posts;
             final hasMore = viewModel.hasMorePages;
 
             return Skeletonizer(
-              enabled: donationState is GenericLoadingState,
+              enabled: funeralsState is GenericLoadingState,
               child: ListView.separated(
                 padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
                 controller: _scrollController,
                 itemBuilder: (context, index) {
-                  final isLoading = donationState is GenericLoadingState;
+                  final isLoading = funeralsState is GenericLoadingState;
 
                   // Fake placeholders when loading
                   if (isLoading) {
-                    return DonationItem(
+                    return FuneralItem(
+                      post: FuneralPost(),
                       onTap: () {},
-                      percentage: "0",
-                      title: "Loading title",
-                      image: "", // skeletonizes
-                      desc: "Loading description",
-                      total: "0",
-                      remaining: "0",
-                      currency: "USD",
                     );
                   }
 
@@ -114,29 +110,14 @@ class _DonationListScreenState extends State<DonationListScreen> {
                   }
 
                   final post = posts[index];
-                  return DonationItem(
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        DonationDetailsScreen.routeName,
-                        arguments: {
-                          "id": post.id,
-                          "donation_name": post.title,
-                        },
-                      );
-                    },
-                    percentage: post.donation?.percent.toString() ?? "",
-                    title: post.title ?? "",
-                    image: post.image ?? "",
-                    desc: post.excerpt ?? "",
-                    total: post.donation?.total.toString() ?? "",
-                    remaining: post.donation?.paid.toString() ?? "",
-                    currency: post.donation?.currency.toString() ?? "",
+                  return FuneralItem(
+                    post: post,
+                    onTap: () {},
                   );
                 },
                 separatorBuilder: (context, index) => SizedBox(height: 10.h),
-                itemCount: (donationState is GenericLoadingState)
-                    ? 5 // show 5 skeleton DonationItems
+                itemCount: (funeralsState is GenericLoadingState)
+                    ? 5
                     : posts!.length + (hasMore ? 1 : 0),
               ),
             );

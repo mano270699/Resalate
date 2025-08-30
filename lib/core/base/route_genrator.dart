@@ -7,6 +7,9 @@ import '../../src/Auth/view/register_screen.dart';
 import '../../src/Auth/view/reset_password_screen.dart';
 import '../../src/donation/view/donation_details_screen.dart';
 import '../../src/from_mosque_to_mosque/views/from_mosque_to_mosque_screen.dart';
+import '../../src/home/views/all_feed_screen.dart';
+import '../../src/home/views/all_funerals_screen.dart';
+import '../../src/home/views/all_lesson_screen.dart';
 import '../../src/layout/screens/user_bottom_navigation_screen.dart';
 import '../../src/my_mosque/views/my_mosque_screen.dart';
 import '../../src/nearest_mosque/views/nearest_mosque.dart';
@@ -56,6 +59,12 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => FromMosqueToMosqueScreen());
       case NearestMosque.routeName:
         return MaterialPageRoute(builder: (_) => const NearestMosque());
+      case AllFeedLiveScreen.routeName:
+        return MaterialPageRoute(builder: (_) => const AllFeedLiveScreen());
+      case AllLessonsScreen.routeName:
+        return MaterialPageRoute(builder: (_) => const AllLessonsScreen());
+      case AllFuneralsScreen.routeName:
+        return MaterialPageRoute(builder: (_) => const AllFuneralsScreen());
       case DonationDetailsScreen.routeName:
         final args = settings.arguments as Map;
 

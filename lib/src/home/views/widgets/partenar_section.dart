@@ -33,33 +33,32 @@ class PartenerSection extends StatelessWidget {
                   Color(0xff04536e),
                 ])),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15.w),
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // Text("Partener Organization",),
 
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  AppText(
-                    text: title,
-                    model: AppTextModel(
-                        style: AppFontStyleGlobal(
-                                AppLocalizations.of(context)!.locale)
-                            .bodyMedium1
-                            .copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.white,
-                            )),
-                  ),
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  SizedBox(
-                    width: 200,
-                    child: AppText(
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AppText(
+                      text: title,
+                      model: AppTextModel(
+                          style: AppFontStyleGlobal(
+                                  AppLocalizations.of(context)!.locale)
+                              .bodyMedium1
+                              .copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.white,
+                              )),
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    AppText(
                       text: desc,
                       model: AppTextModel(
                           maxLines: 3,
@@ -78,8 +77,8 @@ class PartenerSection extends StatelessWidget {
                                 color: AppColors.white,
                               )),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
 
               Stack(

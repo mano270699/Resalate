@@ -46,7 +46,7 @@ class LiveFeedItem extends StatelessWidget {
         },
         child: Container(
           height: 200.h,
-          width: 180.h,
+          width: 190.w,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10), color: AppColors.white),
           child: Column(
@@ -58,7 +58,7 @@ class LiveFeedItem extends StatelessWidget {
                       topRight: Radius.circular(10)),
                   child: SizedBox(
                       height: 100.h,
-                      width: 180.w,
+                      width: double.infinity,
                       child: Image.network(
                         image,
                         fit: BoxFit.cover,

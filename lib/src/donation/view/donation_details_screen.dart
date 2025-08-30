@@ -46,94 +46,48 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: AppText(
-          text: widget.donationName,
-          model: AppTextModel(
-            style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                .headingMedium2
-                .copyWith(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.black,
-                ),
+    return Directionality(
+      textDirection: AppLocalizations.of(context)!.locale.languageCode == 'en'
+          ? TextDirection.ltr
+          : TextDirection.rtl,
+      child: Scaffold(
+        appBar: AppBar(
+          title: AppText(
+            text: widget.donationName,
+            model: AppTextModel(
+              style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
+                  .headingMedium2
+                  .copyWith(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.black,
+                  ),
+            ),
           ),
         ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: BlocBuilder<GenericCubit<DonationsDetailsResponse>,
-            GenericCubitState<DonationsDetailsResponse>>(
-          bloc: viewModel.donationDetailsResponse,
-          builder: (context, state) {
-            final data = state.data.post;
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: BlocBuilder<GenericCubit<DonationsDetailsResponse>,
+              GenericCubitState<DonationsDetailsResponse>>(
+            bloc: viewModel.donationDetailsResponse,
+            builder: (context, state) {
+              final data = state.data.post;
 
-            if (state is GenericLoadingState) {
-              return Padding(
-                  padding: EdgeInsets.only(top: 150.h),
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.primaryColor,
-                    ),
-                  ));
-            }
-
-            if (data == null && state is GenericUpdatedState) {
-              return Center(
-                child: AppText(
-                  text: "No donation details found",
-                  model: AppTextModel(
-                    style:
-                        AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                            .bodyMedium1
-                            .copyWith(
-                              color: AppColors.gray,
-                            ),
-                  ),
-                ),
-              );
-            }
-
-            return Skeletonizer(
-              enabled: state is GenericLoadingState,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  /// Post Image
-                  if ((data?.image ?? "").isNotEmpty)
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.network(
-                        data!.image!,
-                        width: double.infinity,
-                        height: 200,
-                        fit: BoxFit.cover,
+              if (state is GenericLoadingState) {
+                return Padding(
+                    padding: EdgeInsets.only(top: 150.h),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.primaryColor,
                       ),
-                    ),
+                    ));
+              }
 
-                  const SizedBox(height: 12),
-
-                  /// Title
-                  AppText(
-                    text: data?.title ?? "",
-                    model: AppTextModel(
-                      style: AppFontStyleGlobal(
-                              AppLocalizations.of(context)!.locale)
-                          .headingMedium2
-                          .copyWith(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.black,
-                          ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  /// Date
-                  AppText(
-                    text: "📅 ${data?.date ?? ''}",
+              if (data == null && state is GenericUpdatedState) {
+                return Center(
+                  child: AppText(
+                    text: AppLocalizations.of(context)!
+                        .translate("no_donation_details_found"),
                     model: AppTextModel(
                       style: AppFontStyleGlobal(
                               AppLocalizations.of(context)!.locale)
@@ -143,39 +97,90 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
                           ),
                     ),
                   ),
+                );
+              }
 
-                  const SizedBox(height: 16),
+              return Skeletonizer(
+                enabled: state is GenericLoadingState,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    /// Post Image
+                    if ((data?.image ?? "").isNotEmpty)
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.network(
+                          data!.image!,
+                          width: double.infinity,
+                          height: 200,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
 
-                  /// Content
-                  AppText(
-                    text:
-                        data?.content?.replaceAll(RegExp(r"<[^>]*>"), "") ?? "",
-                    model: AppTextModel(
-                      style: AppFontStyleGlobal(
-                              AppLocalizations.of(context)!.locale)
-                          .bodyMedium1
-                          .copyWith(
-                            fontSize: 16,
-                            color: AppColors.black,
-                          ),
+                    const SizedBox(height: 12),
+
+                    /// Title
+                    AppText(
+                      text: data?.title ?? "",
+                      model: AppTextModel(
+                        style: AppFontStyleGlobal(
+                                AppLocalizations.of(context)!.locale)
+                            .headingMedium2
+                            .copyWith(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.black,
+                            ),
+                      ),
                     ),
-                  ),
 
-                  const SizedBox(height: 20),
+                    const SizedBox(height: 8),
 
-                  /// Donation Progress
-                  if (data?.donation != null)
-                    _buildDonationSection(data?.donation ?? Donation()),
+                    AppText(
+                      text: "📅 ${data?.date ?? ''}",
+                      model: AppTextModel(
+                        style: AppFontStyleGlobal(
+                                AppLocalizations.of(context)!.locale)
+                            .bodyMedium1
+                            .copyWith(
+                              color: AppColors.gray,
+                            ),
+                      ),
+                    ),
 
-                  const SizedBox(height: 24),
+                    const SizedBox(height: 16),
 
-                  /// Masjid Info
-                  if (data?.masjid != null)
-                    _buildMasjidSection(data?.masjid ?? Masjid()),
-                ],
-              ),
-            );
-          },
+                    /// Content
+                    AppText(
+                      text: data?.content?.replaceAll(RegExp(r"<[^>]*>"), "") ??
+                          "",
+                      model: AppTextModel(
+                        style: AppFontStyleGlobal(
+                                AppLocalizations.of(context)!.locale)
+                            .bodyMedium1
+                            .copyWith(
+                              fontSize: 16,
+                              color: AppColors.black,
+                            ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    /// Donation Progress
+                    if (data?.donation != null)
+                      _buildDonationSection(data?.donation ?? Donation()),
+
+                    const SizedBox(height: 24),
+
+                    /// Masjid Info
+                    if (data?.masjid != null)
+                      _buildMasjidSection(data?.masjid ?? Masjid()),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -190,7 +195,7 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AppText(
-          text: "Donation Progress",
+          text: AppLocalizations.of(context)!.translate("donation_progress"),
           model: AppTextModel(
             style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
                 .headingMedium2
@@ -234,7 +239,7 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AppText(
-          text: "Masjid Info",
+          text: AppLocalizations.of(context)!.translate("masjid_info"),
           model: AppTextModel(
             style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
                 .headingMedium2
@@ -295,7 +300,8 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
                 horizontal: 16.w,
               ),
               child: AppText(
-                text: "Payment Options",
+                text:
+                    AppLocalizations.of(context)!.translate("payment_options"),
                 model: AppTextModel(
                   style:
                       AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
@@ -318,47 +324,34 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
   Widget _buildPaymentInfo(
     PaymentInfo info,
   ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // AppText(
-        //   text: "Payment Options",
-        //   model: AppTextModel(
-        //     style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-        //         .headingMedium2
-        //         .copyWith(
-        //           fontSize: 16,
-        //           fontWeight: FontWeight.bold,
-        //           color: AppColors.black,
-        //         ),
-        //   ),
-        // ),
-        // const SizedBox(height: 12),
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(16.r)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // AppText(
+          //   text: "Payment Options",
+          //   model: AppTextModel(
+          //     style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
+          //         .headingMedium2
+          //         .copyWith(
+          //           fontSize: 16,
+          //           fontWeight: FontWeight.bold,
+          //           color: AppColors.black,
+          //         ),
+          //   ),
+          // ),
+          // const SizedBox(height: 12),
 
-        /// Paypal
-        if ((info.paypalUser ?? "").isNotEmpty)
-          ListTile(
-            leading:
-                SvgPicture.asset(height: 20.h, width: 20.w, AppIconSvg.paypal),
-            title: AppText(
-              text: "Paypal: ${info.paypalUser}",
-              model: AppTextModel(
-                style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                    .bodyMedium1
-                    .copyWith(
-                      color: AppColors.black,
-                    ),
-              ),
-            ),
-          ),
-
-        /// Switch
-        if (info.switchPayment != null) ...[
-          ListTile(
-              leading: const Icon(Icons.payment,
-                  color: Color.fromARGB(255, 2, 104, 188)),
+          /// Paypal
+          if ((info.paypalUser ?? "").isNotEmpty)
+            ListTile(
+              leading: SvgPicture.asset(
+                  height: 20.h, width: 20.w, AppIconSvg.paypal),
               title: AppText(
-                text: "Switch Number: ${info.switchPayment?.number ?? ''}",
+                text:
+                    "${AppLocalizations.of(context)!.translate("paypal")} ${info.paypalUser}",
                 model: AppTextModel(
                   style:
                       AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
@@ -368,33 +361,50 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
                           ),
                 ),
               ),
-              subtitle: _buildContent(info.switchPayment?.url ?? "")
-              // AppText(
-              //   text: info.switchPayment?.url ?? "",
-              //   model: AppTextModel(
-              //     style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-              //         .bodyMedium1
-              //         .copyWith(
-              //           color: AppColors.gray,
-              //         ),
-              //   ),
-              // ),
-              ),
-          if (info.switchPayment?.qrCode?.url != null)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Image.network(
-                info.switchPayment!.qrCode!.url!,
-                height: 150,
-              ),
             ),
-        ],
 
-        /// Bank Account
-        if (info.bankAccount != null)
-          Card(
-            margin: const EdgeInsets.only(top: 12),
-            child: Padding(
+          /// Switch
+          if (info.switchPayment != null) ...[
+            ListTile(
+                leading: const Icon(Icons.payment,
+                    color: Color.fromARGB(255, 2, 104, 188)),
+                title: AppText(
+                  text:
+                      "${AppLocalizations.of(context)!.translate("switch_number")} ${info.switchPayment?.number ?? ''}",
+                  model: AppTextModel(
+                    style:
+                        AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
+                            .bodyMedium1
+                            .copyWith(
+                              color: AppColors.black,
+                            ),
+                  ),
+                ),
+                subtitle: _buildContent(info.switchPayment?.url ?? "")
+                // AppText(
+                //   text: info.switchPayment?.url ?? "",
+                //   model: AppTextModel(
+                //     style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
+                //         .bodyMedium1
+                //         .copyWith(
+                //           color: AppColors.gray,
+                //         ),
+                //   ),
+                // ),
+                ),
+            if (info.switchPayment?.qrCode?.url != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Image.network(
+                  info.switchPayment!.qrCode!.url!,
+                  height: 150,
+                ),
+              ),
+          ],
+
+          /// Bank Account
+          if (info.bankAccount != null)
+            Padding(
               padding: const EdgeInsets.all(12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -410,7 +420,8 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
                       ),
                       5.w.horizontalSpace,
                       AppText(
-                        text: "Bank Account",
+                        text: AppLocalizations.of(context)!
+                            .translate("bank_account"),
                         model: AppTextModel(
                           style: AppFontStyleGlobal(
                                   AppLocalizations.of(context)!.locale)
@@ -425,7 +436,8 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
                   ),
                   const SizedBox(height: 8),
                   AppText(
-                    text: "Name: ${info.bankAccount?.name ?? ''}j",
+                    text:
+                        "${AppLocalizations.of(context)!.translate("Name")} ${info.bankAccount?.name ?? ''}j",
                     model: AppTextModel(
                       style: AppFontStyleGlobal(
                               AppLocalizations.of(context)!.locale)
@@ -434,7 +446,7 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
                   ),
                   AppText(
                     text:
-                        "Account No: ${info.bankAccount?.accountNumber ?? ''}",
+                        "${AppLocalizations.of(context)!.translate("Account_No")} ${info.bankAccount?.accountNumber ?? ''}",
                     model: AppTextModel(
                       style: AppFontStyleGlobal(
                               AppLocalizations.of(context)!.locale)
@@ -442,7 +454,8 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
                     ),
                   ),
                   AppText(
-                    text: "IBAN: ${info.bankAccount?.iban ?? ''}",
+                    text:
+                        "${AppLocalizations.of(context)!.translate("IBAN")} ${info.bankAccount?.iban ?? ''}",
                     model: AppTextModel(
                       style: AppFontStyleGlobal(
                               AppLocalizations.of(context)!.locale)
@@ -450,7 +463,8 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
                     ),
                   ),
                   AppText(
-                    text: "Swift Code: ${info.bankAccount?.swiftCode ?? ''}",
+                    text:
+                        "${AppLocalizations.of(context)!.translate("Swift_Code")} ${info.bankAccount?.swiftCode ?? ''}",
                     model: AppTextModel(
                       style: AppFontStyleGlobal(
                               AppLocalizations.of(context)!.locale)
@@ -460,8 +474,8 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
                 ],
               ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 

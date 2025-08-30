@@ -53,51 +53,29 @@ class _ForgetPasswordOTPScreenState extends State<ForgetPasswordOTPScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocListener<GenericCubit<DefaultModel>,
-          GenericCubitState<DefaultModel>>(
-        bloc: viewModel.confirmOtpResponse,
-        listener: (context, state) {
-          if (state is GenericLoadingState) {
-            LoadingScreen.show(context);
-          } else if (state is GenericUpdatedState) {
-            // Navigator.of(context, rootNavigator: false).pop();
-            showAppSnackBar(
-              context: context,
-              message: state.data.message,
-              color: AppColors.success,
-            );
-            Navigator.pushReplacementNamed(
-                context, ResetPasswordScreen.routeName, arguments: {
-              "code": viewModel.controller.text,
-              "email": widget.email
-            });
-          } else {
-            Navigator.pop(context);
-            if (state is GenericErrorState) {
-              showAppSnackBar(
-                context: context,
-                message: state.responseError!.errorMessage,
-                color: AppColors.error,
-              );
-            }
-          }
-        },
-        child: BlocListener<GenericCubit<DefaultModel>,
+    return Directionality(
+      textDirection: AppLocalizations.of(context)!.locale.languageCode == 'en'
+          ? TextDirection.ltr
+          : TextDirection.rtl,
+      child: Scaffold(
+        body: BlocListener<GenericCubit<DefaultModel>,
             GenericCubitState<DefaultModel>>(
-          bloc: viewModel.resendOtpRes,
+          bloc: viewModel.confirmOtpResponse,
           listener: (context, state) {
             if (state is GenericLoadingState) {
               LoadingScreen.show(context);
             } else if (state is GenericUpdatedState) {
               // Navigator.of(context, rootNavigator: false).pop();
-              Navigator.pop(context);
-
               showAppSnackBar(
                 context: context,
                 message: state.data.message,
                 color: AppColors.success,
               );
+              Navigator.pushReplacementNamed(
+                  context, ResetPasswordScreen.routeName, arguments: {
+                "code": viewModel.controller.text,
+                "email": widget.email
+              });
             } else {
               Navigator.pop(context);
               if (state is GenericErrorState) {
@@ -109,195 +87,233 @@ class _ForgetPasswordOTPScreenState extends State<ForgetPasswordOTPScreen> {
               }
             }
           },
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  120.h.verticalSpace,
-                  Center(
-                    child: SvgPicture.asset(
-                      AppLocalizations.of(context)!.locale.languageCode == "en"
-                          ? AppIconSvg.splashLogo
-                          : AppIconSvg.splashLogoAr,
-                      height: 200.h,
+          child: BlocListener<GenericCubit<DefaultModel>,
+              GenericCubitState<DefaultModel>>(
+            bloc: viewModel.resendOtpRes,
+            listener: (context, state) {
+              if (state is GenericLoadingState) {
+                LoadingScreen.show(context);
+              } else if (state is GenericUpdatedState) {
+                // Navigator.of(context, rootNavigator: false).pop();
+                Navigator.pop(context);
+
+                showAppSnackBar(
+                  context: context,
+                  message: state.data.message,
+                  color: AppColors.success,
+                );
+              } else {
+                Navigator.pop(context);
+                if (state is GenericErrorState) {
+                  showAppSnackBar(
+                    context: context,
+                    message: state.responseError!.errorMessage,
+                    color: AppColors.error,
+                  );
+                }
+              }
+            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    25.h.verticalSpace,
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Icon(
+                          Icons.arrow_back_ios,
+                          color: AppColors.black,
+                          size: 30,
+                        )),
+                    120.h.verticalSpace,
+                    Center(
+                      child: SvgPicture.asset(
+                        AppLocalizations.of(context)!.locale.languageCode ==
+                                "en"
+                            ? AppIconSvg.splashLogo
+                            : AppIconSvg.splashLogoAr,
+                        height: 200.h,
+                      ),
                     ),
-                  ),
-                  20.h.verticalSpace,
-                  Directionality(
-                    textDirection: TextDirection.ltr,
-                    child: Center(
-                      child: AppPinCodeTextField(
-                        model: AppPinCodeModel(
-                          controller: viewModel.controller,
-                          key: viewModel.formKey,
-                          boxHeight: 45.h,
-                          boxWidth: 41.w,
-                          borderRadius: 12.r,
-                          errorTextSpace: 3.h,
-                          length: 6,
-                          obscureText: false,
-                          selectedColor: AppColors.otpBorder,
-                          activeColor: AppColors.otpBorder,
-                          inactiveColor: AppColors.otpBorder,
-                          errorBorderColor: AppColors.error,
-                          errorDetailsTextModel: AppTextModel(
-                            style: AppFontStyleGlobal(
+                    20.h.verticalSpace,
+                    Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: Center(
+                        child: AppPinCodeTextField(
+                          model: AppPinCodeModel(
+                            controller: viewModel.controller,
+                            key: viewModel.formKey,
+                            boxHeight: 45.h,
+                            boxWidth: 41.w,
+                            borderRadius: 12.r,
+                            errorTextSpace: 3.h,
+                            length: 6,
+                            obscureText: false,
+                            selectedColor: AppColors.otpBorder,
+                            activeColor: AppColors.otpBorder,
+                            inactiveColor: AppColors.otpBorder,
+                            errorBorderColor: AppColors.error,
+                            errorDetailsTextModel: AppTextModel(
+                              style: AppFontStyleGlobal(
+                                      AppLocalizations.of(context)!.locale)
+                                  .caption
+                                  .copyWith(
+                                    color: AppColors.error,
+                                  ),
+                            ),
+                            textStyle: AppFontStyleGlobal(
                                     AppLocalizations.of(context)!.locale)
-                                .caption
+                                .bodyMedium1
                                 .copyWith(
-                                  color: AppColors.error,
+                                  color: AppColors.darkBlack,
                                 ),
+                            onCompleted: (value) {},
+                            onChanged: (value) {
+                              debugPrint(value);
+                            },
+                            pinCodeSelectedFillColor: AppColors.white,
+                            pinCodeInActiveFillColor: AppColors.white,
+                            pinCodeActiveFillColor: AppColors.primaryColor,
+                            cursorColor: AppColors.primaryColor,
+                            // enableActiveFill: true,
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: false, signed: true),
+                            errorController: viewModel.errorController,
                           ),
-                          textStyle: AppFontStyleGlobal(
-                                  AppLocalizations.of(context)!.locale)
-                              .bodyMedium1
-                              .copyWith(
-                                color: AppColors.darkBlack,
-                              ),
-                          onCompleted: (value) {},
-                          onChanged: (value) {
-                            debugPrint(value);
-                          },
-                          pinCodeSelectedFillColor: AppColors.white,
-                          pinCodeInActiveFillColor: AppColors.white,
-                          pinCodeActiveFillColor: AppColors.primaryColor,
-                          cursorColor: AppColors.primaryColor,
-                          // enableActiveFill: true,
-                          keyboardType: const TextInputType.numberWithOptions(
-                              decimal: false, signed: true),
-                          errorController: viewModel.errorController,
                         ),
                       ),
                     ),
-                  ),
-                  80.h.verticalSpace,
-                  // BlocBuilder<GenericCubit<bool>, GenericCubitState<bool>>(
-                  //   bloc: viewModel.showTimer,
-                  //   builder: (context, showTimerState) {
-                  //     if (showTimerState.data) {
-                  //       return SizedBox.shrink();
-                  //     }
-                  //     return GestureDetector(
-                  //       onTap: () {
-                  //         viewModel.startTimer();
-                  //         viewModel.resendOtp(email: widget.email);
-                  //       },
-                  //       child: Center(
-                  //         child: AppText(
-                  //           text: AppLocalizations.of(context)!
-                  //               .translate('resend_otp'),
-                  //           model: AppTextModel(
-                  //             style: AppFontStyleGlobal(
-                  //                     AppLocalizations.of(context)!.locale)
-                  //                 .bodyRegular1
-                  //                 .copyWith(
-                  //                   fontSize: 12.sp,
-                  //                   fontWeight: FontWeight.bold,
-                  //                   decoration: TextDecoration.underline,
-                  //                   decorationColor: AppColors.scondaryColor,
-                  //                   color: AppColors.scondaryColor,
-                  //                 ),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     );
-                  //   },
-                  // ),
+                    80.h.verticalSpace,
+                    // BlocBuilder<GenericCubit<bool>, GenericCubitState<bool>>(
+                    //   bloc: viewModel.showTimer,
+                    //   builder: (context, showTimerState) {
+                    //     if (showTimerState.data) {
+                    //       return SizedBox.shrink();
+                    //     }
+                    //     return GestureDetector(
+                    //       onTap: () {
+                    //         viewModel.startTimer();
+                    //         viewModel.resendOtp(email: widget.email);
+                    //       },
+                    //       child: Center(
+                    //         child: AppText(
+                    //           text: AppLocalizations.of(context)!
+                    //               .translate('resend_otp'),
+                    //           model: AppTextModel(
+                    //             style: AppFontStyleGlobal(
+                    //                     AppLocalizations.of(context)!.locale)
+                    //                 .bodyRegular1
+                    //                 .copyWith(
+                    //                   fontSize: 12.sp,
+                    //                   fontWeight: FontWeight.bold,
+                    //                   decoration: TextDecoration.underline,
+                    //                   decorationColor: AppColors.scondaryColor,
+                    //                   color: AppColors.scondaryColor,
+                    //                 ),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     );
+                    //   },
+                    // ),
 
-                  BlocBuilder<GenericCubit<bool>, GenericCubitState<bool>>(
-                    bloc: viewModel.showTimer,
-                    builder: (context, showTimerState) {
-                      if (!showTimerState.data) {
-                        return SizedBox.shrink();
-                      }
+                    BlocBuilder<GenericCubit<bool>, GenericCubitState<bool>>(
+                      bloc: viewModel.showTimer,
+                      builder: (context, showTimerState) {
+                        if (!showTimerState.data) {
+                          return SizedBox.shrink();
+                        }
 
-                      return BlocBuilder<GenericCubit<String>,
-                          GenericCubitState<String>>(
-                        bloc: viewModel.timerCubit,
-                        builder: (context, state) {
-                          return Center(
+                        return BlocBuilder<GenericCubit<String>,
+                            GenericCubitState<String>>(
+                          bloc: viewModel.timerCubit,
+                          builder: (context, state) {
+                            return Center(
+                              child: AppText(
+                                text: state.data,
+                                model: AppTextModel(
+                                  style: AppFontStyleGlobal(
+                                    AppLocalizations.of(context)!.locale,
+                                  ).bodyRegular1.copyWith(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.primaryColor,
+                                      ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+
+                    BlocBuilder<GenericCubit<bool>, GenericCubitState<bool>>(
+                      bloc: viewModel.showTimer,
+                      builder: (context, showTimerState) {
+                        if (showTimerState.data) {
+                          return SizedBox.shrink();
+                        }
+                        return GestureDetector(
+                          onTap: () {
+                            viewModel.resendOtp(email: widget.email);
+                          },
+
+                          // viewModel.resendOtp(
+                          //     context: context,
+                          //     emailInput: widget.phone),
+                          child: Center(
                             child: AppText(
-                              text: state.data,
+                              text: AppLocalizations.of(context)!
+                                  .translate('resend_otp'),
                               model: AppTextModel(
                                 style: AppFontStyleGlobal(
-                                  AppLocalizations.of(context)!.locale,
-                                ).bodyRegular1.copyWith(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.primaryColor,
+                                        AppLocalizations.of(context)!.locale)
+                                    .bodyRegular1
+                                    .copyWith(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.bold,
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: AppColors.scondaryColor,
+                                      color: AppColors.scondaryColor,
                                     ),
                               ),
                             ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-
-                  BlocBuilder<GenericCubit<bool>, GenericCubitState<bool>>(
-                    bloc: viewModel.showTimer,
-                    builder: (context, showTimerState) {
-                      if (showTimerState.data) {
-                        return SizedBox.shrink();
-                      }
-                      return GestureDetector(
-                        onTap: () {
-                          viewModel.resendOtp(email: widget.email);
-                        },
-
-                        // viewModel.resendOtp(
-                        //     context: context,
-                        //     emailInput: widget.phone),
-                        child: Center(
+                          ),
+                        );
+                      },
+                    ),
+                    20.h.verticalSpace,
+                    Padding(
+                      padding: EdgeInsetsDirectional.only(
+                          bottom: 14, start: 8.w, end: 8.w),
+                      child: AppButton(
+                        model: AppButtonModel(
                           child: AppText(
                             text: AppLocalizations.of(context)!
-                                .translate('resend_otp'),
+                                .translate('verify'),
                             model: AppTextModel(
-                              style: AppFontStyleGlobal(
-                                      AppLocalizations.of(context)!.locale)
-                                  .bodyRegular1
-                                  .copyWith(
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.bold,
-                                    decoration: TextDecoration.underline,
-                                    decorationColor: AppColors.scondaryColor,
-                                    color: AppColors.scondaryColor,
-                                  ),
-                            ),
+                                style: AppFontStyleGlobal(
+                                        AppLocalizations.of(context)!.locale)
+                                    .label
+                                    .copyWith(color: AppColors.white)),
                           ),
+                          decoration: ComponentStyle.buttonDecoration,
+                          buttonStyle: ComponentStyle.buttonStyle,
                         ),
-                      );
-                    },
-                  ),
-                  20.h.verticalSpace,
-                  Padding(
-                    padding: EdgeInsetsDirectional.only(
-                        bottom: 14, start: 8.w, end: 8.w),
-                    child: AppButton(
-                      model: AppButtonModel(
-                        child: AppText(
-                          text:
-                              AppLocalizations.of(context)!.translate('verify'),
-                          model: AppTextModel(
-                              style: AppFontStyleGlobal(
-                                      AppLocalizations.of(context)!.locale)
-                                  .label
-                                  .copyWith(color: AppColors.white)),
+                        onPressed: () => viewModel.confirmOtp(
+                          context: context,
+                          email: widget.email,
                         ),
-                        decoration: ComponentStyle.buttonDecoration,
-                        buttonStyle: ComponentStyle.buttonStyle,
-                      ),
-                      onPressed: () => viewModel.confirmOtp(
-                        context: context,
-                        email: widget.email,
                       ),
                     ),
-                  ),
-                  10.h.verticalSpace,
-                ],
+                    10.h.verticalSpace,
+                  ],
+                ),
               ),
             ),
           ),

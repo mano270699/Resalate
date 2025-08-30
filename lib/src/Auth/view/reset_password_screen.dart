@@ -38,154 +38,170 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocListener<GenericCubit<ResetPasswordResponse>,
-          GenericCubitState<ResetPasswordResponse>>(
-        bloc: viewModel.resetPasswordRes,
-        listener: (context, state) {
-          if (state is GenericLoadingState) {
-            LoadingScreen.show(context);
-          } else if (state is GenericUpdatedState) {
-            showAppSnackBar(
-              context: context,
-              message: state.data.message,
-              color: AppColors.success,
-            );
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              LoginScreen.routeName,
-              (route) => false,
-            );
-          } else {
-            Navigator.pop(context);
-            if (state is GenericErrorState) {
+    return Directionality(
+      textDirection: AppLocalizations.of(context)!.locale.languageCode == 'en'
+          ? TextDirection.ltr
+          : TextDirection.rtl,
+      child: Scaffold(
+        body: BlocListener<GenericCubit<ResetPasswordResponse>,
+            GenericCubitState<ResetPasswordResponse>>(
+          bloc: viewModel.resetPasswordRes,
+          listener: (context, state) {
+            if (state is GenericLoadingState) {
+              LoadingScreen.show(context);
+            } else if (state is GenericUpdatedState) {
               showAppSnackBar(
                 context: context,
-                message: state.responseError!.errorMessage,
-                color: AppColors.error,
+                message: state.data.message,
+                color: AppColors.success,
               );
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                LoginScreen.routeName,
+                (route) => false,
+              );
+            } else {
+              Navigator.pop(context);
+              if (state is GenericErrorState) {
+                showAppSnackBar(
+                  context: context,
+                  message: state.responseError!.errorMessage,
+                  color: AppColors.error,
+                );
+              }
             }
-          }
-        },
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                120.h.verticalSpace,
-                Center(
-                  child: SvgPicture.asset(
-                    AppLocalizations.of(context)!.locale.languageCode == "en"
-                        ? AppIconSvg.splashLogo
-                        : AppIconSvg.splashLogoAr,
-                    height: 200.h,
-                  ),
-                ),
-                20.h.verticalSpace,
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12.r),
-                  child: BlocBuilder<GenericCubit<String>,
-                          GenericCubitState<String>>(
-                      bloc: viewModel.resetPasswordValidation,
-                      builder: (context, validation) {
-                        return AppTextField(
-                          model: AppTextFieldModel(
-                            appTextModel: AppTextModel(
-                                style: AppFontStyleGlobal(
-                                        AppLocalizations.of(context)!.locale)
-                                    .bodyRegular1
-                                    .copyWith(
-                                      color: AppColors.primaryColor,
-                                    )),
-                            controller: viewModel.resetPassword,
-                            keyboardType: TextInputType.visiblePassword,
-                            textInputAction: TextInputAction.done,
-                            onChangeInput: (value) {},
-                            borderRadius: BorderRadius.circular(12.r),
-                            decoration: ComponentStyle.inputDecoration(
-                                    const Locale("en"))
-                                .copyWith(
-                              fillColor: AppColors.white,
-                              contentPadding:
-                                  EdgeInsetsDirectional.only(start: 10.w),
-                              filled: true,
-                              hintText: AppLocalizations.of(context)!
-                                  .translate('password'),
-                            ),
-                            errorText: validation.data.isNotEmpty
-                                ? AppLocalizations.of(context)!
-                                    .translate(validation.data)
-                                : null,
-                          ),
-                        );
-                      }),
-                ),
-                20.h.verticalSpace,
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12.r),
-                  child: BlocBuilder<GenericCubit<String>,
-                          GenericCubitState<String>>(
-                      bloc: viewModel.confirmResetPasswordValidation,
-                      builder: (context, validation) {
-                        return AppTextField(
-                          model: AppTextFieldModel(
-                            appTextModel: AppTextModel(
-                                style: AppFontStyleGlobal(
-                                        AppLocalizations.of(context)!.locale)
-                                    .bodyRegular1
-                                    .copyWith(
-                                      color: AppColors.primaryColor,
-                                    )),
-                            controller: viewModel.confirmRestPassword,
-                            keyboardType: TextInputType.visiblePassword,
-                            textInputAction: TextInputAction.done,
-                            onChangeInput: (value) {},
-                            borderRadius: BorderRadius.circular(12.r),
-                            decoration: ComponentStyle.inputDecoration(
-                                    const Locale("en"))
-                                .copyWith(
-                              fillColor: AppColors.white,
-                              contentPadding:
-                                  EdgeInsetsDirectional.only(start: 10.w),
-                              filled: true,
-                              hintText: AppLocalizations.of(context)!
-                                  .translate('confirm_password'),
-                            ),
-                            errorText: validation.data.isNotEmpty
-                                ? AppLocalizations.of(context)!
-                                    .translate(validation.data)
-                                : null,
-                          ),
-                        );
-                      }),
-                ),
-                20.h.verticalSpace,
-                Padding(
-                  padding: EdgeInsetsDirectional.only(
-                      bottom: 14, start: 8.w, end: 8.w),
-                  child: AppButton(
-                    model: AppButtonModel(
-                      child: AppText(
-                        text: AppLocalizations.of(context)!.translate('change'),
-                        model: AppTextModel(
-                            style: AppFontStyleGlobal(
-                                    AppLocalizations.of(context)!.locale)
-                                .label
-                                .copyWith(color: AppColors.white)),
-                      ),
-                      decoration: ComponentStyle.buttonDecoration,
-                      buttonStyle: ComponentStyle.buttonStyle,
+          },
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  25.h.verticalSpace,
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(
+                        Icons.arrow_back_ios,
+                        color: AppColors.black,
+                        size: 30,
+                      )),
+                  120.h.verticalSpace,
+                  Center(
+                    child: SvgPicture.asset(
+                      AppLocalizations.of(context)!.locale.languageCode == "en"
+                          ? AppIconSvg.splashLogo
+                          : AppIconSvg.splashLogoAr,
+                      height: 200.h,
                     ),
-                    onPressed: () => viewModel.resetUserPassword(
-                        context: context,
-                        code: widget.code,
-                        email: widget.email),
                   ),
-                ),
-                10.h.verticalSpace,
-              ],
+                  20.h.verticalSpace,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12.r),
+                    child: BlocBuilder<GenericCubit<String>,
+                            GenericCubitState<String>>(
+                        bloc: viewModel.resetPasswordValidation,
+                        builder: (context, validation) {
+                          return AppTextField(
+                            model: AppTextFieldModel(
+                              appTextModel: AppTextModel(
+                                  style: AppFontStyleGlobal(
+                                          AppLocalizations.of(context)!.locale)
+                                      .bodyRegular1
+                                      .copyWith(
+                                        color: AppColors.primaryColor,
+                                      )),
+                              controller: viewModel.resetPassword,
+                              keyboardType: TextInputType.visiblePassword,
+                              textInputAction: TextInputAction.done,
+                              onChangeInput: (value) {},
+                              borderRadius: BorderRadius.circular(12.r),
+                              decoration: ComponentStyle.inputDecoration(
+                                      const Locale("en"))
+                                  .copyWith(
+                                fillColor: AppColors.white,
+                                contentPadding:
+                                    EdgeInsetsDirectional.only(start: 10.w),
+                                filled: true,
+                                hintText: AppLocalizations.of(context)!
+                                    .translate('password'),
+                              ),
+                              errorText: validation.data.isNotEmpty
+                                  ? AppLocalizations.of(context)!
+                                      .translate(validation.data)
+                                  : null,
+                            ),
+                          );
+                        }),
+                  ),
+                  20.h.verticalSpace,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12.r),
+                    child: BlocBuilder<GenericCubit<String>,
+                            GenericCubitState<String>>(
+                        bloc: viewModel.confirmResetPasswordValidation,
+                        builder: (context, validation) {
+                          return AppTextField(
+                            model: AppTextFieldModel(
+                              appTextModel: AppTextModel(
+                                  style: AppFontStyleGlobal(
+                                          AppLocalizations.of(context)!.locale)
+                                      .bodyRegular1
+                                      .copyWith(
+                                        color: AppColors.primaryColor,
+                                      )),
+                              controller: viewModel.confirmRestPassword,
+                              keyboardType: TextInputType.visiblePassword,
+                              textInputAction: TextInputAction.done,
+                              onChangeInput: (value) {},
+                              borderRadius: BorderRadius.circular(12.r),
+                              decoration: ComponentStyle.inputDecoration(
+                                      const Locale("en"))
+                                  .copyWith(
+                                fillColor: AppColors.white,
+                                contentPadding:
+                                    EdgeInsetsDirectional.only(start: 10.w),
+                                filled: true,
+                                hintText: AppLocalizations.of(context)!
+                                    .translate('confirm_password'),
+                              ),
+                              errorText: validation.data.isNotEmpty
+                                  ? AppLocalizations.of(context)!
+                                      .translate(validation.data)
+                                  : null,
+                            ),
+                          );
+                        }),
+                  ),
+                  20.h.verticalSpace,
+                  Padding(
+                    padding: EdgeInsetsDirectional.only(
+                        bottom: 14, start: 8.w, end: 8.w),
+                    child: AppButton(
+                      model: AppButtonModel(
+                        child: AppText(
+                          text:
+                              AppLocalizations.of(context)!.translate('change'),
+                          model: AppTextModel(
+                              style: AppFontStyleGlobal(
+                                      AppLocalizations.of(context)!.locale)
+                                  .label
+                                  .copyWith(color: AppColors.white)),
+                        ),
+                        decoration: ComponentStyle.buttonDecoration,
+                        buttonStyle: ComponentStyle.buttonStyle,
+                      ),
+                      onPressed: () => viewModel.resetUserPassword(
+                          context: context,
+                          code: widget.code,
+                          email: widget.email),
+                    ),
+                  ),
+                  10.h.verticalSpace,
+                ],
+              ),
             ),
           ),
         ),

@@ -188,7 +188,8 @@ class _MasjedListScreenState extends State<MasjedListScreen> {
                     ),
                     20.h.verticalSpace,
                     Text(
-                      "Select Filtration",
+                      AppLocalizations.of(context)!
+                          .translate("Select_Filtration"),
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18.sp,
@@ -200,7 +201,8 @@ class _MasjedListScreenState extends State<MasjedListScreen> {
                       bloc: viewModel.countriesList,
                       builder: (context, state) {
                         return _buildDropdown<Locations>(
-                          hint: "Select Country",
+                          hint: AppLocalizations.of(context)!
+                              .translate("Select_Country"),
                           value: viewModel.selectedCountry,
                           items: state.data,
                           labelBuilder: (c) => c.country ?? "",
@@ -214,7 +216,8 @@ class _MasjedListScreenState extends State<MasjedListScreen> {
                       bloc: viewModel.provincesList,
                       builder: (context, state) {
                         return _buildDropdown<States>(
-                          hint: "Select Province",
+                          hint: AppLocalizations.of(context)!
+                              .translate("Select_Province"),
                           value: viewModel.selectedProvince,
                           items: state.data,
                           labelBuilder: (s) => s.state ?? "",
@@ -228,7 +231,8 @@ class _MasjedListScreenState extends State<MasjedListScreen> {
                       bloc: viewModel.citiesList,
                       builder: (context, state) {
                         return _buildDropdown<Cities>(
-                          hint: "Select City",
+                          hint: AppLocalizations.of(context)!
+                              .translate("Select_City"),
                           value: viewModel.selectedCity,
                           items: state.data,
                           labelBuilder: (c) => c.name ?? "",
@@ -253,7 +257,7 @@ class _MasjedListScreenState extends State<MasjedListScreen> {
                               Navigator.pop(context);
                             },
                             child: Text(
-                              "Reset",
+                              AppLocalizations.of(context)!.translate("reset"),
                               style: TextStyle(
                                   fontSize: 16.sp,
                                   color: AppColors.scondaryColor),
@@ -275,7 +279,7 @@ class _MasjedListScreenState extends State<MasjedListScreen> {
                               Navigator.pop(context);
                             },
                             child: Text(
-                              "Apply",
+                              AppLocalizations.of(context)!.translate("apply"),
                               style: TextStyle(
                                   fontSize: 16.sp, color: Colors.white),
                             ),

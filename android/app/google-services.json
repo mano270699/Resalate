@@ -14,6 +14,30 @@
       },
       "oauth_client": [
         {
+          "client_id": "280879038347-1dhqtrfspjflkgq6tftf3m3ofdcslcu4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.resalate.app",
+            "certificate_hash": "add33c916861a19774793ad9fbc71fb4fa849003"
+          }
+        },
+        {
+          "client_id": "280879038347-42kujqklbt5903h1pqi6c24tmvsnftfv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.resalate.app",
+            "certificate_hash": "267a0148a535638f4887cf16d202553697ade4b8"
+          }
+        },
+        {
+          "client_id": "280879038347-999quqkp22nj3lbooa6gnmof2kign43i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.resalate.app",
+            "certificate_hash": "1fd32dff6a851c44fa77e9231b2143f23e5f4cab"
+          }
+        },
+        {
           "client_id": "280879038347-bivg671g0dt41ddf8cg6n9keavk32c28.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

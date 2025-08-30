@@ -18,6 +18,7 @@ import '../../../core/shared_components/app_snack_bar/app_snack_bar.dart';
 import '../../../core/shared_components/app_text/models/app_text_model.dart';
 import '../../../core/util/loading.dart';
 import '../../../core/util/localization/app_localizations.dart';
+import '../../../core/util/localization/cubit/localization_cubit.dart';
 import '../../notification/view/notification_screen.dart';
 import '../logic/profile_view_model.dart';
 import 'edit_profile_screen.dart';
@@ -101,7 +102,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           return state.data
                               ? Positioned(
                                   left: 10.w,
-                                  top: 25.h,
+                                  top: 30.h,
                                   child: GestureDetector(
                                     onTap: () {
                                       Navigator.pushNamed(context,
@@ -118,6 +119,57 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 )
                               : SizedBox.shrink();
                         },
+                      ),
+                      Positioned(
+                        right: 10.w,
+                        top: 30.h,
+                        child:
+                            BlocBuilder<LocalizationCubit, LocalizationState>(
+                          builder: (context, state) {
+                            return GestureDetector(
+                              onTap: () {
+                                if (AppLocalizations.of(context)!
+                                        .locale
+                                        .languageCode ==
+                                    "en") {
+                                  context
+                                      .read<LocalizationCubit>()
+                                      .changeLanguage('ar');
+                                } else {
+                                  context
+                                      .read<LocalizationCubit>()
+                                      .changeLanguage('en');
+                                }
+                              },
+                              child: Container(
+                                height: 35.h,
+                                width: 35.h,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.white),
+                                child: Center(
+                                  child: AppText(
+                                    text: AppLocalizations.of(context)!
+                                                .locale
+                                                .languageCode ==
+                                            "en"
+                                        ? "أ"
+                                        : "A",
+                                    model: AppTextModel(
+                                      style: AppFontStyleGlobal(
+                                              AppLocalizations.of(context)!
+                                                  .locale)
+                                          .bodyMedium1
+                                          .copyWith(
+                                              color: AppColors.black,
+                                              fontSize: 20.h),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                       // Content
                       Column(
@@ -180,7 +232,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   BorderRadius.circular(20.w)),
                                           child: Center(
                                             child: AppText(
-                                              text: 'Login',
+                                              text:
+                                                  AppLocalizations.of(context)!
+                                                      .translate("login"),
                                               model: AppTextModel(
                                                   style: AppFontStyleGlobal(
                                                           AppLocalizations.of(
@@ -329,8 +383,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                                   .spaceBetween,
                                                           children: [
                                                             AppText(
-                                                              text:
-                                                                  "Edit Profile",
+                                                              text: AppLocalizations
+                                                                      .of(
+                                                                          context)!
+                                                                  .translate(
+                                                                      "edit_profile"),
                                                               model:
                                                                   AppTextModel(
                                                                       style: AppFontStyleGlobal(
@@ -417,7 +474,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         .spaceBetween,
                                                 children: [
                                                   AppText(
-                                                    text: "Sponsor Form",
+                                                    text: AppLocalizations.of(
+                                                            context)!
+                                                        .translate(
+                                                            "Sponsor_Form"),
                                                     model: AppTextModel(
                                                         style: AppFontStyleGlobal(
                                                                 AppLocalizations.of(
@@ -502,7 +562,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         .spaceBetween,
                                                 children: [
                                                   AppText(
-                                                    text: "Contact Form",
+                                                    text: AppLocalizations.of(
+                                                            context)!
+                                                        .translate(
+                                                            "Contact_Form"),
                                                     model: AppTextModel(
                                                         style: AppFontStyleGlobal(
                                                                 AppLocalizations.of(
@@ -550,7 +613,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               AppText(
-                                                text: "Common Questions",
+                                                text: AppLocalizations.of(
+                                                        context)!
+                                                    .translate(
+                                                        "Common_Questions"),
                                                 model: AppTextModel(
                                                     style: AppFontStyleGlobal(
                                                             AppLocalizations.of(
@@ -583,7 +649,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             Navigator.pushNamed(
                                                 context, WebViewPage.routeName,
                                                 arguments: {
-                                                  "title": "About Resalty",
+                                                  "title": AppLocalizations.of(
+                                                          context)!
+                                                      .translate(
+                                                          "About_Resalty"),
                                                   "url": state
                                                       .data.aboutMobilePage?.url
                                                 });
@@ -604,7 +673,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         .spaceBetween,
                                                 children: [
                                                   AppText(
-                                                    text: "About Resalty",
+                                                    text: AppLocalizations.of(
+                                                            context)!
+                                                        .translate(
+                                                            "About_Resalty"),
                                                     model: AppTextModel(
                                                         style: AppFontStyleGlobal(
                                                                 AppLocalizations.of(
@@ -641,7 +713,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             Navigator.pushNamed(
                                                 context, WebViewPage.routeName,
                                                 arguments: {
-                                                  "title": "Privcy Policy",
+                                                  "title": AppLocalizations.of(
+                                                          context)!
+                                                      .translate(
+                                                          "Privcy_Policy"),
                                                   "url": state
                                                       .data.privacyPolicy?.url
                                                 });
@@ -662,7 +737,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         .spaceBetween,
                                                 children: [
                                                   AppText(
-                                                    text: "Privcy Policy",
+                                                    text: AppLocalizations.of(
+                                                            context)!
+                                                        .translate(
+                                                            "Privcy_Policy"),
                                                     model: AppTextModel(
                                                         style: AppFontStyleGlobal(
                                                                 AppLocalizations.of(
@@ -699,7 +777,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             Navigator.pushNamed(
                                                 context, WebViewPage.routeName,
                                                 arguments: {
-                                                  "title": "Terms & Conditions",
+                                                  "title": AppLocalizations.of(
+                                                          context)!
+                                                      .translate(
+                                                          "Terms_Conditions"),
                                                   "url": state.data.terms?.url
                                                 });
                                           },
@@ -719,7 +800,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         .spaceBetween,
                                                 children: [
                                                   AppText(
-                                                    text: "Terms & Conditions",
+                                                    text: AppLocalizations.of(
+                                                            context)!
+                                                        .translate(
+                                                            "Terms_Conditions"),
                                                     model: AppTextModel(
                                                         style: AppFontStyleGlobal(
                                                                 AppLocalizations.of(
@@ -758,10 +842,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     context: context,
                                                     builder: (_) =>
                                                         ConfirmDialog(
-                                                      title: "Logout",
-                                                      message:
-                                                          "Are you sure you want to log out?",
-                                                      confirmText: "Logout",
+                                                      title: AppLocalizations
+                                                              .of(context)!
+                                                          .translate("logout"),
+                                                      message: AppLocalizations
+                                                              .of(context)!
+                                                          .translate(
+                                                              "logout_alrt"),
+                                                      confirmText:
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  "logout"),
                                                       confirmColor: AppColors
                                                           .primaryColor,
                                                       onConfirm: () {
@@ -788,7 +880,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                               .spaceBetween,
                                                       children: [
                                                         AppText(
-                                                          text: "Logout",
+                                                          text: AppLocalizations
+                                                                  .of(context)!
+                                                              .translate(
+                                                                  "logout"),
                                                           model: AppTextModel(
                                                               style: AppFontStyleGlobal(
                                                                       AppLocalizations.of(
@@ -829,10 +924,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     context: context,
                                                     builder: (_) =>
                                                         ConfirmDialog(
-                                                      title: "Delete Account",
-                                                      message:
-                                                          "This action cannot be undone.\nDo you want to continue?",
-                                                      confirmText: "Delete",
+                                                      title: AppLocalizations
+                                                              .of(context)!
+                                                          .translate(
+                                                              "Delete_Account"),
+                                                      message: AppLocalizations
+                                                              .of(context)!
+                                                          .translate(
+                                                              "Delete_Account_alart"),
+                                                      confirmText:
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  "delete"),
                                                       confirmColor: Colors.red,
                                                       onConfirm: () {
                                                         viewModel
@@ -859,8 +963,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                               .spaceBetween,
                                                       children: [
                                                         AppText(
-                                                          text:
-                                                              "Delete Account",
+                                                          text: AppLocalizations
+                                                                  .of(context)!
+                                                              .translate(
+                                                                  "Delete_Account"),
                                                           model: AppTextModel(
                                                               style: AppFontStyleGlobal(
                                                                       AppLocalizations.of(

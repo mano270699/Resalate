@@ -60,144 +60,148 @@ class _NearestMosqueState extends State<NearestMosque> {
   ];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Nearest Mosque"),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12.r),
-                      child: AppTextField(
-                        model: AppTextFieldModel(
-                          appTextModel: AppTextModel(
-                              style: AppFontStyleGlobal(
-                                      AppLocalizations.of(context)!.locale)
-                                  .bodyRegular1
-                                  .copyWith(
-                                    color: AppColors.primaryColor,
-                                  )),
-                          controller: TextEditingController(),
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.done,
+    return Directionality(
+      textDirection: AppLocalizations.of(context)!.locale.languageCode == 'en'
+          ? TextDirection.ltr
+          : TextDirection.rtl,
+      child: Scaffold(
+        appBar: AppBar(
+          title:
+              Text(AppLocalizations.of(context)!.translate("nearest_mosques")),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12.r),
+                        child: AppTextField(
+                          model: AppTextFieldModel(
+                            appTextModel: AppTextModel(
+                                style: AppFontStyleGlobal(
+                                        AppLocalizations.of(context)!.locale)
+                                    .bodyRegular1
+                                    .copyWith(
+                                      color: AppColors.primaryColor,
+                                    )),
+                            controller: TextEditingController(),
+                            keyboardType: TextInputType.text,
+                            textInputAction: TextInputAction.done,
 
-                          onChangeInput: (value) {
-                            if (value.length <= 1) {
-                              setState(() {});
-                            }
-                          },
-                          // label: "Search..",
-                          borderRadius: BorderRadius.circular(12.r),
-                          decoration:
-                              ComponentStyle.inputDecoration(const Locale("en")
-                                      // AppLocalizations.of(context)!.locale,
-                                      )
-                                  .copyWith(
-                            fillColor: AppColors.white,
-                            contentPadding:
-                                EdgeInsetsDirectional.only(start: 10.w),
-                            filled: true,
+                            onChangeInput: (value) {
+                              if (value.length <= 1) {
+                                setState(() {});
+                              }
+                            },
+                            // label: "Search..",
+                            borderRadius: BorderRadius.circular(12.r),
+                            decoration: ComponentStyle.inputDecoration(
+                              AppLocalizations.of(context)!.locale,
+                            ).copyWith(
+                              fillColor: AppColors.white,
+                              contentPadding:
+                                  EdgeInsetsDirectional.only(start: 10.w),
+                              filled: true,
 
-                            //   floatingLabelBehavior: viewModel.password.text.isEmpty
-                            //       ? FloatingLabelBehavior.never
-                            //       : FloatingLabelBehavior.always,
-                            // labelText: "Search..",
-                            //  viewModel.password.text.isEmpty
-                            //     ? null
-                            //     :
-                            // AppLocalizations.of(context)!.translate('password'),
-                            hintText: "Search..",
-                            //  AppLocalizations.of(context)!.translate('password'),
+                              //   floatingLabelBehavior: viewModel.password.text.isEmpty
+                              //       ? FloatingLabelBehavior.never
+                              //       : FloatingLabelBehavior.always,
+                              // labelText: "Search..",
+                              //  viewModel.password.text.isEmpty
+                              //     ? null
+                              //     :
+                              // AppLocalizations.of(context)!.translate('password'),
+                              hintText: "Search..",
+                              //  AppLocalizations.of(context)!.translate('password'),
+                            ),
+                            errorText: "",
+
+                            // validation.data.isNotEmpty
+                            //     ? AppLocalizations.of(context)!.translate(validation.data)
+                            //     : null,
                           ),
-                          errorText: "",
-
-                          // validation.data.isNotEmpty
-                          //     ? AppLocalizations.of(context)!.translate(validation.data)
-                          //     : null,
                         ),
                       ),
                     ),
-                  ),
-                  10.w.horizontalSpace,
-                  Container(
-                    height: 47.h,
-                    padding: EdgeInsets.symmetric(horizontal: 10.w),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12.r)),
-                    child: const Center(
+                    10.w.horizontalSpace,
+                    Container(
+                      height: 47.h,
+                      padding: EdgeInsets.symmetric(horizontal: 10.w),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12.r)),
+                      child: const Center(
+                        child: Icon(
+                          Icons.filter_alt_sharp,
+                          color: AppColors.scondaryColor,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          showItem = 1;
+                        });
+                      },
                       child: Icon(
-                        Icons.filter_alt_sharp,
-                        color: AppColors.scondaryColor,
+                        Icons.all_inbox,
+                        color: showItem == 1
+                            ? AppColors.scondaryColor
+                            : AppColors.gray,
                       ),
                     ),
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.w),
-              child: Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        showItem = 1;
-                      });
-                    },
-                    child: Icon(
-                      Icons.all_inbox,
-                      color: showItem == 1
-                          ? AppColors.scondaryColor
-                          : AppColors.gray,
+                    10.w.horizontalSpace,
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          showItem = 2;
+                        });
+                      },
+                      child: Icon(
+                        Icons.window,
+                        color: showItem == 2
+                            ? AppColors.scondaryColor
+                            : AppColors.gray,
+                      ),
                     ),
-                  ),
-                  10.w.horizontalSpace,
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        showItem = 2;
-                      });
-                    },
-                    child: Icon(
-                      Icons.window,
-                      color: showItem == 2
-                          ? AppColors.scondaryColor
-                          : AppColors.gray,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-              child: GridView.builder(
-                padding: EdgeInsets.zero,
-                itemCount: mosquesList.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: showItem == 2 ? 0.83 : 1.45,
-                    crossAxisCount: showItem,
-                    crossAxisSpacing: 5.w,
-                    mainAxisSpacing: 5.h),
-                itemBuilder: (BuildContext context, int index) {
-                  return MosqueItem(
-                      address: mosquesList[index]["address"],
-                      lat: "31.2001",
-                      long: "29.9187",
-                      image: mosquesList[index]["image"],
-                      title: mosquesList[index]["name"]);
-                },
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                child: GridView.builder(
+                  padding: EdgeInsets.zero,
+                  itemCount: mosquesList.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      childAspectRatio: showItem == 2 ? 0.83 : 1.45,
+                      crossAxisCount: showItem,
+                      crossAxisSpacing: 5.w,
+                      mainAxisSpacing: 5.h),
+                  itemBuilder: (BuildContext context, int index) {
+                    return MosqueItem(
+                        address: mosquesList[index]["address"],
+                        lat: "31.2001",
+                        long: "29.9187",
+                        image: mosquesList[index]["image"],
+                        title: mosquesList[index]["name"]);
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

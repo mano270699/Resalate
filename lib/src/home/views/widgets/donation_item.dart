@@ -35,7 +35,7 @@ class DonationItem extends StatelessWidget {
       padding: EdgeInsetsDirectional.only(start: 10.w),
       child: Container(
         height: 342.h,
-        width: MediaQuery.of(context).size.width - 32.w,
+        width: MediaQuery.of(context).size.width - 70.w,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10), color: AppColors.white),
         child: Padding(
@@ -126,7 +126,7 @@ class DonationItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           AppText(
                             text: AppLocalizations.of(context)!
@@ -147,7 +147,7 @@ class DonationItem extends StatelessWidget {
                                     )),
                           ),
                           AppText(
-                            text: "${double.parse(total)} $currency",
+                            text: " ${double.parse(total)} $currency",
                             model: AppTextModel(
                                 style: AppFontStyleGlobal(
                                         AppLocalizations.of(context)!.locale)
@@ -161,7 +161,7 @@ class DonationItem extends StatelessWidget {
                         ],
                       ),
                       Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           AppText(
                             text:
@@ -182,7 +182,7 @@ class DonationItem extends StatelessWidget {
                                     )),
                           ),
                           AppText(
-                            text: "${double.parse(remaining)} $currency",
+                            text: " ${double.parse(remaining)} $currency",
                             model: AppTextModel(
                                 style: AppFontStyleGlobal(
                                         AppLocalizations.of(context)!.locale)

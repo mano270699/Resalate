@@ -166,17 +166,13 @@ class AuthViewModel {
         loginResponse.onErrorState(Failure('$e'));
       }
     } else {
-      print("in Loading state");
+      debugPrint("in Loading state");
 
       return;
     }
   }
 
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-      clientId:
-          "280879038347-996a0j758rs140kkkdg2fkk5827jp68i.apps.googleusercontent.com", // Web client ID
-
-      scopes: ['email']);
+  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
 
   GenericCubit<LoginResponse> googleLogin = GenericCubit(LoginResponse());
   Future<GoogleSignInAccount?> signInWithGoogle(BuildContext context) async {

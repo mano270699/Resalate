@@ -36,362 +36,377 @@ class _RegesterScreenState extends State<RegesterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocListener<GenericCubit<RegisterModel>,
-          GenericCubitState<RegisterModel>>(
-        bloc: viewModel.registerResponse,
-        listener: (context, state) {
-          if (state is GenericLoadingState) {
-            LoadingScreen.show(context);
-          } else if (state is GenericUpdatedState) {
-            // Navigator.of(context, rootNavigator: false).pop();
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              MainBottomNavigationScreen.routeName,
-              arguments: {"index": 0},
-              (route) => false,
-            );
-            showAppSnackBar(
-              context: context,
-              message: state.data.message,
-              color: AppColors.success,
-            );
-          } else {
-            Navigator.pop(context);
-            if (state is GenericErrorState) {
+    return Directionality(
+      textDirection: AppLocalizations.of(context)!.locale.languageCode == 'en'
+          ? TextDirection.ltr
+          : TextDirection.rtl,
+      child: Scaffold(
+        body: BlocListener<GenericCubit<RegisterModel>,
+            GenericCubitState<RegisterModel>>(
+          bloc: viewModel.registerResponse,
+          listener: (context, state) {
+            if (state is GenericLoadingState) {
+              LoadingScreen.show(context);
+            } else if (state is GenericUpdatedState) {
+              // Navigator.of(context, rootNavigator: false).pop();
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                MainBottomNavigationScreen.routeName,
+                arguments: {"index": 0},
+                (route) => false,
+              );
               showAppSnackBar(
                 context: context,
-                message: state.responseError!.errorMessage,
-                color: AppColors.error,
+                message: state.data.message,
+                color: AppColors.success,
               );
+            } else {
+              Navigator.pop(context);
+              if (state is GenericErrorState) {
+                showAppSnackBar(
+                  context: context,
+                  message: state.responseError!.errorMessage,
+                  color: AppColors.error,
+                );
+              }
             }
-          }
-        },
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: SvgPicture.asset(
-                    AppLocalizations.of(context)!.locale.languageCode == "en"
-                        ? AppIconSvg.splashLogo
-                        : AppIconSvg.splashLogoAr,
-                    height: 200.h,
-                  ),
-                ),
-
-                20.h.verticalSpace,
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12.r),
-                  child: BlocBuilder<GenericCubit<String>,
-                          GenericCubitState<String>>(
-                      bloc: viewModel.nameValidation,
-                      builder: (context, validation) {
-                        return AppTextField(
-                          model: AppTextFieldModel(
-                            appTextModel: AppTextModel(
-                                style: AppFontStyleGlobal(
-                                        AppLocalizations.of(context)!.locale)
-                                    .bodyRegular1
-                                    .copyWith(
-                                      color: AppColors.primaryColor,
-                                    )),
-                            controller: viewModel.name,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.done,
-
-                            onChangeInput: (value) {},
-                            // label: "Search..",
-                            borderRadius: BorderRadius.circular(12.r),
-                            decoration: ComponentStyle.inputDecoration(
-                              AppLocalizations.of(context)!.locale,
-                            ).copyWith(
-                              fillColor: AppColors.white,
-                              contentPadding:
-                                  EdgeInsetsDirectional.only(start: 10.w),
-                              filled: true,
-                              hintText: AppLocalizations.of(context)!
-                                  .translate('name'),
-                            ),
-                            errorText: validation.data.isNotEmpty
-                                ? AppLocalizations.of(context)!
-                                    .translate(validation.data)
-                                : null,
-                          ),
-                        );
-                      }),
-                ),
-                20.h.verticalSpace,
-
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12.r),
-                  child: BlocBuilder<GenericCubit<String>,
-                          GenericCubitState<String>>(
-                      bloc: viewModel.emailValidation,
-                      builder: (context, validation) {
-                        return AppTextField(
-                          model: AppTextFieldModel(
-                            appTextModel: AppTextModel(
-                                style: AppFontStyleGlobal(
-                                        AppLocalizations.of(context)!.locale)
-                                    .bodyRegular1
-                                    .copyWith(
-                                      color: AppColors.primaryColor,
-                                    )),
-                            controller: viewModel.email,
-                            keyboardType: TextInputType.emailAddress,
-                            textInputAction: TextInputAction.done,
-                            onChangeInput: (value) {},
-                            borderRadius: BorderRadius.circular(12.r),
-                            decoration: ComponentStyle.inputDecoration(
-                              AppLocalizations.of(context)!.locale,
-                            ).copyWith(
-                              fillColor: AppColors.white,
-                              contentPadding:
-                                  EdgeInsetsDirectional.only(start: 10.w),
-                              filled: true,
-                              hintText: AppLocalizations.of(context)!
-                                  .translate('email'),
-                            ),
-                            errorText: validation.data.isNotEmpty
-                                ? AppLocalizations.of(context)!
-                                    .translate(validation.data)
-                                : null,
-                          ),
-                        );
-                      }),
-                ),
-                20.h.verticalSpace,
-
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12.r),
-                  child: BlocBuilder<GenericCubit<String>,
-                          GenericCubitState<String>>(
-                      bloc: viewModel.phoneNumberValidation,
-                      builder: (context, validation) {
-                        return AppTextField(
-                          model: AppTextFieldModel(
-                            appTextModel: AppTextModel(
-                                style: AppFontStyleGlobal(
-                                        AppLocalizations.of(context)!.locale)
-                                    .bodyRegular1
-                                    .copyWith(
-                                      color: AppColors.primaryColor,
-                                    )),
-                            controller: viewModel.phone,
-                            keyboardType: TextInputType.phone,
-                            textInputAction: TextInputAction.done,
-                            onChangeInput: (value) {},
-                            borderRadius: BorderRadius.circular(12.r),
-                            decoration: ComponentStyle.inputDecoration(
-                              AppLocalizations.of(context)!.locale,
-                            ).copyWith(
-                              fillColor: AppColors.white,
-                              contentPadding:
-                                  EdgeInsetsDirectional.only(start: 10.w),
-                              filled: true,
-                              hintText: AppLocalizations.of(context)!
-                                  .translate('phone'),
-                            ),
-                            errorText: validation.data.isNotEmpty
-                                ? AppLocalizations.of(context)!
-                                    .translate(validation.data)
-                                : null,
-                          ),
-                        );
-                      }),
-                ),
-                20.h.verticalSpace,
-
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12.r),
-                  child: BlocBuilder<GenericCubit<String>,
-                          GenericCubitState<String>>(
-                      bloc: viewModel.passwordValidation,
-                      builder: (context, validation) {
-                        return AppTextField(
-                          model: AppTextFieldModel(
-                            appTextModel: AppTextModel(
-                                style: AppFontStyleGlobal(
-                                        AppLocalizations.of(context)!.locale)
-                                    .bodyRegular1
-                                    .copyWith(
-                                      color: AppColors.primaryColor,
-                                    )),
-                            controller: viewModel.password,
-                            obscureInputText: true,
-                            maxLines: 1,
-                            keyboardType: TextInputType.visiblePassword,
-                            textInputAction: TextInputAction.done,
-                            onChangeInput: (value) {},
-                            borderRadius: BorderRadius.circular(12.r),
-                            decoration: ComponentStyle.inputDecoration(
-                              AppLocalizations.of(context)!.locale,
-                            ).copyWith(
-                              fillColor: AppColors.white,
-                              contentPadding:
-                                  EdgeInsetsDirectional.only(start: 10.w),
-                              filled: true,
-                              hintText: AppLocalizations.of(context)!
-                                  .translate('password'),
-                            ),
-                            errorText: validation.data.isNotEmpty
-                                ? AppLocalizations.of(context)!
-                                    .translate(validation.data)
-                                : null,
-                          ),
-                        );
-                      }),
-                ),
-
-                20.h.verticalSpace,
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12.r),
-                  child: BlocBuilder<GenericCubit<String>,
-                          GenericCubitState<String>>(
-                      bloc: viewModel.confirmValidation,
-                      builder: (context, validation) {
-                        return AppTextField(
-                          model: AppTextFieldModel(
-                            appTextModel: AppTextModel(
-                                style: AppFontStyleGlobal(
-                                        AppLocalizations.of(context)!.locale)
-                                    .bodyRegular1
-                                    .copyWith(
-                                      color: AppColors.primaryColor,
-                                    )),
-                            controller: viewModel.confirmPassword,
-                            keyboardType: TextInputType.visiblePassword,
-                            obscureInputText: true,
-                            maxLines: 1,
-                            textInputAction: TextInputAction.done,
-                            onChangeInput: (value) {},
-                            borderRadius: BorderRadius.circular(12.r),
-                            decoration: ComponentStyle.inputDecoration(
-                              AppLocalizations.of(context)!.locale,
-                            ).copyWith(
-                              fillColor: AppColors.white,
-                              contentPadding:
-                                  EdgeInsetsDirectional.only(start: 10.w),
-                              filled: true,
-                              hintText: AppLocalizations.of(context)!
-                                  .translate('confirm_password'),
-                            ),
-                            errorText: validation.data.isNotEmpty
-                                ? AppLocalizations.of(context)!
-                                    .translate(validation.data)
-                                : null,
-                          ),
-                        );
-                      }),
-                ),
-
-                20.h.verticalSpace,
-                // SizedBox(
-                //   height: 24,
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     children: [
-                //       AppText(
-                //         text: AppLocalizations.of(context)!
-                //             .translate('do_not_have_account'),
-                //         model: AppTextModel(
-                //           style: AppFontStyleGlobal(
-                //                   AppLocalizations.of(context)!.locale)
-                //               .bodyRegular1
-                //               .copyWith(
-                //                 color: AppColors.hint,
-                //               ),
-                //         ),
-                //       ),
-                //       SizedBox(width: 5.w),
-                //       InkWell(
-                //         onTap: () => Navigator.pushNamed(
-                //           context,
-                //           SignupScreen.routeName,
-                //         ),
-                //         child: AppText(
-                //           text: AppLocalizations.of(context)!
-                //               .translate('register_now'),
-                //           model: AppTextModel(
-                //             style: AppFontStyleGlobal(
-                //                     AppLocalizations.of(context)!.locale)
-                //                 .bodyRegular1
-                //                 .copyWith(
-                //                   color: AppColors.primaryColor,
-                //                 ),
-                //           ),
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
-
-                Padding(
-                  padding: EdgeInsetsDirectional.only(
-                      bottom: 14, start: 8.w, end: 8.w),
-                  child: AppButton(
-                    model: AppButtonModel(
-                      child: AppText(
-                        text: AppLocalizations.of(context)!
-                            .translate('register_now'),
-                        model: AppTextModel(
-                            style: AppFontStyleGlobal(
-                                    AppLocalizations.of(context)!.locale)
-                                .label
-                                .copyWith(color: AppColors.white)),
-                      ),
-                      decoration: ComponentStyle.buttonDecoration,
-                      buttonStyle: ComponentStyle.buttonStyle,
+          },
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  25.h.verticalSpace,
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(
+                        Icons.arrow_back_ios,
+                        color: AppColors.black,
+                        size: 30,
+                      )),
+                  Center(
+                    child: SvgPicture.asset(
+                      AppLocalizations.of(context)!.locale.languageCode == "en"
+                          ? AppIconSvg.splashLogo
+                          : AppIconSvg.splashLogoAr,
+                      height: 200.h,
                     ),
-                    onPressed: () => viewModel.register(context: context),
                   ),
-                ),
 
-                10.h.verticalSpace,
-                SizedBox(
-                  height: 24,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      AppText(
-                        text: AppLocalizations.of(context)!
-                            .translate('already_have_account'),
-                        model: AppTextModel(
-                          style: AppFontStyleGlobal(
-                                  AppLocalizations.of(context)!.locale)
-                              .bodyRegular1
-                              .copyWith(
-                                color: AppColors.gray,
+                  20.h.verticalSpace,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12.r),
+                    child: BlocBuilder<GenericCubit<String>,
+                            GenericCubitState<String>>(
+                        bloc: viewModel.nameValidation,
+                        builder: (context, validation) {
+                          return AppTextField(
+                            model: AppTextFieldModel(
+                              appTextModel: AppTextModel(
+                                  style: AppFontStyleGlobal(
+                                          AppLocalizations.of(context)!.locale)
+                                      .bodyRegular1
+                                      .copyWith(
+                                        color: AppColors.primaryColor,
+                                      )),
+                              controller: viewModel.name,
+                              keyboardType: TextInputType.text,
+                              textInputAction: TextInputAction.done,
+
+                              onChangeInput: (value) {},
+                              // label: "Search..",
+                              borderRadius: BorderRadius.circular(12.r),
+                              decoration: ComponentStyle.inputDecoration(
+                                AppLocalizations.of(context)!.locale,
+                              ).copyWith(
+                                fillColor: AppColors.white,
+                                contentPadding:
+                                    EdgeInsetsDirectional.only(start: 10.w),
+                                filled: true,
+                                hintText: AppLocalizations.of(context)!
+                                    .translate('name'),
                               ),
-                        ),
-                      ),
-                      SizedBox(width: 5.w),
-                      InkWell(
-                        onTap: () => Navigator.pushNamed(
-                          context,
-                          LoginScreen.routeName,
-                        ),
+                              errorText: validation.data.isNotEmpty
+                                  ? AppLocalizations.of(context)!
+                                      .translate(validation.data)
+                                  : null,
+                            ),
+                          );
+                        }),
+                  ),
+                  20.h.verticalSpace,
+
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12.r),
+                    child: BlocBuilder<GenericCubit<String>,
+                            GenericCubitState<String>>(
+                        bloc: viewModel.emailValidation,
+                        builder: (context, validation) {
+                          return AppTextField(
+                            model: AppTextFieldModel(
+                              appTextModel: AppTextModel(
+                                  style: AppFontStyleGlobal(
+                                          AppLocalizations.of(context)!.locale)
+                                      .bodyRegular1
+                                      .copyWith(
+                                        color: AppColors.primaryColor,
+                                      )),
+                              controller: viewModel.email,
+                              keyboardType: TextInputType.emailAddress,
+                              textInputAction: TextInputAction.done,
+                              onChangeInput: (value) {},
+                              borderRadius: BorderRadius.circular(12.r),
+                              decoration: ComponentStyle.inputDecoration(
+                                AppLocalizations.of(context)!.locale,
+                              ).copyWith(
+                                fillColor: AppColors.white,
+                                contentPadding:
+                                    EdgeInsetsDirectional.only(start: 10.w),
+                                filled: true,
+                                hintText: AppLocalizations.of(context)!
+                                    .translate('email'),
+                              ),
+                              errorText: validation.data.isNotEmpty
+                                  ? AppLocalizations.of(context)!
+                                      .translate(validation.data)
+                                  : null,
+                            ),
+                          );
+                        }),
+                  ),
+                  20.h.verticalSpace,
+
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12.r),
+                    child: BlocBuilder<GenericCubit<String>,
+                            GenericCubitState<String>>(
+                        bloc: viewModel.phoneNumberValidation,
+                        builder: (context, validation) {
+                          return AppTextField(
+                            model: AppTextFieldModel(
+                              appTextModel: AppTextModel(
+                                  style: AppFontStyleGlobal(
+                                          AppLocalizations.of(context)!.locale)
+                                      .bodyRegular1
+                                      .copyWith(
+                                        color: AppColors.primaryColor,
+                                      )),
+                              controller: viewModel.phone,
+                              keyboardType: TextInputType.phone,
+                              textInputAction: TextInputAction.done,
+                              onChangeInput: (value) {},
+                              borderRadius: BorderRadius.circular(12.r),
+                              decoration: ComponentStyle.inputDecoration(
+                                AppLocalizations.of(context)!.locale,
+                              ).copyWith(
+                                fillColor: AppColors.white,
+                                contentPadding:
+                                    EdgeInsetsDirectional.only(start: 10.w),
+                                filled: true,
+                                hintText: AppLocalizations.of(context)!
+                                    .translate('phone'),
+                              ),
+                              errorText: validation.data.isNotEmpty
+                                  ? AppLocalizations.of(context)!
+                                      .translate(validation.data)
+                                  : null,
+                            ),
+                          );
+                        }),
+                  ),
+                  20.h.verticalSpace,
+
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12.r),
+                    child: BlocBuilder<GenericCubit<String>,
+                            GenericCubitState<String>>(
+                        bloc: viewModel.passwordValidation,
+                        builder: (context, validation) {
+                          return AppTextField(
+                            model: AppTextFieldModel(
+                              appTextModel: AppTextModel(
+                                  style: AppFontStyleGlobal(
+                                          AppLocalizations.of(context)!.locale)
+                                      .bodyRegular1
+                                      .copyWith(
+                                        color: AppColors.primaryColor,
+                                      )),
+                              controller: viewModel.password,
+                              obscureInputText: true,
+                              maxLines: 1,
+                              keyboardType: TextInputType.visiblePassword,
+                              textInputAction: TextInputAction.done,
+                              onChangeInput: (value) {},
+                              borderRadius: BorderRadius.circular(12.r),
+                              decoration: ComponentStyle.inputDecoration(
+                                AppLocalizations.of(context)!.locale,
+                              ).copyWith(
+                                fillColor: AppColors.white,
+                                contentPadding:
+                                    EdgeInsetsDirectional.only(start: 10.w),
+                                filled: true,
+                                hintText: AppLocalizations.of(context)!
+                                    .translate('password'),
+                              ),
+                              errorText: validation.data.isNotEmpty
+                                  ? AppLocalizations.of(context)!
+                                      .translate(validation.data)
+                                  : null,
+                            ),
+                          );
+                        }),
+                  ),
+
+                  20.h.verticalSpace,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12.r),
+                    child: BlocBuilder<GenericCubit<String>,
+                            GenericCubitState<String>>(
+                        bloc: viewModel.confirmValidation,
+                        builder: (context, validation) {
+                          return AppTextField(
+                            model: AppTextFieldModel(
+                              appTextModel: AppTextModel(
+                                  style: AppFontStyleGlobal(
+                                          AppLocalizations.of(context)!.locale)
+                                      .bodyRegular1
+                                      .copyWith(
+                                        color: AppColors.primaryColor,
+                                      )),
+                              controller: viewModel.confirmPassword,
+                              keyboardType: TextInputType.visiblePassword,
+                              obscureInputText: true,
+                              maxLines: 1,
+                              textInputAction: TextInputAction.done,
+                              onChangeInput: (value) {},
+                              borderRadius: BorderRadius.circular(12.r),
+                              decoration: ComponentStyle.inputDecoration(
+                                AppLocalizations.of(context)!.locale,
+                              ).copyWith(
+                                fillColor: AppColors.white,
+                                contentPadding:
+                                    EdgeInsetsDirectional.only(start: 10.w),
+                                filled: true,
+                                hintText: AppLocalizations.of(context)!
+                                    .translate('confirm_password'),
+                              ),
+                              errorText: validation.data.isNotEmpty
+                                  ? AppLocalizations.of(context)!
+                                      .translate(validation.data)
+                                  : null,
+                            ),
+                          );
+                        }),
+                  ),
+
+                  20.h.verticalSpace,
+                  // SizedBox(
+                  //   height: 24,
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: [
+                  //       AppText(
+                  //         text: AppLocalizations.of(context)!
+                  //             .translate('do_not_have_account'),
+                  //         model: AppTextModel(
+                  //           style: AppFontStyleGlobal(
+                  //                   AppLocalizations.of(context)!.locale)
+                  //               .bodyRegular1
+                  //               .copyWith(
+                  //                 color: AppColors.hint,
+                  //               ),
+                  //         ),
+                  //       ),
+                  //       SizedBox(width: 5.w),
+                  //       InkWell(
+                  //         onTap: () => Navigator.pushNamed(
+                  //           context,
+                  //           SignupScreen.routeName,
+                  //         ),
+                  //         child: AppText(
+                  //           text: AppLocalizations.of(context)!
+                  //               .translate('register_now'),
+                  //           model: AppTextModel(
+                  //             style: AppFontStyleGlobal(
+                  //                     AppLocalizations.of(context)!.locale)
+                  //                 .bodyRegular1
+                  //                 .copyWith(
+                  //                   color: AppColors.primaryColor,
+                  //                 ),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+
+                  Padding(
+                    padding: EdgeInsetsDirectional.only(
+                        bottom: 14, start: 8.w, end: 8.w),
+                    child: AppButton(
+                      model: AppButtonModel(
                         child: AppText(
-                          text:
-                              AppLocalizations.of(context)!.translate('login'),
+                          text: AppLocalizations.of(context)!
+                              .translate('register_now'),
+                          model: AppTextModel(
+                              style: AppFontStyleGlobal(
+                                      AppLocalizations.of(context)!.locale)
+                                  .label
+                                  .copyWith(color: AppColors.white)),
+                        ),
+                        decoration: ComponentStyle.buttonDecoration,
+                        buttonStyle: ComponentStyle.buttonStyle,
+                      ),
+                      onPressed: () => viewModel.register(context: context),
+                    ),
+                  ),
+
+                  10.h.verticalSpace,
+                  SizedBox(
+                    height: 24,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AppText(
+                          text: AppLocalizations.of(context)!
+                              .translate('already_have_account'),
                           model: AppTextModel(
                             style: AppFontStyleGlobal(
                                     AppLocalizations.of(context)!.locale)
                                 .bodyRegular1
                                 .copyWith(
-                                  color: AppColors.primaryColor,
+                                  color: AppColors.gray,
                                 ),
                           ),
                         ),
-                      ),
-                    ],
+                        SizedBox(width: 5.w),
+                        InkWell(
+                          onTap: () => Navigator.pushNamed(
+                            context,
+                            LoginScreen.routeName,
+                          ),
+                          child: AppText(
+                            text: AppLocalizations.of(context)!
+                                .translate('login'),
+                            model: AppTextModel(
+                              style: AppFontStyleGlobal(
+                                      AppLocalizations.of(context)!.locale)
+                                  .bodyRegular1
+                                  .copyWith(
+                                    color: AppColors.primaryColor,
+                                  ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

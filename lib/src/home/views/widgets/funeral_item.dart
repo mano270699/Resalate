@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../data/models/funerial_model.dart';
 
@@ -19,8 +20,8 @@ class FuneralItem extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Container(
-        width: 240,
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        width: 220.w,
+        // margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),

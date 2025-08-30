@@ -91,7 +91,8 @@ class ItemMasjedToMasjed extends StatelessWidget {
                       // width: 100.w,
                       child: Center(
                         child: AppText(
-                          text: "WhatsApp",
+                          text: AppLocalizations.of(context)!
+                              .translate("whatsApp"),
                           model: AppTextModel(
                               style: AppFontStyleGlobal(
                                       AppLocalizations.of(context)!.locale)

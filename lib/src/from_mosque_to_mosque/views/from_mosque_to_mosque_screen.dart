@@ -50,7 +50,8 @@ class _FromMosqueToMosqueScreenState extends State<FromMosqueToMosqueScreen> {
           : TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("From Mosque To Mosque"),
+          title: Text(
+              AppLocalizations.of(context)!.translate("From_Mosque_To_Mosque")),
         ),
         body: BlocBuilder<GenericCubit<MasjedToMasjedModel>,
             GenericCubitState<MasjedToMasjedModel>>(

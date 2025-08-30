@@ -9,6 +9,9 @@ import 'package:resalate/src/home/data/models/funerial_model.dart';
 import 'package:resalate/src/home/data/models/lessons_model.dart';
 import 'package:resalate/src/home/data/models/live_model.dart';
 import 'package:resalate/src/home/logic/home_view_model.dart';
+import 'package:resalate/src/home/views/all_feed_screen.dart';
+import 'package:resalate/src/home/views/all_funerals_screen.dart';
+import 'package:resalate/src/home/views/all_lesson_screen.dart';
 import 'package:resalate/src/home/views/widgets/funeral_item.dart';
 import 'package:resalate/src/home/views/widgets/lesson_item.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -206,18 +209,19 @@ class HomePage extends StatelessWidget {
                                   ),
                             ),
                           ),
-                          AppText(
-                            text: "show more",
-                            model: AppTextModel(
-                              style: AppFontStyleGlobal(
-                                      AppLocalizations.of(context)!.locale)
-                                  .subTitle2
-                                  .copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.primaryColor,
-                                  ),
-                            ),
-                          ),
+                          // AppText(
+                          //   text: AppLocalizations.of(context)!
+                          //       .translate('show_more'),
+                          //   model: AppTextModel(
+                          //     style: AppFontStyleGlobal(
+                          //             AppLocalizations.of(context)!.locale)
+                          //         .subTitle2
+                          //         .copyWith(
+                          //           fontWeight: FontWeight.w500,
+                          //           color: AppColors.primaryColor,
+                          //         ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
@@ -297,16 +301,23 @@ class HomePage extends StatelessWidget {
                                   ),
                             ),
                           ),
-                          AppText(
-                            text: "show more",
-                            model: AppTextModel(
-                              style: AppFontStyleGlobal(
-                                      AppLocalizations.of(context)!.locale)
-                                  .subTitle2
-                                  .copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.primaryColor,
-                                  ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, AllFeedLiveScreen.routeName);
+                            },
+                            child: AppText(
+                              text: AppLocalizations.of(context)!
+                                  .translate('show_more'),
+                              model: AppTextModel(
+                                style: AppFontStyleGlobal(
+                                        AppLocalizations.of(context)!.locale)
+                                    .subTitle2
+                                    .copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.primaryColor,
+                                    ),
+                              ),
                             ),
                           ),
                         ],
@@ -362,16 +373,23 @@ class HomePage extends StatelessWidget {
                                   ),
                             ),
                           ),
-                          AppText(
-                            text: "show more",
-                            model: AppTextModel(
-                              style: AppFontStyleGlobal(
-                                      AppLocalizations.of(context)!.locale)
-                                  .subTitle2
-                                  .copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.primaryColor,
-                                  ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, AllLessonsScreen.routeName);
+                            },
+                            child: AppText(
+                              text: AppLocalizations.of(context)!
+                                  .translate('show_more'),
+                              model: AppTextModel(
+                                style: AppFontStyleGlobal(
+                                        AppLocalizations.of(context)!.locale)
+                                    .subTitle2
+                                    .copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.primaryColor,
+                                    ),
+                              ),
                             ),
                           ),
                         ],
@@ -385,7 +403,7 @@ class HomePage extends StatelessWidget {
                         return Skeletonizer(
                           enabled: lessonState is GenericLoadingState,
                           child: SizedBox(
-                            height: 240.h,
+                            height: 245.h,
                             child: ListView.separated(
                               clipBehavior: Clip.none,
                               scrollDirection: Axis.horizontal,
@@ -423,16 +441,23 @@ class HomePage extends StatelessWidget {
                                   ),
                             ),
                           ),
-                          AppText(
-                            text: "show more",
-                            model: AppTextModel(
-                              style: AppFontStyleGlobal(
-                                      AppLocalizations.of(context)!.locale)
-                                  .subTitle2
-                                  .copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.primaryColor,
-                                  ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, AllFuneralsScreen.routeName);
+                            },
+                            child: AppText(
+                              text: AppLocalizations.of(context)!
+                                  .translate('show_more'),
+                              model: AppTextModel(
+                                style: AppFontStyleGlobal(
+                                        AppLocalizations.of(context)!.locale)
+                                    .subTitle2
+                                    .copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.primaryColor,
+                                    ),
+                              ),
                             ),
                           ),
                         ],
@@ -484,18 +509,19 @@ class HomePage extends StatelessWidget {
                                   ),
                             ),
                           ),
-                          AppText(
-                            text: "show more",
-                            model: AppTextModel(
-                              style: AppFontStyleGlobal(
-                                      AppLocalizations.of(context)!.locale)
-                                  .subTitle2
-                                  .copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.primaryColor,
-                                  ),
-                            ),
-                          ),
+                          // AppText(
+                          //   text: AppLocalizations.of(context)!
+                          //       .translate('show_more'),
+                          //   model: AppTextModel(
+                          //     style: AppFontStyleGlobal(
+                          //             AppLocalizations.of(context)!.locale)
+                          //         .subTitle2
+                          //         .copyWith(
+                          //           fontWeight: FontWeight.w500,
+                          //           color: AppColors.primaryColor,
+                          //         ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),

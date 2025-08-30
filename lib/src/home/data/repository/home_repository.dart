@@ -12,9 +12,9 @@ import '../models/live_model.dart';
 abstract class HomeRepository {
   Future<Either<String, HomeDataModel>> getHomeData();
   Future<Either<String, DonationsResponse>> getDonationData();
-  Future<Either<String, LiveFeedsResponse>> getLiveFeed();
-  Future<Either<String, LessonsResponse>> getLessons();
-  Future<Either<String, FuneralsResponse>> getFuneralsData();
+  Future<Either<String, LiveFeedsResponse>> getLiveFeed({required int page});
+  Future<Either<String, LessonsResponse>> getLessons({required int page});
+  Future<Either<String, FuneralsResponse>> getFuneralsData({required int page});
 }
 
 class HomeRepositoryImpl extends HomeRepository {
@@ -52,10 +52,11 @@ class HomeRepositoryImpl extends HomeRepository {
   }
 
   @override
-  Future<Either<String, LiveFeedsResponse>> getLiveFeed() async {
+  Future<Either<String, LiveFeedsResponse>> getLiveFeed(
+      {required int page}) async {
     try {
       final response = await _networkService.get(
-        "live-feed?per_page=10&page=1",
+        "live-feed?per_page=10&page=$page",
       );
       LiveFeedsResponse res = LiveFeedsResponse.fromJson(response.data);
       return Right(res);
@@ -66,10 +67,11 @@ class HomeRepositoryImpl extends HomeRepository {
   }
 
   @override
-  Future<Either<String, LessonsResponse>> getLessons() async {
+  Future<Either<String, LessonsResponse>> getLessons(
+      {required int page}) async {
     try {
       final response = await _networkService.get(
-        "lessons?per_page=10&page=1",
+        "lessons?per_page=10&page=$page",
       );
       LessonsResponse res = LessonsResponse.fromJson(response.data);
       return Right(res);
@@ -80,10 +82,11 @@ class HomeRepositoryImpl extends HomeRepository {
   }
 
   @override
-  Future<Either<String, FuneralsResponse>> getFuneralsData() async {
+  Future<Either<String, FuneralsResponse>> getFuneralsData(
+      {required int page}) async {
     try {
       final response = await _networkService.get(
-        "funerals?per_page=10&page=1",
+        "funerals?per_page=10&page=$page",
       );
       FuneralsResponse res = FuneralsResponse.fromJson(response.data);
       return Right(res);
