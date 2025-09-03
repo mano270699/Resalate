@@ -91,7 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       // Background
                       SizedBox(
                         width: double.infinity,
-                        height: constraints.maxHeight,
+                        height: 720.h,
                         child: CustomPaint(
                           painter: WaveBackgroundPainter(),
                         ),
