@@ -7,10 +7,10 @@ class AppText extends StatelessWidget {
   final String text;
   final AppTextModel model;
   const AppText({
-    Key? key,
+    super.key,
     required this.text,
     required this.model,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

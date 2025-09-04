@@ -82,7 +82,7 @@ class RadialBackgroundPainter extends CustomPainter {
 
     // Define the paint for circular patterns
     final circlePaint = Paint()
-      ..color = Colors.white.withOpacity(0.2)
+      ..color = Colors.white.withValues(alpha: 0.2)
       ..style = PaintingStyle.fill;
 
     // Draw circular patterns

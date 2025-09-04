@@ -2,7 +2,7 @@ import 'package:flutter/services.dart';
 
 class LengthLimitingTextFieldFormatterFixed
     extends LengthLimitingTextInputFormatter {
-  LengthLimitingTextFieldFormatterFixed(int maxLength) : super(maxLength);
+  LengthLimitingTextFieldFormatterFixed(int super.maxLength);
 
   @override
   TextEditingValue formatEditUpdate(
@@ -16,4 +16,3 @@ class LengthLimitingTextFieldFormatterFixed
     return newValue;
   }
 }
-

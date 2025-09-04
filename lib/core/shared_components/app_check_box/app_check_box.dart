@@ -8,8 +8,7 @@ import 'models/app_check_box_model.dart';
 
 class AppCheckBox extends StatelessWidget {
   final AppCheckBoxModel appCheckBoxModel;
-  const AppCheckBox({Key? key, required this.appCheckBoxModel})
-      : super(key: key);
+  const AppCheckBox({super.key, required this.appCheckBoxModel});
 
   @override
   Widget build(BuildContext context) {

@@ -6,9 +6,9 @@ import 'models/app_bottom_sheet_model.dart';
 class AppBottomSheet extends StatelessWidget {
   final AppBottomSheetModel model;
   const AppBottomSheet({
-    Key? key,
+    super.key,
     required this.model,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

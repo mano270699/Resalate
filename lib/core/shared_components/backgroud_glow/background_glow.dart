@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BackGroundGlow extends StatelessWidget {
   final BackGroundGlowModel? model;
-  const BackGroundGlow({Key? key, this.model}) : super(key: key);
+  const BackGroundGlow({super.key, this.model});
 
   @override
   Widget build(BuildContext context) {

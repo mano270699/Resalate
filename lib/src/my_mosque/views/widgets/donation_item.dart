@@ -48,14 +48,14 @@ class DonationItem extends StatelessWidget {
                     borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(10),
                         bottomRight: Radius.circular(10)),
-                    color: Colors.amber.withOpacity(0.2)),
+                    color: Colors.amber.withValues(alpha: 0.2)),
                 child: ClipRRect(
                   borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(10),
                       bottomRight: Radius.circular(10)),
                   child: LinearPercentIndicator(
                     // barRadius: const Radius.circular(10),
-                    fillColor: AppColors.primaryColor.withOpacity(0.5),
+                    fillColor: AppColors.primaryColor.withValues(alpha: 0.5),
                     lineHeight: 30.h,
 
                     padding: EdgeInsets.zero,

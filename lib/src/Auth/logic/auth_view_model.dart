@@ -102,7 +102,7 @@ class AuthViewModel {
 
         response.fold(
           (failure) {
-            debugPrint("failure::${failure}");
+            debugPrint("failure::$failure");
             registerResponse.onErrorState(Failure(failure));
           },
           (user) async {
@@ -122,7 +122,7 @@ class AuthViewModel {
         registerResponse.onErrorState(Failure('$e'));
       }
     } else {
-      print("in Loading state");
+      debugPrint("in Loading state");
 
       return;
     }
@@ -466,7 +466,7 @@ class AuthViewModel {
 
         response.fold(
           (failure) {
-            debugPrint("failure::${failure}");
+            debugPrint("failure::$failure");
             resetPasswordRes.onErrorState(Failure(failure));
           },
           (user) async {
@@ -478,7 +478,7 @@ class AuthViewModel {
         resetPasswordRes.onErrorState(Failure('$e'));
       }
     } else {
-      print("in Loading state");
+      debugPrint("in Loading state");
 
       return;
     }
