@@ -25,6 +25,8 @@ import '../../../core/shared_components/app_text/models/app_text_model.dart';
 import '../../../core/util/localization/app_localizations.dart';
 import '../../donation/view/donation_details_screen.dart';
 import '../../from_mosque_to_mosque/views/from_mosque_to_mosque_screen.dart';
+import '../../funerals/view/funerals_details_screen.dart';
+import '../../lessons/view/lesson_details_screen.dart';
 import '../../nearest_mosque/views/nearest_mosque.dart';
 import '../data/models/home_data_model.dart';
 import 'widgets/banner.dart';
@@ -244,8 +246,6 @@ class HomePage extends StatelessWidget {
                                       arguments: {
                                         "id":
                                             donationState.data.posts![index].id,
-                                        "donation_name": donationState
-                                            .data.posts![index].title
                                       });
                                 },
                                 percentage: donationState
@@ -336,6 +336,7 @@ class HomePage extends StatelessWidget {
                               clipBehavior: Clip.none,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) => LiveFeedItem(
+                                id: liveState.data.posts?[index].id ?? 0,
                                 title: liveState.data.posts?[index].title ?? "",
                                 url: liveState.data.posts?[index].iframe ?? "",
                                 desc:
@@ -410,7 +411,14 @@ class HomePage extends StatelessWidget {
                               itemBuilder: (context, index) => LessonItem(
                                 lesson: lessonState.data.lessons?[index] ??
                                     Lesson(),
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, LessonDetailsScreen.routeName,
+                                      arguments: {
+                                        "id":
+                                            lessonState.data.lessons?[index].id
+                                      });
+                                },
                               ),
                               separatorBuilder: (context, index) => SizedBox(
                                 width: 5.w,
@@ -478,7 +486,14 @@ class HomePage extends StatelessWidget {
                               itemBuilder: (context, index) => FuneralItem(
                                 post: funeralsState.data.posts?[index] ??
                                     FuneralPost(),
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, FuneralsDetailsScreen.routeName,
+                                      arguments: {
+                                        "id":
+                                            funeralsState.data.posts?[index].id
+                                      });
+                                },
                               ),
                               separatorBuilder: (context, index) => SizedBox(
                                 width: 5.w,
@@ -552,6 +567,7 @@ class HomePage extends StatelessWidget {
                                         fit: BoxFit.contain,
                                         placeholderBuilder: (context) => Center(
                                           child: CircularProgressIndicator(
+                                              color: AppColors.primaryColor,
                                               strokeWidth: 2),
                                         ),
                                       )
@@ -565,6 +581,7 @@ class HomePage extends StatelessWidget {
                                           }
                                           return Center(
                                             child: CircularProgressIndicator(
+                                                color: AppColors.primaryColor,
                                                 strokeWidth: 2),
                                           );
                                         },

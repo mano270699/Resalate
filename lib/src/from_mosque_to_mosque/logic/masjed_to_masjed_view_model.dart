@@ -1,5 +1,7 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:resalate/core/blocs/generic_cubit/generic_cubit.dart';
+import 'package:resalate/src/from_mosque_to_mosque/data/models/masjed_to_masjed_detais_model.dart';
 import 'package:resalate/src/from_mosque_to_mosque/data/models/masjed_to_masjed_model.dart';
 import '../../../core/common/models/failure.dart';
 import '../data/repository/masjed_to_masjed_repository.dart';
@@ -11,6 +13,29 @@ class MasjedToMasjedViewModel {
 
   GenericCubit<MasjedToMasjedModel> masjedToMasjedRes =
       GenericCubit(MasjedToMasjedModel());
+  GenericCubit<MasjedToMasjedDetailsModel> masjedToMasjedDetailsRes =
+      GenericCubit(MasjedToMasjedDetailsModel());
+
+  Future<void> getMasjedToMasjedDetails({required int id}) async {
+    masjedToMasjedDetailsRes.onLoadingState();
+    try {
+      Either<String, MasjedToMasjedDetailsModel> response =
+          await masjedRepositoryImpl.getMasjedToMasjedDetails(id: id);
+
+      response.fold(
+        (failure) {
+          masjedToMasjedDetailsRes.onErrorState(Failure(failure));
+        },
+        (res) async {
+          masjedToMasjedDetailsRes.onUpdateData(res);
+        },
+      );
+    } on Failure catch (e, s) {
+      debugPrint("lllllllllllll:$s");
+      masjedToMasjedDetailsRes.onErrorState(Failure('$e'));
+    }
+  }
+
   int _currentPage = 1;
   bool _isLoadingMore = false;
   Future<void> getMasjedToMasjed(

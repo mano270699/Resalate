@@ -181,7 +181,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             builder: (context, state) {
                               return state.data
                                   ? SizedBox(height: 120.h)
-                                  : SizedBox(height: 155.h);
+                                  : SizedBox(height: 150.h);
                             },
                           ),
                           BlocBuilder<GenericCubit<bool>,

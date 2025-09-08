@@ -6,11 +6,15 @@ import '../../src/Auth/view/login_screen.dart';
 import '../../src/Auth/view/register_screen.dart';
 import '../../src/Auth/view/reset_password_screen.dart';
 import '../../src/donation/view/donation_details_screen.dart';
+import '../../src/from_mosque_to_mosque/views/from_mosque_to_mosque_details_screen.dart';
 import '../../src/from_mosque_to_mosque/views/from_mosque_to_mosque_screen.dart';
+import '../../src/funerals/view/funerals_details_screen.dart';
 import '../../src/home/views/all_feed_screen.dart';
 import '../../src/home/views/all_funerals_screen.dart';
 import '../../src/home/views/all_lesson_screen.dart';
 import '../../src/layout/screens/user_bottom_navigation_screen.dart';
+import '../../src/lessons/view/lesson_details_screen.dart';
+import '../../src/live_feed/view/live_feed_details_screen.dart';
 import '../../src/my_mosque/views/my_mosque_screen.dart';
 import '../../src/nearest_mosque/views/nearest_mosque.dart';
 import '../../src/notification/view/notification_screen.dart';
@@ -71,7 +75,34 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) => DonationDetailsScreen(
                   donationId: args["id"],
-                  donationName: args["donation_name"],
+                ));
+      case LiveFeedDetailsScreen.routeName:
+        final args = settings.arguments as Map;
+
+        return MaterialPageRoute(
+            builder: (_) => LiveFeedDetailsScreen(
+                  id: args["id"],
+                ));
+      case LessonDetailsScreen.routeName:
+        final args = settings.arguments as Map;
+
+        return MaterialPageRoute(
+            builder: (_) => LessonDetailsScreen(
+                  id: args["id"],
+                ));
+      case FuneralsDetailsScreen.routeName:
+        final args = settings.arguments as Map;
+
+        return MaterialPageRoute(
+            builder: (_) => FuneralsDetailsScreen(
+                  id: args["id"],
+                ));
+      case FromMosqueToMosqueDetailsScreen.routeName:
+        final args = settings.arguments as Map;
+
+        return MaterialPageRoute(
+            builder: (_) => FromMosqueToMosqueDetailsScreen(
+                  id: args["id"],
                 ));
       case WebViewPage.routeName:
         final args = settings.arguments as Map;

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/common/app_colors/app_colors.dart';
 import '../../../../core/common/app_font_style/app_font_style_global.dart';
 import '../../../../core/shared_components/app_text/app_text.dart';
 import '../../../../core/shared_components/app_text/models/app_text_model.dart';
 import '../../../../core/util/localization/app_localizations.dart';
+import '../../../live_feed/view/live_feed_details_screen.dart';
 
 class LiveFeedItem extends StatelessWidget {
   const LiveFeedItem(
@@ -15,26 +15,14 @@ class LiveFeedItem extends StatelessWidget {
       required this.title,
       required this.desc,
       required this.url,
-      required this.date});
+      required this.date,
+      required this.id});
   final String image;
   final String url;
+  final int id;
   final String title;
   final String desc;
   final String date;
-
-  Future<void> openYouTube(String videoUrl) async {
-    final Uri url = Uri.parse(videoUrl);
-
-    // This forces YouTube app if installed, otherwise fallback to browser
-    if (await canLaunchUrl(url)) {
-      await launchUrl(
-        url,
-        mode: LaunchMode.externalApplication, // open in YouTube app
-      );
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +30,9 @@ class LiveFeedItem extends StatelessWidget {
       padding: EdgeInsetsDirectional.only(start: 10.w),
       child: GestureDetector(
         onTap: () {
-          openYouTube(url);
+          Navigator.pushNamed(context, LiveFeedDetailsScreen.routeName,
+              arguments: {"id": id});
+          // openYouTube(url);
         },
         child: Container(
           height: 200.h,

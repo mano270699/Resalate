@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:resalate/core/blocs/generic_cubit/generic_cubit.dart';
 import 'package:resalate/src/home/logic/home_view_model.dart';
+import 'package:resalate/src/lessons/view/lesson_details_screen.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../core/base/dependency_injection.dart';
@@ -104,7 +105,10 @@ class _AllLessonsScreenState extends State<AllLessonsScreen> {
                     return hasMore
                         ? const Padding(
                             padding: EdgeInsets.all(16.0),
-                            child: Center(child: CircularProgressIndicator()),
+                            child: Center(
+                                child: CircularProgressIndicator(
+                              color: AppColors.primaryColor,
+                            )),
                           )
                         : const SizedBox.shrink();
                   }
@@ -112,7 +116,11 @@ class _AllLessonsScreenState extends State<AllLessonsScreen> {
                   final post = posts[index];
                   return LessonItem(
                     lesson: post,
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushNamed(
+                          context, LessonDetailsScreen.routeName,
+                          arguments: {"id": post.id});
+                    },
                   );
                 },
                 separatorBuilder: (context, index) => SizedBox(height: 10.h),

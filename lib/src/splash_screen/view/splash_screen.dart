@@ -88,6 +88,7 @@ import 'package:resalate/src/splash_screen/view/splash_screen_view_model.dart';
 
 import '../../../core/base/dependency_injection.dart';
 import '../../../core/common/app_colors/app_colors.dart';
+import '../../../core/push_notification/notification_helper.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -105,7 +106,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-
+    NotificationHelper.whenTerminated(context);
     // Initialize the animation controller
     _logoController = AnimationController(vsync: this);
     _logoController.addStatusListener((status) {

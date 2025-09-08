@@ -123,7 +123,10 @@ class _MasjedListScreenState extends State<MasjedListScreen> {
                     return hasMore
                         ? const Padding(
                             padding: EdgeInsets.all(16.0),
-                            child: Center(child: CircularProgressIndicator()),
+                            child: Center(
+                                child: CircularProgressIndicator(
+                              color: AppColors.primaryColor,
+                            )),
                           )
                         : const SizedBox.shrink();
                   }
@@ -165,7 +168,10 @@ class _MasjedListScreenState extends State<MasjedListScreen> {
               bloc: viewModel.getLocationsListRes,
               builder: (context, state) {
                 if (state is GenericLoadingState) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(
+                      child: CircularProgressIndicator(
+                    color: AppColors.primaryColor,
+                  ));
                 }
                 if (state is GenericErrorState) {
                   return Center(

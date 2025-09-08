@@ -1,21 +1,21 @@
 class NotificationBody {
-  int? courseId;
-  String? url;
+  int? id;
+  String? type;
 
   NotificationBody({
-    this.courseId,
-    this.url,
+    this.id,
+    this.type,
   });
 
   NotificationBody.fromJson(Map<String, dynamic> json) {
-    courseId = json['course_id'];
-    url = json['url'];
+    id = json['id'];
+    type = json['type'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['course_id'] = courseId;
-    data['url'] = url;
+    data['id'] = id;
+    data['type'] = type;
     return data;
   }
 }

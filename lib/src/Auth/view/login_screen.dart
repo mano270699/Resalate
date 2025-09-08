@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -221,33 +223,40 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   10.h.verticalSpace,
-                  Center(
-                    child: AppText(
-                      text:
-                          "------------------- ${AppLocalizations.of(context)!.translate('or')} --------------------",
-                      model: AppTextModel(
-                        style: AppFontStyleGlobal(
-                                AppLocalizations.of(context)!.locale)
-                            .bodyRegular1
-                            .copyWith(
-                              color: AppColors.gray,
+                  Platform.isAndroid
+                      ? Column(
+                          children: [
+                            Center(
+                              child: AppText(
+                                text:
+                                    "------------------- ${AppLocalizations.of(context)!.translate('or')} --------------------",
+                                model: AppTextModel(
+                                  style: AppFontStyleGlobal(
+                                          AppLocalizations.of(context)!.locale)
+                                      .bodyRegular1
+                                      .copyWith(
+                                        color: AppColors.gray,
+                                      ),
+                                ),
+                              ),
                             ),
-                      ),
-                    ),
-                  ),
-                  10.h.verticalSpace,
-                  Center(
-                    child: SocialLoginButton(
-                      label: AppLocalizations.of(context)!
-                          .translate('continue_with_google'),
-                      backgroundColor: Colors.white,
-                      textColor: Colors.black,
-                      iconPath: Assets.googleImage, // Add Google icon asset
-                      onPressed: () {
-                        viewModel.signInWithGoogle(context);
-                      },
-                    ),
-                  ),
+                            10.h.verticalSpace,
+                            Center(
+                              child: SocialLoginButton(
+                                label: AppLocalizations.of(context)!
+                                    .translate('continue_with_google'),
+                                backgroundColor: Colors.white,
+                                textColor: Colors.black,
+                                iconPath:
+                                    Assets.googleImage, // Add Google icon asset
+                                onPressed: () {
+                                  viewModel.signInWithGoogle(context);
+                                },
+                              ),
+                            ),
+                          ],
+                        )
+                      : SizedBox.shrink(),
                   SizedBox(
                     height: 24,
                     child: Row(

@@ -9,11 +9,19 @@ import '../../src/Auth/logic/auth_view_model.dart';
 import '../../src/donation/data/repository/donetatio_repository.dart';
 import '../../src/donation/logic/donations_view_model.dart';
 import '../../src/from_mosque_to_mosque/logic/masjed_to_masjed_view_model.dart';
+import '../../src/funerals/data/repository/funerals_repository.dart';
+import '../../src/funerals/logic/funerals_view_model.dart';
 import '../../src/home/data/repository/home_repository.dart';
 import '../../src/home/logic/home_view_model.dart';
 import '../../src/layout/screens/main_screen_view_model.dart';
+import '../../src/lessons/data/repository/lesson_repository.dart';
+import '../../src/lessons/logic/lesson_viewmodel.dart';
+import '../../src/live_feed/data/repository/live_feed_repository.dart';
+import '../../src/live_feed/logic/live_feed_viewmodel.dart';
 import '../../src/my_mosque/data/repository/masjed_repository.dart';
 import '../../src/my_mosque/logic/masjed_view_model.dart';
+import '../../src/nearest_mosque/data/repository/nearby_masjeds_repository.dart';
+import '../../src/nearest_mosque/logic/nearby_masjeds_view_model.dart';
 import '../../src/notification/data/repository/notification_repository.dart';
 import '../../src/notification/logic/notification_view_model.dart';
 import '../../src/profile/data/repository/profile_repository.dart';
@@ -61,6 +69,10 @@ Future<void> init() async {
   sl.registerFactory(() => ProfileRepositoryImpl(sl()));
   sl.registerFactory(() => NotificationRepositoryImpl(sl()));
   sl.registerFactory(() => MasjedToMasjedRepositoryImpl(sl()));
+  sl.registerFactory(() => NearbyMasjedsRepositoryImpl(sl()));
+  sl.registerFactory(() => LiveFeedRepositoryImpl(sl()));
+  sl.registerFactory(() => LessonsRepositoryImpl(sl()));
+  sl.registerFactory(() => FuneralsRepositoryImpl(sl()));
 
   /// VIEW MODELS
 
@@ -72,6 +84,10 @@ Future<void> init() async {
   sl.registerFactory(() => ProfileViewModel(sl()));
   sl.registerFactory(() => NotificationViewModel(sl()));
   sl.registerFactory(() => MasjedToMasjedViewModel(sl()));
+  sl.registerFactory(() => NearbyMasjedsViewModel(sl()));
+  sl.registerFactory(() => LiveFeedViewModel(sl()));
+  sl.registerFactory(() => LessonViewModel(sl()));
+  sl.registerFactory(() => FuneralsViewModel(sl()));
   sl.registerFactory(() => DonationsViewModel(donetatioRepositoryImpl: sl()));
 
   /// USECASES

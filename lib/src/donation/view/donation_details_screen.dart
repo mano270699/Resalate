@@ -14,9 +14,11 @@ import '../../../core/base/dependency_injection.dart';
 import '../../../core/common/app_colors/app_colors.dart';
 import '../../../core/common/app_font_style/app_font_style_global.dart';
 import '../../../core/common/assets.dart';
+import '../../../core/push_notification/notification_helper.dart';
 import '../../../core/shared_components/app_text/app_text.dart';
 import '../../../core/shared_components/app_text/models/app_text_model.dart';
 import '../../../core/util/localization/app_localizations.dart';
+import '../../layout/screens/user_bottom_navigation_screen.dart';
 import '../../my_mosque/views/widgets/custom_expantion_tile.dart';
 import '../data/models/donation_details_model.dart';
 
@@ -26,10 +28,8 @@ class DonationDetailsScreen extends StatefulWidget {
   const DonationDetailsScreen({
     super.key,
     required this.donationId,
-    required this.donationName,
   });
   final int donationId;
-  final String donationName;
 
   @override
   State<DonationDetailsScreen> createState() => _DonationDetailsScreenState();
@@ -52,8 +52,25 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
           : TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
+          leading: GestureDetector(
+              onTap: () {
+                if (NotificationHelper.isFromNotifiction) {
+                  Navigator.pushNamed(
+                    context,
+                    MainBottomNavigationScreen.routeName,
+                  );
+                } else {
+                  Navigator.pop(context);
+                }
+              },
+              child: Icon(
+                Icons.arrow_back_ios,
+                color: AppColors.black,
+                size: 30,
+              )),
           title: AppText(
-            text: widget.donationName,
+            text: AppLocalizations.of(context)!.translate("Donation_details"),
             model: AppTextModel(
               style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
                   .headingMedium2

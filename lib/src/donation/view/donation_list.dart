@@ -121,7 +121,6 @@ class _DonationListScreenState extends State<DonationListScreen> {
                         DonationDetailsScreen.routeName,
                         arguments: {
                           "id": post.id,
-                          "donation_name": post.title,
                         },
                       );
                     },

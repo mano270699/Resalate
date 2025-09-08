@@ -3,25 +3,23 @@ import 'dart:io';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
-// import 'package:permission_handler/permission_handler.dart';
-// import 'package:url_launcher/url_launcher.dart';
+import 'package:resalate/src/donation/view/donation_details_screen.dart';
+import 'package:resalate/src/funerals/view/funerals_details_screen.dart';
+import 'package:resalate/src/lessons/view/lesson_details_screen.dart';
+import 'package:resalate/src/live_feed/view/live_feed_details_screen.dart';
 
-import '../common/config.dart'; // Ensure this path is correct
-// import '../util/environment/environment.dart'; // Ensure this path is correct
+import '../../src/from_mosque_to_mosque/views/from_mosque_to_mosque_details_screen.dart'
+    show FromMosqueToMosqueDetailsScreen;
+import '../common/config.dart';
+import '../util/environment/environment.dart';
 import '../util/token_util.dart';
 import 'model/notification_body.dart';
 
 class NotificationHelper {
-  // --- Call this function from your main screen's initState or similar ---
-  // --- It handles the case where the app is opened from a terminated state ---
-  // --- by tapping a notification. ---
-
   static bool isFromNotifiction = false;
 
   static void handleInitialMessage() async {
@@ -41,35 +39,47 @@ class NotificationHelper {
   // --- Used by getInitialMessage, onMessageOpenedApp, onDidReceiveNotificationResponse ---
   static void _handleNotificationTap(Map<String, dynamic> data) {
     debugPrint("➡️ Handling Notification Tap Data: $data");
-    // NotificationBody notificationBody = convertNotification(data);
-    // debugPrint("➡️ Converted Notification Body: ${notificationBody.toJson()}");
+    NotificationBody notificationBody = convertNotification(data);
+    debugPrint("➡️ Converted Notification Body: ${notificationBody.toJson()}");
 
     // Ensure the navigator is ready before pushing routes
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   if (Environment.navigatorKey.currentState != null) {
-    //     if (notificationBody.courseId != null) {
-    //       isFromNotifiction = true;
-    //       debugPrint(
-    //           "➡️ Navigating to CourseDetailsScreen with ID: ${notificationBody.courseId}");
-    //       // Environment.navigatorKey.currentState!.pushNamed(
-    //       //     CourseDetailsScreen.routeName, // Make sure this route is defined
-    //       //     arguments: {"id": notificationBody.courseId});
-    //     } else if (notificationBody.url != null &&
-    //         notificationBody.url!.isNotEmpty) {
-    //       // isFromNotifiction = true;
-    //       debugPrint("➡️ Launching URL: ${notificationBody.url}");
-    //       _launchUrl(notificationBody.url!);
-    //     } else {
-    //       debugPrint(
-    //           "➡️ Notification tap data lacks actionable 'course_id' or 'url'. Data: $data");
-    //       // Optional: Navigate to a default screen like notifications list
-    //     }
-    //   } else {
-    //     debugPrint(
-    //         "❌ Navigator state is null when handling tap. Cannot navigate.");
-    //     // Optionally queue the action if this happens frequently
-    //   }
-    // });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (Environment.navigatorKey.currentState != null) {
+        if (notificationBody.id != null) {
+          isFromNotifiction = true;
+          if (notificationBody.type == "donations") {
+            Environment.navigatorKey.currentState!.pushNamed(
+                DonationDetailsScreen
+                    .routeName, // Make sure this route is defined
+                arguments: {"id": notificationBody.id});
+          } else if (notificationBody.type == "masjid-to-masjid") {
+            Environment.navigatorKey.currentState!.pushNamed(
+                FromMosqueToMosqueDetailsScreen
+                    .routeName, // Make sure this route is defined
+                arguments: {"id": notificationBody.id});
+          } else if (notificationBody.type == "funerals") {
+            Environment.navigatorKey.currentState!.pushNamed(
+                FuneralsDetailsScreen
+                    .routeName, // Make sure this route is defined
+                arguments: {"id": notificationBody.id});
+          } else if (notificationBody.type == "lessons") {
+            Environment.navigatorKey.currentState!.pushNamed(
+                LessonDetailsScreen
+                    .routeName, // Make sure this route is defined
+                arguments: {"id": notificationBody.id});
+          } else if (notificationBody.type == "live-feed") {
+            Environment.navigatorKey.currentState!.pushNamed(
+                LiveFeedDetailsScreen
+                    .routeName, // Make sure this route is defined
+                arguments: {"id": notificationBody.id});
+          }
+        }
+      } else {
+        debugPrint(
+            "❌ Navigator state is null when handling tap. Cannot navigate.");
+        // Optionally queue the action if this happens frequently
+      }
+    });
   }
 
   static void whenTerminated(BuildContext context) async {
@@ -85,24 +95,6 @@ class NotificationHelper {
     });
   }
 
-  // static Future<void> _launchUrl(String urlString) async {
-  //   final Uri? url = Uri.tryParse(urlString); // Use tryParse for safety
-  //   if (url != null) {
-  //     try {
-  //       bool launched =
-  //           await launchUrl(url, mode: LaunchMode.externalApplication);
-  //       if (!launched) {
-  //         debugPrint('❌ Could not launch $urlString');
-  //       } else {
-  //         debugPrint('✅ Launched URL: $urlString');
-  //       }
-  //     } catch (e) {
-  //       debugPrint('❌ Error launching URL $urlString: $e');
-  //     }
-  //   } else {
-  //     debugPrint('❌ Invalid URL format for launch: $urlString');
-  //   }
-  // }
   static Future<void> initialize(
       FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
     // --- Local Notifications Initialization ---
@@ -295,10 +287,11 @@ class NotificationHelper {
     );
     AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-      'dentopia_channel_id', // Use the same unique ID
-      'Dentopia Notifications', // Channel Name
+      'Resalate_channel_id', // Use a unique ID
+      'Resalate Notifications', // Channel Name
       channelDescription:
-          'Channel for Dentopia app notifications', // Channel Description
+          'Channel for Resalate app notifications', // Channel Description
+
       importance: Importance.max,
       styleInformation: bigTextStyleInformation,
       priority: Priority.max,
@@ -360,10 +353,10 @@ class NotificationHelper {
     );
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-      'dentopia_channel_id_big_picture', // Use a different ID for picture channel if desired
-      'Dentopia Image Notifications', // Channel Name
+      'Resalate_channel_id_big_picture', // Use a different ID for picture channel if desired
+      'Resalate_channel_id Image Notifications', // Channel Name
       channelDescription:
-          'Channel for Dentopia notifications with images', // Channel Description
+          'Channel for Resalate_channel_id notifications with images', // Channel Description
       // largeIcon: FilePathAndroidBitmap(largeIconPath), // Already set in style
       priority: Priority.max,
       playSound: true,
@@ -411,30 +404,7 @@ class NotificationHelper {
 
   // --- Fixed and safer conversion ---
   static NotificationBody convertNotification(Map<String, dynamic> data) {
-    String? url;
-    int? courseId;
-
-    if (data.containsKey('url') && data['url'] != null) {
-      url = data['url'].toString();
-    }
-
-    if (data.containsKey('course_id') && data['course_id'] != null) {
-      courseId = int.tryParse(data['course_id'].toString());
-      if (courseId == null) {
-        debugPrint("⚠️ Could not parse course_id: '${data['course_id']}'");
-      }
-    }
-
-    // Prioritize courseId if both are present? Adjust if needed.
-    if (courseId != null) {
-      return NotificationBody(
-          courseId: courseId, url: null); // Clear URL if courseId is primary
-    } else if (url != null && url.isNotEmpty) {
-      return NotificationBody(courseId: null, url: url);
-    } else {
-      debugPrint(
-          "ℹ️ Notification data contains neither valid 'url' nor 'course_id'. Data: $data");
-      return NotificationBody(courseId: null, url: null); // Fallback
-    }
+    return NotificationBody(
+        id: int.parse(data['id'].toString()), type: data['type']);
   }
 }

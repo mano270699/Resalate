@@ -94,6 +94,7 @@ class _AllFeedLiveScreenState extends State<AllFeedLiveScreen> {
                   // Fake placeholders when loading
                   if (isLoading) {
                     return LiveFeedItem(
+                      id: 0,
                       date: "",
                       desc: "",
                       image: "",
@@ -107,13 +108,17 @@ class _AllFeedLiveScreenState extends State<AllFeedLiveScreen> {
                     return hasMore
                         ? const Padding(
                             padding: EdgeInsets.all(16.0),
-                            child: Center(child: CircularProgressIndicator()),
+                            child: Center(
+                                child: CircularProgressIndicator(
+                              color: AppColors.primaryColor,
+                            )),
                           )
                         : const SizedBox.shrink();
                   }
 
                   final post = posts[index];
                   return LiveFeedItem(
+                      id: post.id ?? 0,
                       date: post.date ?? "",
                       desc: post.excerpt ?? "",
                       image:

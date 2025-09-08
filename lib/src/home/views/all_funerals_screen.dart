@@ -12,6 +12,7 @@ import '../../../core/common/app_font_style/app_font_style_global.dart'
 import '../../../core/shared_components/app_text/app_text.dart';
 import '../../../core/shared_components/app_text/models/app_text_model.dart';
 import '../../../core/util/localization/app_localizations.dart';
+import '../../funerals/view/funerals_details_screen.dart';
 import '../data/models/funerial_model.dart';
 import 'widgets/funeral_item.dart';
 
@@ -104,7 +105,10 @@ class _AllFuneralsScreenState extends State<AllFuneralsScreen> {
                     return hasMore
                         ? const Padding(
                             padding: EdgeInsets.all(16.0),
-                            child: Center(child: CircularProgressIndicator()),
+                            child: Center(
+                                child: CircularProgressIndicator(
+                              color: AppColors.primaryColor,
+                            )),
                           )
                         : const SizedBox.shrink();
                   }
@@ -112,7 +116,11 @@ class _AllFuneralsScreenState extends State<AllFuneralsScreen> {
                   final post = posts[index];
                   return FuneralItem(
                     post: post,
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushNamed(
+                          context, FuneralsDetailsScreen.routeName,
+                          arguments: {"id": post.id});
+                    },
                   );
                 },
                 separatorBuilder: (context, index) => SizedBox(height: 10.h),

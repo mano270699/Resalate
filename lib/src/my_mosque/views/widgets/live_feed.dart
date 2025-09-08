@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:resalate/src/live_feed/view/live_feed_details_screen.dart';
 
 import '../../../../core/common/app_colors/app_colors.dart';
 import '../../../../core/common/app_font_style/app_font_style_global.dart';
@@ -16,19 +16,19 @@ class LiveFeedItem extends StatelessWidget {
   });
   final PostItem postItem;
 
-  Future<void> openYouTube(String videoUrl) async {
-    final Uri url = Uri.parse(videoUrl);
+  // Future<void> openYouTube(String videoUrl) async {
+  //   final Uri url = Uri.parse(videoUrl);
 
-    // This forces YouTube app if installed, otherwise fallback to browser
-    if (await canLaunchUrl(url)) {
-      await launchUrl(
-        url,
-        mode: LaunchMode.externalApplication, // open in YouTube app
-      );
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
+  //   // This forces YouTube app if installed, otherwise fallback to browser
+  //   if (await canLaunchUrl(url)) {
+  //     await launchUrl(
+  //       url,
+  //       mode: LaunchMode.externalApplication, // open in YouTube app
+  //     );
+  //   } else {
+  //     throw 'Could not launch $url';
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,15 @@ class LiveFeedItem extends StatelessWidget {
       padding: EdgeInsetsDirectional.only(start: 10.w),
       child: GestureDetector(
         onTap: () {
-          openYouTube(postItem.link ?? "");
+          // openYouTube(postItem.link ?? "");
+
+          Navigator.pushNamed(
+            context,
+            LiveFeedDetailsScreen.routeName,
+            arguments: {
+              "id": postItem.id,
+            },
+          );
         },
         child: Container(
           height: 200.h,

@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:resalate/core/blocs/generic_cubit/generic_cubit.dart';
+import 'package:resalate/src/nearest_mosque/data/models/nearby_masjids_model.dart';
+import 'package:resalate/src/nearest_mosque/logic/nearby_masjeds_view_model.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import '../../../core/base/dependency_injection.dart';
 import '../../../core/common/app_colors/app_colors.dart';
 import '../../../core/common/app_component_style/component_style.dart';
 import '../../../core/common/app_font_style/app_font_style_global.dart';
@@ -18,46 +25,29 @@ class NearestMosque extends StatefulWidget {
 }
 
 class _NearestMosqueState extends State<NearestMosque> {
+  final viewModel = sl<NearbyMasjedsViewModel>();
   int showItem = 1;
 
-  List<Map<String, dynamic>> mosquesList = [
-    {
-      "name": "مسجد أدهم باي",
-      "address": "ألبانيا",
-      "image":
-          "https://www.yasmina.com/tachyon/sites/5/2022/01/96fde973b5fc40b8d4ab8631976f3d252b453f2a.jpg"
-    },
-    {
-      "name": "المسجد الغربي",
-      "address": "أمستردام",
-      "image":
-          "https://www.yasmina.com/tachyon/sites/5/2022/01/e0b7c7811a25d609e794d2f161cb34a30550b44d.jpg"
-    },
-    {
-      "name": "مسجد ريجنت بارك",
-      "address": "لندن",
-      "image":
-          "https://www.yasmina.com/tachyon/sites/5/2022/01/36b6d9b7e01fa8ab8cfa0e2273590a6f56d15ca1.jpg"
-    },
-    {
-      "name": "المنستير لا ريال",
-      "address": "إسبانيا",
-      "image":
-          "https://assets.raya.com/wp-content/uploads/2020/07/12000039/%D9%85%D8%B3%D8%AC%D8%B1-%D8%A7%D9%84%D9%85%D9%86%D8%B3%D8%AA%D9%8A%D8%B1.jpg"
-    },
-    {
-      "name": "باريس الكبير",
-      "address": "فرنسا",
-      "image":
-          "https://assets.raya.com/wp-content/uploads/2020/07/12000101/%D9%85%D8%B3%D8%AC%D8%AF-%D8%A8%D8%A7%D8%B1%D9%8A%D8%B3-%D8%A7%D9%84%D9%83%D8%A8%D9%8A%D8%B1.jpg"
-    },
-    {
-      "name": "فينبسبري بارك",
-      "address": "بريطانيا",
-      "image":
-          "https://assets.raya.com/wp-content/uploads/2020/07/12000118/%D9%85%D8%B3%D8%AC%D8%AF-%D9%81%D9%8A%D9%86%D8%A8%D8%B3%D8%A8%D8%B1%D9%8A-%D8%A8%D8%A7%D8%B1%D9%83.jpg"
-    },
-  ];
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel.getNearbyMasjedsList(context);
+    // Reset list when search cleared
+    _searchController.addListener(() {
+      if (_searchController.text.isEmpty) {
+        viewModel.resetMasjidsList(); // 👈 show default list again
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -66,8 +56,9 @@ class _NearestMosqueState extends State<NearestMosque> {
           : TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
-          title:
-              Text(AppLocalizations.of(context)!.translate("nearest_mosques")),
+          title: Text(
+            AppLocalizations.of(context)!.translate("nearest_mosques"),
+          ),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -82,65 +73,54 @@ class _NearestMosqueState extends State<NearestMosque> {
                         child: AppTextField(
                           model: AppTextFieldModel(
                             appTextModel: AppTextModel(
-                                style: AppFontStyleGlobal(
-                                        AppLocalizations.of(context)!.locale)
-                                    .bodyRegular1
-                                    .copyWith(
-                                      color: AppColors.primaryColor,
-                                    )),
+                              style: AppFontStyleGlobal(
+                                AppLocalizations.of(context)!.locale,
+                              ).bodyRegular1.copyWith(
+                                    color: AppColors.primaryColor,
+                                  ),
+                            ),
                             controller: TextEditingController(),
                             keyboardType: TextInputType.text,
                             textInputAction: TextInputAction.done,
-
                             onChangeInput: (value) {
                               if (value.length <= 1) {
-                                setState(() {});
+                                viewModel.filterMasjeds(value);
                               }
                             },
-                            // label: "Search..",
                             borderRadius: BorderRadius.circular(12.r),
                             decoration: ComponentStyle.inputDecoration(
                               AppLocalizations.of(context)!.locale,
                             ).copyWith(
                               fillColor: AppColors.white,
-                              contentPadding:
-                                  EdgeInsetsDirectional.only(start: 10.w),
+                              contentPadding: EdgeInsetsDirectional.only(
+                                start: 10.w,
+                              ),
                               filled: true,
-
-                              //   floatingLabelBehavior: viewModel.password.text.isEmpty
-                              //       ? FloatingLabelBehavior.never
-                              //       : FloatingLabelBehavior.always,
-                              // labelText: "Search..",
-                              //  viewModel.password.text.isEmpty
-                              //     ? null
-                              //     :
-                              // AppLocalizations.of(context)!.translate('password'),
-                              hintText: "Search..",
-                              //  AppLocalizations.of(context)!.translate('password'),
+                              hintText: AppLocalizations.of(context)!
+                                  .translate('search'),
                             ),
-                            errorText: "",
-
-                            // validation.data.isNotEmpty
-                            //     ? AppLocalizations.of(context)!.translate(validation.data)
-                            //     : null,
                           ),
                         ),
                       ),
                     ),
                     10.w.horizontalSpace,
-                    Container(
-                      height: 47.h,
-                      padding: EdgeInsets.symmetric(horizontal: 10.w),
-                      decoration: BoxDecoration(
+                    GestureDetector(
+                      onTap: () => showRadiusFilterDialog(context),
+                      child: Container(
+                        height: 47.h,
+                        padding: EdgeInsets.symmetric(horizontal: 10.w),
+                        decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(12.r)),
-                      child: const Center(
-                        child: Icon(
-                          Icons.filter_alt_sharp,
-                          color: AppColors.scondaryColor,
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: const Center(
+                          child: Icon(
+                            Icons.filter_alt_sharp,
+                            color: AppColors.scondaryColor,
+                          ),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -178,32 +158,224 @@ class _NearestMosqueState extends State<NearestMosque> {
                   ],
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-                child: GridView.builder(
-                  padding: EdgeInsets.zero,
-                  itemCount: mosquesList.length,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      childAspectRatio: showItem == 2 ? 0.83 : 1.45,
-                      crossAxisCount: showItem,
-                      crossAxisSpacing: 5.w,
-                      mainAxisSpacing: 5.h),
-                  itemBuilder: (BuildContext context, int index) {
-                    return MosqueItem(
-                        address: mosquesList[index]["address"],
-                        lat: "31.2001",
-                        long: "29.9187",
-                        image: mosquesList[index]["image"],
-                        title: mosquesList[index]["name"]);
-                  },
-                ),
+              BlocBuilder<GenericCubit<List<Masjids>>,
+                  GenericCubitState<List<Masjids>>>(
+                bloc: viewModel.getNearbyMasjedsRes,
+                builder: (context, state) {
+                  // Show loading skeleton
+                  if (state is GenericLoadingState) {
+                    return Skeletonizer(
+                        enabled: true,
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 200.h),
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.scondaryColor,
+                            ),
+                          ),
+                        ));
+                  }
+
+                  // Handle error
+                  if (state is GenericErrorState) {
+                    return Padding(
+                      padding: EdgeInsets.only(top: 200.h),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            state.responseError!.errorMessage,
+                            style: TextStyle(
+                                fontSize: 16.sp, fontWeight: FontWeight.w700),
+                          ),
+                          SizedBox(height: 10.h),
+                          ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStateProperty.all(
+                                  AppColors.primaryColor),
+                              foregroundColor:
+                                  WidgetStateProperty.all(AppColors.white),
+                            ),
+                            onPressed: () {
+                              Geolocator
+                                  .openAppSettings(); // opens app settings
+                            },
+                            child: Text(
+                              AppLocalizations.of(context)!
+                                  .translate("Open_Settings"),
+                              style: TextStyle(
+                                  fontSize: 14.sp, fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  // Handle empty state
+                  if (state.data.isEmpty) {
+                    return Padding(
+                      padding: EdgeInsets.only(top: 50.h),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.mosque_outlined,
+                            size: 80.sp,
+                            color: AppColors.gray.withValues(alpha: 0.6),
+                          ),
+                          10.h.verticalSpace,
+                          Text(
+                            AppLocalizations.of(context)!
+                                .translate("there_are_no_mosques_nearby"),
+                            style: AppFontStyleGlobal(
+                              AppLocalizations.of(context)!.locale,
+                            ).bodyRegular1.copyWith(color: AppColors.gray),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  // Otherwise show the grid
+                  return _buildMosquesGrid(state.data);
+                },
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildMosquesGrid(List<Masjids> mosques) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+      child: GridView.builder(
+        padding: EdgeInsets.zero,
+        itemCount: mosques.length,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          childAspectRatio: showItem == 2 ? 0.57 : 1.25,
+          crossAxisCount: showItem,
+          crossAxisSpacing: 5.w,
+          mainAxisSpacing: 5.h,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          final masjid = mosques[index];
+          return MosqueItem(
+            distance: masjid.distance ?? "",
+            address:
+                "${masjid.country} ,${masjid.province} ,${masjid.city}", // Or masjid.address if you have it
+            lat: masjid.lat.toString(),
+            long: masjid.lng.toString(),
+            image: masjid.image ?? "",
+            title: masjid.name ?? "",
+          );
+        },
+      ),
+    );
+  }
+
+  showRadiusFilterDialog(BuildContext context) {
+    final List<int> radiusOptions = [
+      100,
+      200,
+      300,
+      400,
+      500,
+      900,
+      1000,
+      3000,
+      5000,
+      10000,
+      20000,
+      30000,
+      40000,
+      50000,
+      60000,
+      60000,
+      70000,
+      80000,
+      90000,
+      100000,
+      200000,
+      300000,
+      400000,
+      500000,
+      1000000,
+      2000000,
+      3000000,
+      4000000,
+      5000000,
+    ]; // meters
+
+    return showDialog<int>(
+      context: context,
+      builder: (ctx) {
+        return Directionality(
+          textDirection:
+              AppLocalizations.of(context)!.locale.languageCode == 'en'
+                  ? TextDirection.ltr
+                  : TextDirection.rtl,
+          child: AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: Text(
+                AppLocalizations.of(context)!.translate("Filter_by_Radius")),
+            content: BlocBuilder<GenericCubit<int>, GenericCubitState<int>>(
+              bloc: viewModel.radiusFilter,
+              builder: (context, state) {
+                return SingleChildScrollView(
+                  child: Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: radiusOptions.map((r) {
+                      final isSelected = state.data == r;
+                      return GestureDetector(
+                        onTap: () {
+                          viewModel.changeRidusFilter(r, context);
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? AppColors.primaryColor
+                                : Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: isSelected
+                                  ? AppColors.primaryColor
+                                  : Colors.grey.shade400,
+                              width: 1.5,
+                            ),
+                          ),
+                          child: Text(
+                            r >= 1000
+                                ? "${r ~/ 1000} ${AppLocalizations.of(context)!.translate("km")}"
+                                : "$r ${AppLocalizations.of(context)!.translate("m")}",
+                            style: TextStyle(
+                              color: isSelected ? Colors.white : Colors.black87,
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 }

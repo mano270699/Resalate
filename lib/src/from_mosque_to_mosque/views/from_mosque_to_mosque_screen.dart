@@ -5,6 +5,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../core/base/dependency_injection.dart';
 import '../../../core/blocs/generic_cubit/generic_cubit.dart';
+import '../../../core/common/app_colors/app_colors.dart';
 import '../../../core/util/localization/app_localizations.dart';
 import '../data/models/masjed_to_masjed_model.dart';
 import '../logic/masjed_to_masjed_view_model.dart';
@@ -84,7 +85,10 @@ class _FromMosqueToMosqueScreenState extends State<FromMosqueToMosqueScreen> {
                     return hasMore
                         ? const Padding(
                             padding: EdgeInsets.all(16.0),
-                            child: Center(child: CircularProgressIndicator()),
+                            child: Center(
+                                child: CircularProgressIndicator(
+                              color: AppColors.primaryColor,
+                            )),
                           )
                         : const SizedBox.shrink();
                   }

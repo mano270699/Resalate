@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../../../core/common/app_colors/app_colors.dart';
+
 class WebViewPage extends StatefulWidget {
   static const String routeName = 'WebViewPage';
 
@@ -46,7 +48,9 @@ class _WebViewPageState extends State<WebViewPage> {
           WebViewWidget(controller: _controller),
           if (isLoading)
             const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: AppColors.primaryColor,
+              ),
             ),
         ],
       ),
