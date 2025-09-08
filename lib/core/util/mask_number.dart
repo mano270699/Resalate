@@ -8,4 +8,3 @@ String maskIbanNumber({
 
   return lastFour.padLeft(15, '*');
 }
-

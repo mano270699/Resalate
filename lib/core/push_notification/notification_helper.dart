@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -375,20 +376,53 @@ class NotificationHelper {
   }
 
   // --- Added error handling ---
+  // static Future<String?> _downloadAndSaveFile(
+  //     // Return nullable string
+  //     String url,
+  //     String fileName) async {
+  //   try {
+  //     final Directory directory = await getApplicationDocumentsDirectory();
+  //     final String filePath = '${directory.path}/$fileName';
+  //     final http.Response response = await http
+  //         .get(Uri.parse(url))
+  //         .timeout(const Duration(seconds: 10)); // Add timeout
+
+  //     if (response.statusCode == 200) {
+  //       final File file = File(filePath);
+  //       await file.writeAsBytes(response.bodyBytes);
+  //       debugPrint("   ✅ Image downloaded and saved to: $filePath");
+  //       return filePath;
+  //     } else {
+  //       debugPrint(
+  //           "❌ Failed to download file: Status code ${response.statusCode} for URL $url");
+  //       return null;
+  //     }
+  //   } catch (e) {
+  //     debugPrint("❌ Exception downloading or saving file from $url: $e");
+  //     return null; // Return null on error
+  //   }
+  // }
+
   static Future<String?> _downloadAndSaveFile(
-      // Return nullable string
-      String url,
-      String fileName) async {
+      String url, String fileName) async {
     try {
       final Directory directory = await getApplicationDocumentsDirectory();
       final String filePath = '${directory.path}/$fileName';
-      final http.Response response = await http
-          .get(Uri.parse(url))
-          .timeout(const Duration(seconds: 10)); // Add timeout
 
-      if (response.statusCode == 200) {
+      final Dio dio = Dio();
+
+      final response = await dio.get<List<int>>(
+        url,
+        options: Options(
+          responseType: ResponseType.bytes, // Get bytes for file saving
+          followRedirects: false,
+          validateStatus: (status) => status != null && status < 500,
+        ),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
         final File file = File(filePath);
-        await file.writeAsBytes(response.bodyBytes);
+        await file.writeAsBytes(response.data!);
         debugPrint("   ✅ Image downloaded and saved to: $filePath");
         return filePath;
       } else {

@@ -91,7 +91,7 @@ import '../../../core/common/app_colors/app_colors.dart';
 import '../../../core/push_notification/notification_helper.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
   static const String routeName = 'Splash Screen';
 
   @override
@@ -120,7 +120,8 @@ class _SplashScreenState extends State<SplashScreen>
   void _delayAfterAnimation() async {
     await Future.delayed(
         const Duration(milliseconds: 500)); // Delay after animation
-    viewModel.init(context); // Proceed to the next screen
+    if (!mounted) return; // ✅ Correct way in a State class
+    viewModel.init(context); // Safe to use context now
   }
 
   @override

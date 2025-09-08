@@ -30,10 +30,10 @@ class ComponentStyle {
             ),
       );
   static ButtonStyle get buttonStyle => ButtonStyle(
-        fixedSize: MaterialStateProperty.all(
+        fixedSize: WidgetStateProperty.all(
           Size(325.w, 45.h),
         ),
-        shape: MaterialStateProperty.all(
+        shape: WidgetStateProperty.all(
           RoundedRectangleBorder(
             // side: const BorderSide(color: AppColors.outlinedBorder, width: 1),
             borderRadius: BorderRadius.circular(12.r),

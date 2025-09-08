@@ -109,7 +109,9 @@ class AuthRepositoryImpl extends AuthRepository {
         LoginResponse loginResponse = LoginResponse.fromJson(response.data);
         return Right(loginResponse);
       } else {
-        print("Data::${response.data}");
+        if (kDebugMode) {
+          print("Data::${response.data}");
+        }
 
         // Check if response.data is already an ErrorModel or needs to be converted
         ErrorModel errorModel;
@@ -125,7 +127,7 @@ class AuthRepositoryImpl extends AuthRepository {
         return Left(errorModel.message);
       }
     } catch (e, t) {
-      debugPrint("Error::${e}--- trace::$t}");
+      debugPrint("Error::$e--- trace::$t}");
 
       // Catch any exception and return it as ErrorModel
       return Left(e.toString());
@@ -155,7 +157,7 @@ class AuthRepositoryImpl extends AuthRepository {
         return Left(ResponseError.getMessage(errorModel.message));
       }
     } catch (e, t) {
-      debugPrint("Error::${e}--- trace::$t}");
+      debugPrint("Error::$e--- trace::$t}");
       // Catch any exception and return it as ErrorModel
       return Left(ErrorModel(message: e.toString(), status: "Error"));
     }

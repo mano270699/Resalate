@@ -9,12 +9,12 @@ class AppStep extends StatelessWidget {
   final AppTextModel? appTextModel;
   final double width;
   const AppStep({
-    Key? key,
+    super.key,
     required this.isActive,
     required this.decoration,
     this.appTextModel,
     required this.width,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

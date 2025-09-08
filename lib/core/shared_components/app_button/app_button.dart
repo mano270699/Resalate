@@ -7,10 +7,10 @@ class AppButton extends StatelessWidget {
   final AppButtonModel model;
 
   const AppButton({
-    Key? key,
+    super.key,
     required this.onPressed,
     required this.model,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

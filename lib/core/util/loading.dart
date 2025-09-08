@@ -35,7 +35,7 @@ class LoadingScreen {
       builder: (BuildContext context) {
         return PopScope(
           canPop: true,
-          onPopInvoked: (didPop) {},
+          onPopInvokedWithResult: (didPop, _) {},
           child: const Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[LoadingWidget()],

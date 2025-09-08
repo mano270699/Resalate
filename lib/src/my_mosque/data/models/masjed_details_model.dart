@@ -453,23 +453,16 @@ class Donation extends PostItem {
   final String? currency;
 
   Donation({
-    int? id,
-    String? title,
-    String? excerpt,
-    String? image,
-    String? date,
-    String? link,
+    super.id,
+    super.title,
+    super.excerpt,
+    super.image,
+    super.date,
+    super.link,
     this.totalAmount,
     this.amountPaid,
     this.currency,
-  }) : super(
-          id: id,
-          title: title,
-          excerpt: excerpt,
-          image: image,
-          date: date,
-          link: link,
-        );
+  });
 
   factory Donation.fromJson(Map<String, dynamic> json) => Donation(
         id: json['id'],
@@ -496,21 +489,14 @@ class Lesson extends PostItem {
   final List<Category>? categories;
 
   Lesson({
-    int? id,
-    String? title,
-    String? excerpt,
-    String? image,
-    String? date,
-    String? link,
+    super.id,
+    super.title,
+    super.excerpt,
+    super.image,
+    super.date,
+    super.link,
     this.categories,
-  }) : super(
-          id: id,
-          title: title,
-          excerpt: excerpt,
-          image: image,
-          date: date,
-          link: link,
-        );
+  });
 
   factory Lesson.fromJson(Map<String, dynamic> json) => Lesson(
         id: json['id'],

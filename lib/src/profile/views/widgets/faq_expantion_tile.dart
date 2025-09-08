@@ -6,10 +6,10 @@ class FaqExpansionTile extends StatelessWidget {
   final String answer;
 
   const FaqExpansionTile({
-    Key? key,
+    super.key,
     required this.question,
     required this.answer,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
