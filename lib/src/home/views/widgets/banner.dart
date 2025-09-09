@@ -23,7 +23,7 @@ class CustomBannerSliderState extends State<CustomBannerSlider> {
   Widget build(BuildContext context) {
     return CarouselSlider(
       options: CarouselOptions(
-          aspectRatio: 300 / 140,
+          height: MediaQuery.of(context).size.width * (140 / 300),
           viewportFraction: 1,
           initialPage: 0,
           enableInfiniteScroll: true,
@@ -44,21 +44,17 @@ class CustomBannerSliderState extends State<CustomBannerSlider> {
           builder: (BuildContext context) {
             return Stack(
               children: <Widget>[
-                Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
-                  child: SizedBox(
-                      width: double.infinity,
-                      child: ClipRRect(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(6)),
-                          child: FadeInImage.assetNetwork(
-                            placeholder: 'assets/images/placeholder.jpg',
-                            image: i.url,
-                            height: 200,
-                            fit: BoxFit.fill,
-                          ))),
-                ),
+                SizedBox(
+                    width: double.infinity,
+                    child: ClipRRect(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(0)),
+                        child: FadeInImage.assetNetwork(
+                          placeholder: 'assets/images/placeholder.jpg',
+                          image: i.url,
+                          height: 200,
+                          fit: BoxFit.fill,
+                        ))),
                 Positioned(
                   bottom: 20,
                   right: 50,

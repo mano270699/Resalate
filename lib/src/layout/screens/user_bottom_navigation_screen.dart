@@ -52,52 +52,58 @@ class _MainBottomNavigationScreenState
     return BlocBuilder<GenericCubit<int>, GenericCubitState<int>>(
       bloc: viewModel.screenIndex,
       builder: (context, indexState) {
-        return Scaffold(
-          body: screens[indexState.data],
-          bottomNavigationBar: Container(
-            height: 86.h,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(8.r),
-                    topRight: Radius.circular(8.r))),
-            child: BottomNavigationBar(
-                selectedItemColor: AppColors.primaryColor,
-                selectedLabelStyle:
-                    AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                        .subTitle2
-                        .copyWith(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.primaryColor,
-                        ),
-                unselectedFontSize: 14,
-                type: BottomNavigationBarType.fixed,
-                currentIndex: indexState.data,
-                onTap: (value) {
-                  viewModel.screenIndexChanged(index: value);
-                },
-                unselectedLabelStyle:
-                    AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                        .subTitle2
-                        .copyWith(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.gray,
-                        ),
-                items: List.generate(bottomBarItems.length, (index) {
-                  return BottomNavigationBarItem(
-                      label: bottomBarItems[index].title,
-                      icon: SvgPicture.asset(
-                        bottomBarItems[index].icon,
-                        height: 25,
-                        width: 25,
-                        allowDrawingOutsideViewBox: true,
-                        // color: indexState.data == index
-                        //     ? AppColors.primaryColor
-                        //     : AppColors.lightBlack,
-                      ));
-                })),
+        return Directionality(
+          textDirection:
+              AppLocalizations.of(context)!.locale.languageCode == 'en'
+                  ? TextDirection.ltr
+                  : TextDirection.rtl,
+          child: Scaffold(
+            body: screens[indexState.data],
+            bottomNavigationBar: Container(
+              height: 86.h,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(8.r),
+                      topRight: Radius.circular(8.r))),
+              child: BottomNavigationBar(
+                  selectedItemColor: AppColors.primaryColor,
+                  selectedLabelStyle:
+                      AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
+                          .subTitle2
+                          .copyWith(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.primaryColor,
+                          ),
+                  unselectedFontSize: 14,
+                  type: BottomNavigationBarType.fixed,
+                  currentIndex: indexState.data,
+                  onTap: (value) {
+                    viewModel.screenIndexChanged(index: value);
+                  },
+                  unselectedLabelStyle:
+                      AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
+                          .subTitle2
+                          .copyWith(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.gray,
+                          ),
+                  items: List.generate(bottomBarItems.length, (index) {
+                    return BottomNavigationBarItem(
+                        label: bottomBarItems[index].title,
+                        icon: SvgPicture.asset(
+                          bottomBarItems[index].icon,
+                          height: 25,
+                          width: 25,
+                          allowDrawingOutsideViewBox: true,
+                          // color: indexState.data == index
+                          //     ? AppColors.primaryColor
+                          //     : AppColors.lightBlack,
+                        ));
+                  })),
+            ),
           ),
         );
       },

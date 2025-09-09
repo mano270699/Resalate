@@ -77,18 +77,22 @@ class HomePage extends StatelessWidget {
                     ),
                     10.h.verticalSpace,
                     Center(
-                      child: Text(
-                        "﴾ ${state.data.home?.ayah1} ﴿",
-                        textAlign: TextAlign.center,
-                        textDirection:
-                            AppLocalizations.of(context)!.locale.languageCode ==
-                                    'en'
-                                ? TextDirection.rtl
-                                : TextDirection.ltr,
-                        style: ArabicTextStyle(
-                          color: AppColors.primaryColor,
-                          arabicFont: ArabicFont.scheherazade,
-                          fontSize: 30.sp,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        child: Text(
+                          "${state.data.home?.ayah1}",
+                          textAlign: TextAlign.center,
+                          textDirection: AppLocalizations.of(context)!
+                                      .locale
+                                      .languageCode ==
+                                  'en'
+                              ? TextDirection.ltr
+                              : TextDirection.rtl,
+                          style: ArabicTextStyle(
+                            color: AppColors.primaryColor,
+                            arabicFont: ArabicFont.scheherazade,
+                            fontSize: 28.sp,
+                          ),
                         ),
                       ),
                     ),
@@ -628,18 +632,22 @@ class HomePage extends StatelessWidget {
                     ),
                     30.h.verticalSpace,
                     Center(
-                      child: Text(
-                        "﴾ ${state.data.home?.ayah2} ﴿",
-                        textAlign: TextAlign.center,
-                        textDirection:
-                            AppLocalizations.of(context)!.locale.languageCode ==
-                                    'en'
-                                ? TextDirection.rtl
-                                : TextDirection.ltr,
-                        style: ArabicTextStyle(
-                          color: AppColors.primaryColor,
-                          arabicFont: ArabicFont.scheherazade,
-                          fontSize: 30.sp,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        child: Text(
+                          "${state.data.home?.ayah2}",
+                          textAlign: TextAlign.center,
+                          textDirection: AppLocalizations.of(context)!
+                                      .locale
+                                      .languageCode ==
+                                  'en'
+                              ? TextDirection.rtl
+                              : TextDirection.ltr,
+                          style: ArabicTextStyle(
+                            color: AppColors.primaryColor,
+                            arabicFont: ArabicFont.scheherazade,
+                            fontSize: 30.sp,
+                          ),
                         ),
                       ),
                     ),

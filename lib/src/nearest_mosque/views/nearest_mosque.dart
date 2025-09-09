@@ -258,8 +258,8 @@ class _NearestMosqueState extends State<NearestMosque> {
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           childAspectRatio: showItem == 2 ? 0.57 : 1.25,
           crossAxisCount: showItem,
-          crossAxisSpacing: 5.w,
-          mainAxisSpacing: 5.h,
+          crossAxisSpacing: 10.w,
+          mainAxisSpacing: 10.h,
         ),
         itemBuilder: (BuildContext context, int index) {
           final masjid = mosques[index];
