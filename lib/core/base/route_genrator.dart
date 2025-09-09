@@ -16,6 +16,7 @@ import '../../src/layout/screens/user_bottom_navigation_screen.dart';
 import '../../src/lessons/view/lesson_details_screen.dart';
 import '../../src/live_feed/view/live_feed_details_screen.dart';
 import '../../src/my_mosque/views/my_mosque_screen.dart';
+import '../../src/my_mosque/views/user_masjeds.dart';
 import '../../src/nearest_mosque/views/nearest_mosque.dart';
 import '../../src/notification/view/notification_screen.dart';
 import '../../src/profile/views/edit_profile_screen.dart';
@@ -127,6 +128,8 @@ class RouteGenerator {
                 ));
       case NotificationScreen.routeName:
         return MaterialPageRoute(builder: (_) => NotificationScreen());
+      case UserMasjedListScreen.routeName:
+        return MaterialPageRoute(builder: (_) => UserMasjedListScreen());
 
       default:
         return _errorRoute();

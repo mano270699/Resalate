@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:resalate/core/util/localization/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../data/models/masjed_details_model.dart';
+import '../../data/models/donation_details_model.dart';
 
 class PaymentOptionsSection extends StatelessWidget {
   final PaymentInfo paymentInfo;
@@ -88,7 +88,7 @@ class PaymentOptionsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final paypalUser = paymentInfo.paypalUser ?? "";
-    final switchInfo = paymentInfo.switchData;
+    final switchInfo = paymentInfo.switchPayment;
     final bankInfo = paymentInfo.bankAccount;
 
     return Column(

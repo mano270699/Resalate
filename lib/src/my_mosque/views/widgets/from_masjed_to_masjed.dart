@@ -89,35 +89,31 @@ class FromMasjedToMasjed extends StatelessWidget {
                     ],
                   ),
                 ),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        openWhatsApp(whatsAppLink);
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w),
-                        decoration: BoxDecoration(
-                            color: Colors.green,
-                            borderRadius: BorderRadius.circular(20)),
-                        height: 40.h,
-                        // width: 100.w,
-                        child: Center(
-                          child: AppText(
-                            text: "WhatsApp",
-                            model: AppTextModel(
-                                style: AppFontStyleGlobal(
-                                        AppLocalizations.of(context)!.locale)
-                                    .subTitle2
-                                    .copyWith(
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.white,
-                                    )),
-                          ),
-                        ),
+                GestureDetector(
+                  onTap: () {
+                    openWhatsApp(whatsAppLink);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10.w),
+                    decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(8)),
+                    height: 40.h,
+                    width: double.infinity,
+                    child: Center(
+                      child: AppText(
+                        text: "WhatsApp",
+                        model: AppTextModel(
+                            style: AppFontStyleGlobal(
+                                    AppLocalizations.of(context)!.locale)
+                                .subTitle2
+                                .copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.white,
+                                )),
                       ),
-                    )
-                  ],
+                    ),
+                  ),
                 )
               ],
             ),

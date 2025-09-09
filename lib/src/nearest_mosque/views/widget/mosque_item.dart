@@ -71,7 +71,7 @@ class MosqueItem extends StatelessWidget {
                     topLeft: Radius.circular(10),
                     topRight: Radius.circular(10)),
                 child: SizedBox(
-                    height: 120.h,
+                    height: 110.h,
                     width: MediaQuery.of(context).size.width,
                     child: Image.network(
                       image,
@@ -116,40 +116,33 @@ class MosqueItem extends StatelessWidget {
                             color: AppColors.scondaryColor,
                           )),
             ),
-            10.h.verticalSpace,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const SizedBox.shrink(),
-                GestureDetector(
-                  onTap: () {
-                    openMapDirections(
-                        lat: double.parse(lat), lng: double.parse(long));
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w),
-                    decoration: BoxDecoration(
-                        color: AppColors.scondaryColor,
-                        borderRadius: BorderRadius.circular(20)),
-                    height: 35.h,
-                    // width: 100.w,
-                    child: Center(
-                      child: AppText(
-                        text: AppLocalizations.of(context)!
-                            .translate('direction'),
-                        model: AppTextModel(
-                            style: AppFontStyleGlobal(
-                                    AppLocalizations.of(context)!.locale)
-                                .subTitle2
-                                .copyWith(
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.white,
-                                )),
-                      ),
-                    ),
+            20.h.verticalSpace,
+            GestureDetector(
+              onTap: () {
+                openMapDirections(
+                    lat: double.parse(lat), lng: double.parse(long));
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                decoration: BoxDecoration(
+                    color: AppColors.scondaryColor,
+                    borderRadius: BorderRadius.circular(8)),
+                height: 35.h,
+                width: double.infinity,
+                child: Center(
+                  child: AppText(
+                    text: AppLocalizations.of(context)!.translate('direction'),
+                    model: AppTextModel(
+                        style: AppFontStyleGlobal(
+                                AppLocalizations.of(context)!.locale)
+                            .subTitle2
+                            .copyWith(
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.white,
+                            )),
                   ),
-                )
-              ],
+                ),
+              ),
             )
           ],
         ),

@@ -13,7 +13,7 @@ showAppSnackBar({
 }) {
   return ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      duration: const Duration(seconds: 5),
+      duration: const Duration(seconds: 3),
       backgroundColor: color,
       content: AppText(
         text: message,

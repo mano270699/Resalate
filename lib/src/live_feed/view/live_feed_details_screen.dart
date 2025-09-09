@@ -11,7 +11,10 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../core/common/app_colors/app_colors.dart';
+import '../../../core/common/app_font_style/app_font_style_global.dart';
 import '../../../core/push_notification/notification_helper.dart';
+import '../../../core/shared_components/app_text/app_text.dart';
+import '../../../core/shared_components/app_text/models/app_text_model.dart';
 import '../../../core/util/localization/app_localizations.dart';
 import '../../layout/screens/user_bottom_navigation_screen.dart';
 
@@ -164,23 +167,34 @@ class _LiveFeedDetailsScreenState extends State<LiveFeedDetailsScreen> {
                         "${AppLocalizations.of(context)!.translate("Published")} ${state.data.post?.date ?? ""}",
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
-                      10.h.verticalSpace,
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: WidgetStateProperty.all(Colors.red),
-                          foregroundColor:
-                              WidgetStateProperty.all(AppColors.white),
-                        ),
-                        onPressed: () {
+                      20.h.verticalSpace,
+                      GestureDetector(
+                        onTap: () {
                           openYouTube(state.data.post?.iframe ?? "");
                         },
-                        child: Text(
-                          AppLocalizations.of(context)!
-                              .translate("open_youtube"),
-                          style: TextStyle(
-                              fontSize: 14.sp, fontWeight: FontWeight.w500),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10.w),
+                          decoration: BoxDecoration(
+                              color: AppColors.scondaryColor,
+                              borderRadius: BorderRadius.circular(8)),
+                          height: 35.h,
+                          width: double.infinity,
+                          child: Center(
+                            child: AppText(
+                              text: AppLocalizations.of(context)!
+                                  .translate('open_youtube'),
+                              model: AppTextModel(
+                                  style: AppFontStyleGlobal(
+                                          AppLocalizations.of(context)!.locale)
+                                      .subTitle2
+                                      .copyWith(
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.white,
+                                      )),
+                            ),
+                          ),
                         ),
-                      ),
+                      )
                     ],
                   ),
                 ),

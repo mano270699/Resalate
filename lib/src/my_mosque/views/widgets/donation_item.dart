@@ -104,39 +104,153 @@ class DonationItem extends StatelessWidget {
                           )),
                 ),
                 5.h.verticalSpace,
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         AppText(
+                //           text: AppLocalizations.of(context)!
+                //               .translate('remaining'),
+                //           model: AppTextModel(
+                //               style: AppFontStyleGlobal(
+                //                       AppLocalizations.of(context)!.locale)
+                //                   .subTitle2
+                //                   .copyWith(
+                //                     fontWeight: FontWeight.w600,
+                //                     color: AppColors.primaryColor,
+                //                   )),
+                //         ),
+                //         AppText(
+                //           text:
+                //               "${double.parse(donation.totalAmount.toString()) - double.parse(donation.amountPaid.toString())} ${donation.currency}",
+                //           model: AppTextModel(
+                //               style: AppFontStyleGlobal(
+                //                       AppLocalizations.of(context)!.locale)
+                //                   .smallTab
+                //                   .copyWith(
+                //                     fontWeight: FontWeight.w600,
+                //                     color: AppColors.scondaryColor,
+                //                   )),
+                //         ),
+                //       ],
+                //     ),
+                //   ],
+                // )
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AppText(
-                          text: AppLocalizations.of(context)!
-                              .translate('remaining'),
-                          model: AppTextModel(
-                              style: AppFontStyleGlobal(
-                                      AppLocalizations.of(context)!.locale)
-                                  .subTitle2
-                                  .copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.primaryColor,
-                                  )),
-                        ),
-                        AppText(
-                          text:
-                              "${double.parse(donation.totalAmount.toString()) - double.parse(donation.amountPaid.toString())} ${donation.currency}",
-                          model: AppTextModel(
-                              style: AppFontStyleGlobal(
-                                      AppLocalizations.of(context)!.locale)
-                                  .smallTab
-                                  .copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.scondaryColor,
-                                  )),
-                        ),
-                      ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          AppText(
+                            text: AppLocalizations.of(context)!
+                                .translate('total'),
+                            model: AppTextModel(
+                                textDirection: AppLocalizations.of(context)!
+                                            .locale
+                                            .languageCode ==
+                                        'en'
+                                    ? TextDirection.ltr
+                                    : TextDirection.rtl,
+                                style: AppFontStyleGlobal(
+                                        AppLocalizations.of(context)!.locale)
+                                    .subTitle1
+                                    .copyWith(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.primaryColor,
+                                    )),
+                          ),
+                          AppText(
+                            text:
+                                " ${donation.totalAmount.toString()} ${donation.currency}",
+                            model: AppTextModel(
+                                style: AppFontStyleGlobal(
+                                        AppLocalizations.of(context)!.locale)
+                                    .smallTab
+                                    .copyWith(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.scondaryColor,
+                                    )),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          AppText(
+                            text:
+                                AppLocalizations.of(context)!.translate('paid'),
+                            model: AppTextModel(
+                                textDirection: AppLocalizations.of(context)!
+                                            .locale
+                                            .languageCode ==
+                                        'en'
+                                    ? TextDirection.ltr
+                                    : TextDirection.rtl,
+                                style: AppFontStyleGlobal(
+                                        AppLocalizations.of(context)!.locale)
+                                    .subTitle1
+                                    .copyWith(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.primaryColor,
+                                    )),
+                          ),
+                          AppText(
+                            text:
+                                " ${donation.amountPaid.toString()} ${donation.currency}",
+                            model: AppTextModel(
+                                style: AppFontStyleGlobal(
+                                        AppLocalizations.of(context)!.locale)
+                                    .smallTab
+                                    .copyWith(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.scondaryColor,
+                                    )),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
+                ),
+                10.h.verticalSpace,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(
+                        context, DonationDetailsScreen.routeName,
+                        arguments: {"id": donation.id});
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10.w),
+                    decoration: BoxDecoration(
+                        color: AppColors.scondaryColor,
+                        borderRadius: BorderRadius.circular(8)),
+                    height: 40.h,
+                    width: double.infinity,
+                    child: Center(
+                      child: AppText(
+                        text: AppLocalizations.of(context)!
+                            .translate('donate_now'),
+                        model: AppTextModel(
+                            style: AppFontStyleGlobal(
+                                    AppLocalizations.of(context)!.locale)
+                                .subTitle2
+                                .copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.white,
+                                )),
+                      ),
+                    ),
+                  ),
                 )
               ],
             ),

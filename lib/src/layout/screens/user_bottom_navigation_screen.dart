@@ -44,7 +44,7 @@ class _MainBottomNavigationScreenState
           title: AppLocalizations.of(context)!.translate('donate')),
       BottomBarItem(
           icon: AppIconSvg.mosque,
-          title: AppLocalizations.of(context)!.translate('my_mosque')),
+          title: AppLocalizations.of(context)!.translate('masajed')),
       BottomBarItem(
           icon: AppIconSvg.profile,
           title: AppLocalizations.of(context)!.translate('profile')),

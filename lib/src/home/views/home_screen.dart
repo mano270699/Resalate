@@ -62,6 +62,19 @@ class HomePage extends StatelessWidget {
                   : AppIconSvg.rowLogoAr,
             ),
           ),
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                NearestMosque.routeName,
+              );
+            },
+            child: Icon(
+              Icons.search,
+              size: 30,
+              color: AppColors.scondaryColor,
+            ),
+          ),
         ),
         body: SingleChildScrollView(
           child: BlocBuilder<GenericCubit<HomeDataModel>,

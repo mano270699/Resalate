@@ -50,7 +50,7 @@ class ItemMasjedToMasjed extends StatelessWidget {
                         topLeft: Radius.circular(10),
                         topRight: Radius.circular(10)),
                     child: SizedBox(
-                        height: 100.h,
+                        height: 85.h,
                         width: MediaQuery.of(context).size.width,
                         child: Image.network(
                           posts.image ?? "",
@@ -80,39 +80,33 @@ class ItemMasjedToMasjed extends StatelessWidget {
                             color: AppColors.gray,
                           )),
                 ),
-                10.h.verticalSpace,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const SizedBox(),
-                    GestureDetector(
-                      onTap: () {
-                        openWhatsApp("whatsAppNumber");
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w),
-                        decoration: BoxDecoration(
-                            color: Colors.green,
-                            borderRadius: BorderRadius.circular(20)),
-                        height: 40.h,
-                        // width: 100.w,
-                        child: Center(
-                          child: AppText(
-                            text: AppLocalizations.of(context)!
-                                .translate("whatsApp"),
-                            model: AppTextModel(
-                                style: AppFontStyleGlobal(
-                                        AppLocalizations.of(context)!.locale)
-                                    .subTitle2
-                                    .copyWith(
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.white,
-                                    )),
-                          ),
-                        ),
+                20.h.verticalSpace,
+                GestureDetector(
+                  onTap: () {
+                    openWhatsApp("whatsAppNumber");
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10.w),
+                    decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(8)),
+                    height: 40.h,
+                    width: double.infinity,
+                    child: Center(
+                      child: AppText(
+                        text:
+                            AppLocalizations.of(context)!.translate("whatsApp"),
+                        model: AppTextModel(
+                            style: AppFontStyleGlobal(
+                                    AppLocalizations.of(context)!.locale)
+                                .subTitle2
+                                .copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.white,
+                                )),
                       ),
-                    )
-                  ],
+                    ),
+                  ),
                 )
               ],
             ),

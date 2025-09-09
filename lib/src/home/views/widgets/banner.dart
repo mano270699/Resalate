@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../../core/common/app_colors/app_colors.dart';
 import '../../data/models/home_data_model.dart';
 

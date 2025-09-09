@@ -86,7 +86,6 @@ class _MasjedListScreenState extends State<MasjedListScreen> {
 
             final posts = masjidState.data.masjids ?? [];
             final hasMore = viewModel.hasMorePages;
-            // ✅ Handle empty state
             if (posts.isEmpty && masjidState is! GenericLoadingState) {
               return Center(
                 child: Column(

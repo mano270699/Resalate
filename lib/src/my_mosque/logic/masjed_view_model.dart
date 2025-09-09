@@ -1,5 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
+import 'package:resalate/core/util/localization/app_localizations.dart';
+import 'package:resalate/core/util/token_util.dart';
 import 'package:resalate/src/my_mosque/data/models/masjed_list_model.dart';
 import 'package:resalate/src/my_mosque/data/repository/masjed_repository.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -9,6 +11,7 @@ import '../../../core/common/models/failure.dart';
 import '../data/models/follow_masjed_model.dart';
 import '../data/models/location_model.dart';
 import '../data/models/masjed_details_model.dart';
+import '../data/models/user_masjeds_model.dart';
 
 class MasjedViewModel {
   final MasjidRepositoryImpl masjidRepositoryImpl;
@@ -223,45 +226,86 @@ class MasjedViewModel {
     );
   }
 
-  Future<void> followMasjed({required int masjedId}) async {
+  Future<void> followMasjed(BuildContext context,
+      {required int masjedId}) async {
     followActionRes.onLoadingState();
-    try {
-      Either<String, FollowMasjedResponse> response =
-          await masjidRepositoryImpl.followMasjed(masjedId: masjedId);
+    final token = await TokenUtil.getTokenFromMemory();
+    if (token.isNotEmpty) {
+      try {
+        Either<String, FollowMasjedResponse> response =
+            await masjidRepositoryImpl.followMasjed(masjedId: masjedId);
 
-      response.fold(
-        (failure) {
-          followActionRes.onErrorState(Failure(failure));
-        },
-        (res) async {
-          isUserFollowMasjed.onUpdateData(true);
-          followActionRes.onUpdateData(res);
-        },
-      );
-    } on Failure catch (e, s) {
-      debugPrint("lllllllllllll:$s");
-      followActionRes.onErrorState(Failure('$e'));
+        response.fold(
+          (failure) {
+            followActionRes.onErrorState(Failure(failure));
+          },
+          (res) async {
+            isUserFollowMasjed.onUpdateData(true);
+            followActionRes.onUpdateData(res);
+          },
+        );
+      } on Failure catch (e, s) {
+        debugPrint("lllllllllllll:$s");
+        followActionRes.onErrorState(Failure('$e'));
+      }
+    } else {
+      if (context.mounted) {
+        followActionRes.onErrorState(Failure(AppLocalizations.of(context)!
+            .translate("you_must_login_to_follow_masjed")));
+      }
     }
   }
 
-  Future<void> unfollowMasjed({required int masjedId}) async {
+  Future<void> unfollowMasjed(BuildContext context,
+      {required int masjedId}) async {
     followActionRes.onLoadingState();
+    final token = await TokenUtil.getTokenFromMemory();
+    if (token.isNotEmpty) {
+      try {
+        Either<String, FollowMasjedResponse> response =
+            await masjidRepositoryImpl.unfollowMasjed(masjedId: masjedId);
+
+        response.fold(
+          (failure) {
+            followActionRes.onErrorState(Failure(failure));
+          },
+          (res) async {
+            isUserFollowMasjed.onUpdateData(false);
+            followActionRes.onUpdateData(res);
+          },
+        );
+      } on Failure catch (e, s) {
+        debugPrint("lllllllllllll:$s");
+        followActionRes.onErrorState(Failure('$e'));
+      }
+    } else {
+      if (context.mounted) {
+        followActionRes.onErrorState(Failure(AppLocalizations.of(context)!
+            .translate("you_must_login_to_follow_masjed")));
+      }
+    }
+  }
+
+  GenericCubit<UserMasjedsModel> userMasjidResponse =
+      GenericCubit(UserMasjedsModel());
+
+  Future<void> getUserMasjeds() async {
+    userMasjidResponse.onLoadingState();
     try {
-      Either<String, FollowMasjedResponse> response =
-          await masjidRepositoryImpl.unfollowMasjed(masjedId: masjedId);
+      Either<String, UserMasjedsModel> response =
+          await masjidRepositoryImpl.getUserMasjedsList();
 
       response.fold(
         (failure) {
-          followActionRes.onErrorState(Failure(failure));
+          userMasjidResponse.onErrorState(Failure(failure));
         },
         (res) async {
-          isUserFollowMasjed.onUpdateData(false);
-          followActionRes.onUpdateData(res);
+          userMasjidResponse.onUpdateData(res);
         },
       );
     } on Failure catch (e, s) {
       debugPrint("lllllllllllll:$s");
-      followActionRes.onErrorState(Failure('$e'));
+      userMasjidResponse.onErrorState(Failure('$e'));
     }
   }
 }

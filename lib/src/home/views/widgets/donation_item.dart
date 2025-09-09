@@ -48,7 +48,7 @@ class DonationItem extends StatelessWidget {
                       topLeft: Radius.circular(10),
                       topRight: Radius.circular(10)),
                   child: SizedBox(
-                      height: 150.h,
+                      height: 125.h,
                       width: MediaQuery.of(context).size.width,
                       child: image.isNotEmpty
                           ? Image.network(
@@ -96,7 +96,7 @@ class DonationItem extends StatelessWidget {
               AppText(
                 text: title,
                 model: AppTextModel(
-                    maxLines: 2,
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style:
                         AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
@@ -107,14 +107,16 @@ class DonationItem extends StatelessWidget {
                             )),
               ),
               AppText(
-                text: title,
+                text: desc,
                 model: AppTextModel(
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style:
                         AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
                             .headingMedium2
                             .copyWith(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
                               color: AppColors.gray,
                             )),
               ),
@@ -122,107 +124,106 @@ class DonationItem extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          AppText(
-                            text: AppLocalizations.of(context)!
-                                .translate('total'),
-                            model: AppTextModel(
-                                textDirection: AppLocalizations.of(context)!
-                                            .locale
-                                            .languageCode ==
-                                        'en'
-                                    ? TextDirection.ltr
-                                    : TextDirection.rtl,
-                                style: AppFontStyleGlobal(
-                                        AppLocalizations.of(context)!.locale)
-                                    .subTitle1
-                                    .copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.primaryColor,
-                                    )),
-                          ),
-                          AppText(
-                            text: " ${double.parse(total)} $currency",
-                            model: AppTextModel(
-                                style: AppFontStyleGlobal(
-                                        AppLocalizations.of(context)!.locale)
-                                    .smallTab
-                                    .copyWith(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.scondaryColor,
-                                    )),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          AppText(
-                            text:
-                                AppLocalizations.of(context)!.translate('paid'),
-                            model: AppTextModel(
-                                textDirection: AppLocalizations.of(context)!
-                                            .locale
-                                            .languageCode ==
-                                        'en'
-                                    ? TextDirection.ltr
-                                    : TextDirection.rtl,
-                                style: AppFontStyleGlobal(
-                                        AppLocalizations.of(context)!.locale)
-                                    .subTitle1
-                                    .copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.primaryColor,
-                                    )),
-                          ),
-                          AppText(
-                            text: " ${double.parse(remaining)} $currency",
-                            model: AppTextModel(
-                                style: AppFontStyleGlobal(
-                                        AppLocalizations.of(context)!.locale)
-                                    .smallTab
-                                    .copyWith(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.scondaryColor,
-                                    )),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  GestureDetector(
-                    onTap: onTap,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w),
-                      decoration: BoxDecoration(
-                          color: AppColors.scondaryColor,
-                          borderRadius: BorderRadius.circular(20)),
-                      height: 40.h,
-                      // width: 100.w,
-                      child: Center(
-                        child: AppText(
-                          text: AppLocalizations.of(context)!
-                              .translate('donate_now'),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        AppText(
+                          text:
+                              AppLocalizations.of(context)!.translate('total'),
+                          model: AppTextModel(
+                              textDirection: AppLocalizations.of(context)!
+                                          .locale
+                                          .languageCode ==
+                                      'en'
+                                  ? TextDirection.ltr
+                                  : TextDirection.rtl,
+                              style: AppFontStyleGlobal(
+                                      AppLocalizations.of(context)!.locale)
+                                  .subTitle1
+                                  .copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.primaryColor,
+                                  )),
+                        ),
+                        AppText(
+                          text: " ${double.parse(total)} $currency",
                           model: AppTextModel(
                               style: AppFontStyleGlobal(
                                       AppLocalizations.of(context)!.locale)
-                                  .subTitle2
+                                  .smallTab
                                   .copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.white,
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.scondaryColor,
                                   )),
                         ),
-                      ),
+                      ],
                     ),
-                  )
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        AppText(
+                          text: AppLocalizations.of(context)!.translate('paid'),
+                          model: AppTextModel(
+                              textDirection: AppLocalizations.of(context)!
+                                          .locale
+                                          .languageCode ==
+                                      'en'
+                                  ? TextDirection.ltr
+                                  : TextDirection.rtl,
+                              style: AppFontStyleGlobal(
+                                      AppLocalizations.of(context)!.locale)
+                                  .subTitle1
+                                  .copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.primaryColor,
+                                  )),
+                        ),
+                        AppText(
+                          text: " ${double.parse(remaining)} $currency",
+                          model: AppTextModel(
+                              style: AppFontStyleGlobal(
+                                      AppLocalizations.of(context)!.locale)
+                                  .smallTab
+                                  .copyWith(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.scondaryColor,
+                                  )),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
+              ),
+              10.h.verticalSpace,
+              GestureDetector(
+                onTap: onTap,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w),
+                  decoration: BoxDecoration(
+                      color: AppColors.scondaryColor,
+                      borderRadius: BorderRadius.circular(8)),
+                  height: 40.h,
+                  width: double.infinity,
+                  child: Center(
+                    child: AppText(
+                      text:
+                          AppLocalizations.of(context)!.translate('donate_now'),
+                      model: AppTextModel(
+                          style: AppFontStyleGlobal(
+                                  AppLocalizations.of(context)!.locale)
+                              .subTitle2
+                              .copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.white,
+                              )),
+                    ),
+                  ),
+                ),
               )
             ],
           ),

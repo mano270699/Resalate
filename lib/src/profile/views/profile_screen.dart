@@ -7,6 +7,7 @@ import 'package:resalate/core/common/models/error_model.dart';
 import 'package:resalate/core/shared_components/app_text/app_text.dart';
 import 'package:resalate/src/Auth/view/login_screen.dart';
 import 'package:resalate/src/home/data/models/home_data_model.dart';
+import 'package:resalate/src/my_mosque/views/user_masjeds.dart';
 import 'package:resalate/src/profile/data/models/profile_model.dart';
 import 'package:resalate/src/profile/views/faq_screen.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -388,6 +389,74 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                                           context)!
                                                                   .translate(
                                                                       "edit_profile"),
+                                                              model:
+                                                                  AppTextModel(
+                                                                      style: AppFontStyleGlobal(
+                                                                              AppLocalizations.of(context)!.locale)
+                                                                          .bodyLight1
+                                                                          .copyWith(
+                                                                            fontWeight:
+                                                                                FontWeight.w500,
+                                                                            color:
+                                                                                AppColors.black,
+                                                                          )),
+                                                            ),
+                                                            const Icon(
+                                                              Icons
+                                                                  .arrow_forward_outlined,
+                                                              color: AppColors
+                                                                  .black,
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            : SizedBox.shrink();
+                                      },
+                                    ),
+                                    BlocBuilder<GenericCubit<bool>,
+                                        GenericCubitState<bool>>(
+                                      bloc: viewModel.isUserLoggedin,
+                                      builder: (context, state) {
+                                        return state.data
+                                            ? Column(
+                                                children: [
+                                                  10.h.verticalSpace,
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.pushNamed(
+                                                        context,
+                                                        UserMasjedListScreen
+                                                            .routeName,
+                                                      );
+                                                    },
+                                                    child: Container(
+                                                      height: 50.h,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.r),
+                                                        color: AppColors.white,
+                                                      ),
+                                                      child: Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal:
+                                                                    10.w),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            AppText(
+                                                              text: AppLocalizations
+                                                                      .of(
+                                                                          context)!
+                                                                  .translate(
+                                                                      "my_mosque"),
                                                               model:
                                                                   AppTextModel(
                                                                       style: AppFontStyleGlobal(

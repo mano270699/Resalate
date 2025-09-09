@@ -91,7 +91,7 @@ class _FromMosqueToMosqueDetailsScreenState
                           child: Image.network(
                             state.data.post!.image!,
                             width: double.infinity,
-                            height: 200,
+                            height: 200.h,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -162,7 +162,7 @@ class _FromMosqueToMosqueDetailsScreenState
                           padding: EdgeInsets.symmetric(horizontal: 10.w),
                           decoration: BoxDecoration(
                               color: Colors.green,
-                              borderRadius: BorderRadius.circular(20)),
+                              borderRadius: BorderRadius.circular(8)),
                           height: 40.h,
                           // width: 100.w,
                           child: Center(

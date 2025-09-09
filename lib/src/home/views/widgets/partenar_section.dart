@@ -22,7 +22,7 @@ class PartenerSection extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Container(
-        height: 150.h,
+        height: 200.h,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.w),
             gradient: const LinearGradient(
@@ -34,56 +34,55 @@ class PartenerSection extends StatelessWidget {
                 ])),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
             children: [
-              // Text("Partener Organization",),
-
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    AppText(
-                      text: title,
-                      model: AppTextModel(
-                          style: AppFontStyleGlobal(
-                                  AppLocalizations.of(context)!.locale)
-                              .bodyMedium1
-                              .copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.white,
-                              )),
-                    ),
-                    SizedBox(
-                      height: 10.h,
-                    ),
-                    AppText(
-                      text: desc,
-                      model: AppTextModel(
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          textDirection: AppLocalizations.of(context)!
-                                      .locale
-                                      .languageCode ==
-                                  'en'
-                              ? TextDirection.ltr
-                              : TextDirection.rtl,
-                          style: AppFontStyleGlobal(
-                                  AppLocalizations.of(context)!.locale)
-                              .bodyLight1
-                              .copyWith(
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.white,
-                              )),
-                    ),
-                  ],
-                ),
-              ),
-
-              Stack(
-                alignment: Alignment.center,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // Text("Partener Organization",),
+
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AppText(
+                          text: title,
+                          model: AppTextModel(
+                              style: AppFontStyleGlobal(
+                                      AppLocalizations.of(context)!.locale)
+                                  .bodyMedium1
+                                  .copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.white,
+                                  )),
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        AppText(
+                          text: desc,
+                          model: AppTextModel(
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              textDirection: AppLocalizations.of(context)!
+                                          .locale
+                                          .languageCode ==
+                                      'en'
+                                  ? TextDirection.ltr
+                                  : TextDirection.rtl,
+                              style: AppFontStyleGlobal(
+                                      AppLocalizations.of(context)!.locale)
+                                  .bodyLight1
+                                  .copyWith(
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.white,
+                                  )),
+                        ),
+                      ],
+                    ),
+                  ),
+
                   ImageFiltered(
                     imageFilter: ImageFilter.blur(sigmaX: 1.0, sigmaY: 0),
                     child: Image.asset(
@@ -91,35 +90,35 @@ class PartenerSection extends StatelessWidget {
                       height: 120.h,
                       width: 120.w,
                     ),
-                  ),
-                  Align(
-                      alignment: Alignment.center,
-                      child: GestureDetector(
-                        onTap: () {
-                          Constants.launcherUrl(uri: url);
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10.w),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20)),
-                          height: 40.h,
-                          child: Center(
-                            child: AppText(
-                              text: "learn more",
-                              model: AppTextModel(
-                                  style: AppFontStyleGlobal(
-                                          AppLocalizations.of(context)!.locale)
-                                      .subTitle2
-                                      .copyWith(
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.primaryColor,
-                                      )),
-                            ),
-                          ),
-                        ),
-                      ))
+                  )
                 ],
+              ),
+              20.h.verticalSpace,
+              GestureDetector(
+                onTap: () {
+                  Constants.launcherUrl(uri: url);
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.r)),
+                  height: 40.h,
+                  width: double.infinity,
+                  child: Center(
+                    child: AppText(
+                      text: "learn more",
+                      model: AppTextModel(
+                          style: AppFontStyleGlobal(
+                                  AppLocalizations.of(context)!.locale)
+                              .subTitle2
+                              .copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.primaryColor,
+                              )),
+                    ),
+                  ),
+                ),
               )
             ],
           ),

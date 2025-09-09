@@ -8,6 +8,7 @@ import '../models/follow_masjed_model.dart';
 import '../models/location_model.dart';
 import '../models/masjed_details_model.dart';
 import '../models/masjed_list_model.dart';
+import '../models/user_masjeds_model.dart';
 
 abstract class MasjidRepository {
   Future<Either<String, MasjidListResponse>> getMasjedsList({
@@ -19,6 +20,7 @@ abstract class MasjidRepository {
   Future<Either<String, MasjidDetailsResponse>> getMasjedsDetails({
     required int id,
   });
+  Future<Either<String, UserMasjedsModel>> getUserMasjedsList();
   Future<Either<String, FollowMasjedResponse>> followMasjed({
     required int masjedId,
   });
@@ -107,6 +109,21 @@ class MasjidRepositoryImpl extends MasjidRepository {
         "locations",
       );
       LocationsModels res = LocationsModels.fromJson(response.data);
+      return Right(res);
+    } catch (e, t) {
+      debugPrint("error:$e-- trace $t");
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, UserMasjedsModel>> getUserMasjedsList() async {
+    final userId = await UserIdUtil.getUserIdFromMemory();
+    try {
+      final response = await _networkService.get(
+        "followers/$userId",
+      );
+      UserMasjedsModel res = UserMasjedsModel.fromJson(response.data);
       return Right(res);
     } catch (e, t) {
       debugPrint("error:$e-- trace $t");

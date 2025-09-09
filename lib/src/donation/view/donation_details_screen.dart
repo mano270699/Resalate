@@ -1,19 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 import 'package:resalate/core/blocs/generic_cubit/generic_cubit.dart';
-import 'package:resalate/core/common/app_icon_svg.dart';
 import 'package:resalate/src/donation/logic/donations_view_model.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import '../../../core/base/dependency_injection.dart';
 import '../../../core/common/app_colors/app_colors.dart';
 import '../../../core/common/app_font_style/app_font_style_global.dart';
-import '../../../core/common/assets.dart';
 import '../../../core/push_notification/notification_helper.dart';
 import '../../../core/shared_components/app_text/app_text.dart';
 import '../../../core/shared_components/app_text/models/app_text_model.dart';
@@ -21,6 +16,7 @@ import '../../../core/util/localization/app_localizations.dart';
 import '../../layout/screens/user_bottom_navigation_screen.dart';
 import '../../my_mosque/views/widgets/custom_expantion_tile.dart';
 import '../data/models/donation_details_model.dart';
+import 'widgets/payment_options.dart';
 
 class DonationDetailsScreen extends StatefulWidget {
   static const String routeName = 'DonationDetailsScreen';
@@ -159,9 +155,7 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
                         style: AppFontStyleGlobal(
                                 AppLocalizations.of(context)!.locale)
                             .bodyMedium1
-                            .copyWith(
-                              color: AppColors.gray,
-                            ),
+                            .copyWith(color: AppColors.gray, fontSize: 12.sp),
                       ),
                     ),
 
@@ -188,6 +182,93 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
                     if (data?.donation != null)
                       _buildDonationSection(data?.donation ?? Donation()),
 
+                    // const SizedBox(height: 24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              AppText(
+                                text: AppLocalizations.of(context)!
+                                    .translate('total'),
+                                model: AppTextModel(
+                                    textDirection: AppLocalizations.of(context)!
+                                                .locale
+                                                .languageCode ==
+                                            'en'
+                                        ? TextDirection.ltr
+                                        : TextDirection.rtl,
+                                    style: AppFontStyleGlobal(
+                                            AppLocalizations.of(context)!
+                                                .locale)
+                                        .subTitle1
+                                        .copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.primaryColor,
+                                        )),
+                              ),
+                              AppText(
+                                text:
+                                    " ${data?.donation?.total.toString()} ${data?.donation?.currency}",
+                                model: AppTextModel(
+                                    style: AppFontStyleGlobal(
+                                            AppLocalizations.of(context)!
+                                                .locale)
+                                        .smallTab
+                                        .copyWith(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.scondaryColor,
+                                        )),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              AppText(
+                                text: AppLocalizations.of(context)!
+                                    .translate('paid'),
+                                model: AppTextModel(
+                                    textDirection: AppLocalizations.of(context)!
+                                                .locale
+                                                .languageCode ==
+                                            'en'
+                                        ? TextDirection.ltr
+                                        : TextDirection.rtl,
+                                    style: AppFontStyleGlobal(
+                                            AppLocalizations.of(context)!
+                                                .locale)
+                                        .subTitle1
+                                        .copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.primaryColor,
+                                        )),
+                              ),
+                              AppText(
+                                text:
+                                    " ${data?.donation?.paid.toString()} ${data?.donation?.currency}",
+                                model: AppTextModel(
+                                    style: AppFontStyleGlobal(
+                                            AppLocalizations.of(context)!
+                                                .locale)
+                                        .smallTab
+                                        .copyWith(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.scondaryColor,
+                                        )),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    10.h.verticalSpace,
                     const SizedBox(height: 24),
 
                     /// Masjid Info
@@ -224,27 +305,54 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
           ),
         ),
         const SizedBox(height: 8),
-        LinearProgressIndicator(
-          value: progress,
-          minHeight: 10,
+
+        ClipRRect(
           borderRadius: BorderRadius.circular(8),
-          backgroundColor: Colors.grey[300],
-          valueColor:
-              const AlwaysStoppedAnimation<Color>(AppColors.primaryColor),
-        ),
-        const SizedBox(height: 8),
-        AppText(
-          text:
-              "${donation.paid}/${donation.total} ${donation.currency} (${donation.percent}%)",
-          model: AppTextModel(
-            style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                .bodyMedium1
-                .copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.black,
-                ),
+          child: LinearPercentIndicator(
+            barRadius: const Radius.circular(8),
+            fillColor: AppColors.primaryColor.withValues(alpha: 0.5),
+            lineHeight: 30.h,
+
+            padding: EdgeInsets.zero,
+            percent: progress,
+            // 50% progress
+            center: AppText(
+              text: "${donation.percent}%",
+              model: AppTextModel(
+                  style:
+                      AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
+                          .label
+                          .copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.white,
+                          )),
+            ),
+
+            progressColor: AppColors.primaryColor,
           ),
         ),
+        // LinearProgressIndicator(
+        //   value: progress,
+        //   minHeight: 30.h,
+        //   borderRadius: BorderRadius.circular(8),
+        //   backgroundColor: Colors.grey[300],
+
+        //   valueColor:
+        //       const AlwaysStoppedAnimation<Color>(AppColors.primaryColor),
+        // ),
+        const SizedBox(height: 8),
+        // AppText(
+        //   text:
+        //       "${donation.paid}/${donation.total} ${donation.currency} (${donation.percent}%)",
+        //   model: AppTextModel(
+        //     style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
+        //         .bodyMedium1
+        //         .copyWith(
+        //           fontWeight: FontWeight.w600,
+        //           color: AppColors.black,
+        //         ),
+        //   ),
+        // ),
       ],
     );
   }
@@ -311,7 +419,9 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
         const SizedBox(height: 20),
         if (masjid.paymentInfo != null)
           CustomExpansionTile(
-            content: _buildPaymentInfo(masjid.paymentInfo!),
+            content: PaymentOptionsSection(
+              paymentInfo: masjid.paymentInfo!,
+            ),
             title: Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: 16.w,
@@ -335,181 +445,6 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
             initiallyExpanded: false,
           ),
       ],
-    );
-  }
-
-  Widget _buildPaymentInfo(
-    PaymentInfo info,
-  ) {
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(16.r)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // AppText(
-          //   text: "Payment Options",
-          //   model: AppTextModel(
-          //     style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-          //         .headingMedium2
-          //         .copyWith(
-          //           fontSize: 16,
-          //           fontWeight: FontWeight.bold,
-          //           color: AppColors.black,
-          //         ),
-          //   ),
-          // ),
-          // const SizedBox(height: 12),
-
-          /// Paypal
-          if ((info.paypalUser ?? "").isNotEmpty)
-            ListTile(
-              leading: SvgPicture.asset(
-                  height: 20.h, width: 20.w, AppIconSvg.paypal),
-              title: AppText(
-                text:
-                    "${AppLocalizations.of(context)!.translate("paypal")} ${info.paypalUser}",
-                model: AppTextModel(
-                  style:
-                      AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                          .bodyMedium1
-                          .copyWith(
-                            color: AppColors.black,
-                          ),
-                ),
-              ),
-            ),
-
-          /// Switch
-          if (info.switchPayment != null) ...[
-            ListTile(
-                leading: const Icon(Icons.payment,
-                    color: Color.fromARGB(255, 2, 104, 188)),
-                title: AppText(
-                  text:
-                      "${AppLocalizations.of(context)!.translate("switch_number")} ${info.switchPayment?.number ?? ''}",
-                  model: AppTextModel(
-                    style:
-                        AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                            .bodyMedium1
-                            .copyWith(
-                              color: AppColors.black,
-                            ),
-                  ),
-                ),
-                subtitle: _buildContent(info.switchPayment?.url ?? "")
-                // AppText(
-                //   text: info.switchPayment?.url ?? "",
-                //   model: AppTextModel(
-                //     style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                //         .bodyMedium1
-                //         .copyWith(
-                //           color: AppColors.gray,
-                //         ),
-                //   ),
-                // ),
-                ),
-            if (info.switchPayment?.qrCode?.url != null)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Image.network(
-                  info.switchPayment!.qrCode!.url!,
-                  height: 150,
-                ),
-              ),
-          ],
-
-          /// Bank Account
-          if (info.bankAccount != null)
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Image.asset(
-                        Assets.bank,
-                        height: 25.h,
-                        width: 25.w,
-                      ),
-                      5.w.horizontalSpace,
-                      AppText(
-                        text: AppLocalizations.of(context)!
-                            .translate("bank_account"),
-                        model: AppTextModel(
-                          style: AppFontStyleGlobal(
-                                  AppLocalizations.of(context)!.locale)
-                              .headingMedium2
-                              .copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.black,
-                              ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  AppText(
-                    text:
-                        "${AppLocalizations.of(context)!.translate("Name")} ${info.bankAccount?.name ?? ''}j",
-                    model: AppTextModel(
-                      style: AppFontStyleGlobal(
-                              AppLocalizations.of(context)!.locale)
-                          .bodyMedium1,
-                    ),
-                  ),
-                  AppText(
-                    text:
-                        "${AppLocalizations.of(context)!.translate("Account_No")} ${info.bankAccount?.accountNumber ?? ''}",
-                    model: AppTextModel(
-                      style: AppFontStyleGlobal(
-                              AppLocalizations.of(context)!.locale)
-                          .bodyMedium1,
-                    ),
-                  ),
-                  AppText(
-                    text:
-                        "${AppLocalizations.of(context)!.translate("IBAN")} ${info.bankAccount?.iban ?? ''}",
-                    model: AppTextModel(
-                      style: AppFontStyleGlobal(
-                              AppLocalizations.of(context)!.locale)
-                          .bodyMedium1,
-                    ),
-                  ),
-                  AppText(
-                    text:
-                        "${AppLocalizations.of(context)!.translate("Swift_Code")} ${info.bankAccount?.swiftCode ?? ''}",
-                    model: AppTextModel(
-                      style: AppFontStyleGlobal(
-                              AppLocalizations.of(context)!.locale)
-                          .bodyMedium1,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildContent(String? content) {
-    final cleanText = content?.replaceAll(RegExp(r"<[^>]*>"), "") ?? "";
-
-    return Linkify(
-      text: cleanText,
-      // style: const TextStyle(fontSize: 16, color: Colors.black87),
-      // linkStyle: const TextStyle(
-      //     color: Colors.blue, decoration: TextDecoration.underline),
-      onOpen: (link) async {
-        final uri = Uri.parse(link.url);
-        if (await canLaunchUrl(uri)) {
-          await launchUrl(uri, mode: LaunchMode.externalApplication);
-        }
-      },
     );
   }
 }
