@@ -94,6 +94,7 @@ flutter:
   assets:
     - assets/lang/en.json
     - assets/lang/ar.json
+    - assets/lang/sv.json
     - assets/images/
     - assets/json/
     - assets/icons/

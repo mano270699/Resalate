@@ -22,9 +22,11 @@ class ConfirmDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Directionality(
-      textDirection: AppLocalizations.of(context)!.locale.languageCode == 'en'
-          ? TextDirection.ltr
-          : TextDirection.rtl,
+      textDirection:
+          AppLocalizations.of(context)!.locale.languageCode == 'en' ||
+                  AppLocalizations.of(context)!.locale.languageCode == 'sv'
+              ? TextDirection.ltr
+              : TextDirection.rtl,
       child: Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Padding(

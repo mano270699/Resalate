@@ -54,7 +54,8 @@ class _MainBottomNavigationScreenState
       builder: (context, indexState) {
         return Directionality(
           textDirection:
-              AppLocalizations.of(context)!.locale.languageCode == 'en'
+              AppLocalizations.of(context)!.locale.languageCode == 'en' ||
+                      AppLocalizations.of(context)!.locale.languageCode == 'sv'
                   ? TextDirection.ltr
                   : TextDirection.rtl,
           child: Scaffold(

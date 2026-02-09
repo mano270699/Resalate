@@ -28,6 +28,7 @@ import 'widgets/avatar_custom_paint.dart';
 import 'widgets/background_custom_paint.dart';
 import 'widgets/confirm_dialog.dart';
 import 'widgets/contact_form.dart';
+import 'widgets/language_dialog.dart';
 import 'widgets/sponser_form.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -51,9 +52,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
-      textDirection: AppLocalizations.of(context)!.locale.languageCode == 'en'
-          ? TextDirection.ltr
-          : TextDirection.rtl,
+      textDirection:
+          AppLocalizations.of(context)!.locale.languageCode == 'en' ||
+                  AppLocalizations.of(context)!.locale.languageCode == 'sv'
+              ? TextDirection.ltr
+              : TextDirection.rtl,
       child: Scaffold(
         body: BlocListener<GenericCubit<DefaultModel>,
             GenericCubitState<DefaultModel>>(
@@ -121,6 +124,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               : SizedBox.shrink();
                         },
                       ),
+
                       Positioned(
                         right: 10.w,
                         top: 30.h,
@@ -129,41 +133,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           builder: (context, state) {
                             return GestureDetector(
                               onTap: () {
-                                if (AppLocalizations.of(context)!
-                                        .locale
-                                        .languageCode ==
-                                    "en") {
-                                  context
-                                      .read<LocalizationCubit>()
-                                      .changeLanguage('ar');
-                                } else {
-                                  context
-                                      .read<LocalizationCubit>()
-                                      .changeLanguage('en');
-                                }
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return LanguageDialog(
+                                      currentLanguage:
+                                          AppLocalizations.of(context)!
+                                              .locale
+                                              .languageCode,
+                                      onLanguageSelected:
+                                          (String languageCode) {
+                                        context
+                                            .read<LocalizationCubit>()
+                                            .changeLanguage(languageCode);
+                                      },
+                                    );
+                                  },
+                                );
                               },
                               child: Container(
                                 height: 35.h,
                                 width: 35.h,
                                 decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: AppColors.white),
+                                  shape: BoxShape.circle,
+                                  color: AppColors.white,
+                                ),
                                 child: Center(
-                                  child: AppText(
-                                    text: AppLocalizations.of(context)!
-                                                .locale
-                                                .languageCode ==
-                                            "en"
-                                        ? "أ"
-                                        : "A",
-                                    model: AppTextModel(
-                                      style: AppFontStyleGlobal(
-                                              AppLocalizations.of(context)!
-                                                  .locale)
-                                          .bodyMedium1
-                                          .copyWith(
-                                              color: AppColors.black,
-                                              fontSize: 20.h),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return LanguageDialog(
+                                            currentLanguage:
+                                                AppLocalizations.of(context)!
+                                                    .locale
+                                                    .languageCode,
+                                            onLanguageSelected:
+                                                (String languageCode) {
+                                              context
+                                                  .read<LocalizationCubit>()
+                                                  .changeLanguage(languageCode);
+                                            },
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: SvgPicture.asset(
+                                      AppIconSvg.lang,
+                                      height: 30.h,
+                                      width: 30.w,
                                     ),
                                   ),
                                 ),
@@ -172,6 +191,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           },
                         ),
                       ),
+
                       // Content
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,

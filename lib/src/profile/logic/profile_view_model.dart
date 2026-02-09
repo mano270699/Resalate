@@ -94,6 +94,9 @@ class ProfileViewModel {
     name.text = user.name ?? "";
     phone.text = user.phone ?? "";
     email.text = user.email ?? "";
+
+    debugPrint(
+        "name::${user.name}-- phone::${user.phone}--email::${user.email}");
   }
 
   Future<void> pickImage({

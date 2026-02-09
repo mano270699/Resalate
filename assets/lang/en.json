@@ -105,5 +105,6 @@
   "Location_permissions_are_denied": "Location permissions are denied",
   "Location_permissions_are_permanently_denied": "Location permissions are permanently denied",
   "An_error_occurred_while_fetching_nearby_mosques": "An error occurred while fetching nearby mosques.",
-  "Could_not_get_location": "Could not get location. Please allow location access to find nearby mosques."
+  "Could_not_get_location": "Could not get location. Please allow location access to find nearby mosques.",
+  "Select_Language": "Select Language"
 }

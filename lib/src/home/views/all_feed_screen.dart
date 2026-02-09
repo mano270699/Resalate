@@ -51,9 +51,11 @@ class _AllFeedLiveScreenState extends State<AllFeedLiveScreen> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
-      textDirection: AppLocalizations.of(context)!.locale.languageCode == 'en'
-          ? TextDirection.ltr
-          : TextDirection.rtl,
+      textDirection:
+          AppLocalizations.of(context)!.locale.languageCode == 'en' ||
+                  AppLocalizations.of(context)!.locale.languageCode == 'sv'
+              ? TextDirection.ltr
+              : TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
           title: AppText(

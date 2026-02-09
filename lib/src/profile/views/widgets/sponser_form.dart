@@ -32,9 +32,11 @@ class _SponsorFormState extends State<SponsorForm> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
-      textDirection: AppLocalizations.of(context)!.locale.languageCode == 'en'
-          ? TextDirection.ltr
-          : TextDirection.rtl,
+      textDirection:
+          AppLocalizations.of(context)!.locale.languageCode == 'en' ||
+                  AppLocalizations.of(context)!.locale.languageCode == 'sv'
+              ? TextDirection.ltr
+              : TextDirection.rtl,
       child: BlocListener<GenericCubit<SponserModel>,
           GenericCubitState<SponserModel>>(
         bloc: widget.viewModel.sponserRes,

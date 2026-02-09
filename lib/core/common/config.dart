@@ -11,12 +11,12 @@ class Config {
 String baseUrlSetter(String mode) {
   switch (mode) {
     case "DEV":
-      return 'https://masjid.super-coding.com/wp-json/collections/';
+      return 'https://resalate.com/wp-json/collections/';
     case "SIT":
-      return 'https://masjid.super-coding.com/wp-json/collections/';
+      return 'https://resalate.com/wp-json/collections/';
     case "PREPRD":
-      return 'https://masjid.super-coding.com/wp-json/collections/';
+      return 'https://resalate.com/wp-json/collections/';
     default:
-      return 'https://masjid.super-coding.com/wp-json/collections/';
+      return 'https://resalate.com/wp-json/collections/';
   }
 }

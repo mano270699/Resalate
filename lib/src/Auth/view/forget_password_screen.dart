@@ -36,9 +36,11 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
-      textDirection: AppLocalizations.of(context)!.locale.languageCode == 'en'
-          ? TextDirection.ltr
-          : TextDirection.rtl,
+      textDirection:
+          AppLocalizations.of(context)!.locale.languageCode == 'en' ||
+                  AppLocalizations.of(context)!.locale.languageCode == 'sv'
+              ? TextDirection.ltr
+              : TextDirection.rtl,
       child: Scaffold(
         body: BlocListener<GenericCubit<DefaultModel>,
             GenericCubitState<DefaultModel>>(
@@ -87,7 +89,12 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   120.h.verticalSpace,
                   Center(
                     child: SvgPicture.asset(
-                      AppLocalizations.of(context)!.locale.languageCode == "en"
+                      AppLocalizations.of(context)!.locale.languageCode ==
+                                  "en" ||
+                              AppLocalizations.of(context)!
+                                      .locale
+                                      .languageCode ==
+                                  'sv'
                           ? AppIconSvg.splashLogo
                           : AppIconSvg.splashLogoAr,
                       height: 200.h,
