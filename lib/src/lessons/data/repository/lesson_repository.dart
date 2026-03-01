@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:resalate/core/util/network_service.dart';
 
+import '../../../../core/util/localization/localization_cache_helper.dart';
 import '../models/lesson_details.dart';
 
 abstract class LessonsRepository {
@@ -18,8 +19,10 @@ class LessonsRepositoryImpl extends LessonsRepository {
   Future<Either<String, LessonDetailsModel>> getLessonDetails(
       {required int id}) async {
     try {
+      LocalizationCacheHelper localizationCacheHelper =
+          LocalizationCacheHelper();
       final response = await _networkService.get(
-        "lesson/$id",
+        "lesson/$id?lang=${localizationCacheHelper.getLanguageCode()}",
       );
       LessonDetailsModel res = LessonDetailsModel.fromJson(response.data);
       return Right(res);

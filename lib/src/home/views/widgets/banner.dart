@@ -48,7 +48,7 @@ class CustomBannerSliderState extends State<CustomBannerSlider> {
                         borderRadius:
                             const BorderRadius.all(Radius.circular(0)),
                         child: FadeInImage.assetNetwork(
-                          placeholder: 'assets/images/placeholder.jpg',
+                          placeholder: 'assets/images/placeholder.png',
                           image: i.url,
                           height: 200,
                           fit: BoxFit.fill,

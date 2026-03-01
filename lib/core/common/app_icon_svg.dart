@@ -4,10 +4,10 @@ class AppIconSvg {
   static const String splashLogoAr = 'assets/icons/splash_logo_ar.svg';
   static const String rowLogo = 'assets/icons/row_logo.svg';
   static const String rowLogoAr = 'assets/icons/row_logo_ar.svg';
-  static const String home = 'assets/icons/navigation_home.svg';
-  static const String mosque = 'assets/icons/navigation_mosque.svg';
-  static const String donate = 'assets/icons/navigation_donate.svg';
-  static const String profile = 'assets/icons/navigation_profile.svg';
+  static const String home = 'assets/icons/home.svg';
+  static const String mosque = 'assets/icons/mosque.svg';
+  static const String donate = 'assets/icons/donation.svg';
+  static const String profile = 'assets/icons/profile.svg';
   static const String fromMosque = 'assets/icons/from_mosque.svg';
   static const String mosqueLocation = 'assets/icons/mosque_location.svg';
   static const String resalateLogo1 = 'assets/icons/Resalate-01.svg';

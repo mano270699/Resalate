@@ -10,7 +10,9 @@ import '../../../core/common/app_colors/app_colors.dart';
 import '../../../core/common/app_font_style/app_font_style_global.dart';
 import '../../../core/shared_components/app_text/models/app_text_model.dart';
 import '../../../core/util/localization/app_localizations.dart';
-import '../data/models/location_model.dart';
+import '../data/models/countries_model.dart';
+import '../data/models/province_model.dart';
+import '../data/models/cities_model.dart';
 import '../data/models/masjed_list_model.dart';
 import 'my_mosque_screen.dart';
 import 'widgets/masjed_item.dart';
@@ -25,7 +27,8 @@ class MasjedListScreen extends StatefulWidget {
 class _MasjedListScreenState extends State<MasjedListScreen> {
   final viewModel = sl<MasjedViewModel>()
     ..getMasjedsData(1)
-    ..getLocationsList();
+    ..getLocationsList()
+    ..getCountries();
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -114,6 +117,7 @@ class _MasjedListScreenState extends State<MasjedListScreen> {
                   // Fake placeholders when loading
                   if (isLoading) {
                     return MasjidItem(
+                      viewModel: viewModel,
                       onTap: () {},
                       masjid: Masjid(),
                     );
@@ -134,6 +138,7 @@ class _MasjedListScreenState extends State<MasjedListScreen> {
 
                   final post = posts[index];
                   return MasjidItem(
+                    viewModel: viewModel,
                     onTap: () {
                       Navigator.pushNamed(context, MyMosqueScreen.routeName,
                           arguments: {"id": post.id});
@@ -156,32 +161,19 @@ class _MasjedListScreenState extends State<MasjedListScreen> {
   void _openFilterBottomSheet() {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
       builder: (_) {
-        return Padding(
-          padding: EdgeInsets.all(16.w),
-          child: SizedBox(
-            height: 360.h,
-            child: BlocBuilder<GenericCubit<LocationsModels>,
-                GenericCubitState<LocationsModels>>(
-              bloc: viewModel.getLocationsListRes,
-              builder: (context, state) {
-                if (state is GenericLoadingState) {
-                  return const Center(
-                      child: CircularProgressIndicator(
-                    color: AppColors.primaryColor,
-                  ));
-                }
-                if (state is GenericErrorState) {
-                  return Center(
-                      child:
-                          Text("Failed: ${state.responseError?.errorMessage}"));
-                }
-                return Column(
+        return StatefulBuilder(
+          builder: (sheetContext, setSheetState) {
+            return Padding(
+              padding: EdgeInsets.all(16.w),
+              child: SizedBox(
+                height: 400.h,
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     10.h.verticalSpace,
                     Center(
@@ -203,51 +195,90 @@ class _MasjedListScreenState extends State<MasjedListScreen> {
                           color: AppColors.scondaryColor),
                     ),
                     40.h.verticalSpace,
-                    BlocBuilder<GenericCubit<List<Locations>>,
-                        GenericCubitState<List<Locations>>>(
-                      bloc: viewModel.countriesList,
-                      builder: (context, state) {
-                        return _buildDropdown<Locations>(
+                    // Country dropdown
+                    BlocBuilder<GenericCubit<CountriesResponseModel>,
+                        GenericCubitState<CountriesResponseModel>>(
+                      bloc: viewModel.countriesListRes,
+                      builder: (context, countryState) {
+                        if (countryState is GenericLoadingState) {
+                          return const Center(
+                              child: CircularProgressIndicator(
+                            color: AppColors.primaryColor,
+                          ));
+                        }
+                        return _buildDropdown<CountryModel>(
+                          key: ValueKey('country_${viewModel.filterSheetKey}'),
                           hint: AppLocalizations.of(context)!
                               .translate("Select_Country"),
                           value: viewModel.selectedCountry,
-                          items: state.data,
-                          labelBuilder: (c) => c.country ?? "",
-                          onChanged: (val) => viewModel.selectCountry(val),
+                          items: countryState.data.countries ?? [],
+                          labelBuilder: (c) => c.name,
+                          onChanged: (val) {
+                            viewModel.selectCountry(val);
+                            setSheetState(() {});
+                          },
                         );
                       },
                     ),
                     10.h.verticalSpace,
-                    BlocBuilder<GenericCubit<List<States>>,
-                        GenericCubitState<List<States>>>(
-                      bloc: viewModel.provincesList,
-                      builder: (context, state) {
-                        return _buildDropdown<States>(
+
+                    // Province dropdown
+                    BlocBuilder<GenericCubit<ProvincesResponseModel>,
+                        GenericCubitState<ProvincesResponseModel>>(
+                      bloc: viewModel.provincesListRes,
+                      builder: (context, provinceState) {
+                        if (provinceState is GenericLoadingState) {
+                          return const Center(
+                              child: CircularProgressIndicator(
+                            color: AppColors.primaryColor,
+                          ));
+                        }
+                        return _buildDropdown<ProvinceModel>(
+                          key: ValueKey(
+                              'province_${viewModel.selectedCountry?.name ?? 'none'}_${viewModel.filterSheetKey}'),
                           hint: AppLocalizations.of(context)!
                               .translate("Select_Province"),
                           value: viewModel.selectedProvince,
-                          items: state.data,
-                          labelBuilder: (s) => s.state ?? "",
-                          onChanged: (val) => viewModel.selectProvince(val),
+                          items: provinceState.data.provinces ?? [],
+                          labelBuilder: (s) => s.name,
+                          onChanged: (val) {
+                            viewModel.selectProvince(val);
+                            setSheetState(() {});
+                          },
                         );
                       },
                     ),
                     10.h.verticalSpace,
-                    BlocBuilder<GenericCubit<List<Cities>>,
-                        GenericCubitState<List<Cities>>>(
-                      bloc: viewModel.citiesList,
-                      builder: (context, state) {
-                        return _buildDropdown<Cities>(
+
+                    // City dropdown
+                    BlocBuilder<GenericCubit<CitiesResponseModel>,
+                        GenericCubitState<CitiesResponseModel>>(
+                      bloc: viewModel.citiesListRes,
+                      builder: (context, cityState) {
+                        if (cityState is GenericLoadingState) {
+                          return const Center(
+                              child: CircularProgressIndicator(
+                            color: AppColors.primaryColor,
+                          ));
+                        }
+                        return _buildDropdown<CityModel>(
+                          key: ValueKey(
+                              'city_${viewModel.selectedProvince?.name ?? 'none'}_${viewModel.filterSheetKey}'),
                           hint: AppLocalizations.of(context)!
                               .translate("Select_City"),
                           value: viewModel.selectedCity,
-                          items: state.data,
-                          labelBuilder: (c) => c.name ?? "",
-                          onChanged: (val) => viewModel.selectCity(val),
+                          items: cityState.data.cities ?? [],
+                          labelBuilder: (c) => c.name,
+                          onChanged: (val) {
+                            viewModel.selectCity(val);
+                            setSheetState(() {});
+                          },
                         );
                       },
                     ),
                     const Spacer(),
+
+                    // Reset & Apply buttons
                     Row(
                       children: [
                         Expanded(
@@ -259,7 +290,7 @@ class _MasjedListScreenState extends State<MasjedListScreen> {
                               padding: EdgeInsets.symmetric(vertical: 14.h),
                             ),
                             onPressed: () {
-                              setState(() => viewModel.resetSelection());
+                              viewModel.resetSelection();
                               viewModel.applySelection();
                               Navigator.pop(context);
                             },
@@ -295,16 +326,17 @@ class _MasjedListScreenState extends State<MasjedListScreen> {
                       ],
                     )
                   ],
-                );
-              },
-            ),
-          ),
+                ),
+              ),
+            );
+          },
         );
       },
     );
   }
 
   Widget _buildDropdown<T>({
+    Key? key,
     required String hint,
     required T? value,
     required List<T> items,
@@ -312,6 +344,7 @@ class _MasjedListScreenState extends State<MasjedListScreen> {
     required ValueChanged<T?> onChanged,
   }) {
     return DropdownButtonFormField<T>(
+      key: key,
       value: value,
       decoration: InputDecoration(
         labelText: hint,

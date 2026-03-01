@@ -49,6 +49,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
   }
 
+  String _getLanguageFlag(String languageCode) {
+    switch (languageCode) {
+      case 'en':
+        return '🇬🇧';
+      case 'ar':
+        return '🇸🇦';
+      case 'sv':
+        return '🇸🇪';
+      default:
+        return '🌐';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -159,31 +172,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   color: AppColors.white,
                                 ),
                                 child: Center(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return LanguageDialog(
-                                            currentLanguage:
-                                                AppLocalizations.of(context)!
-                                                    .locale
-                                                    .languageCode,
-                                            onLanguageSelected:
-                                                (String languageCode) {
-                                              context
-                                                  .read<LocalizationCubit>()
-                                                  .changeLanguage(languageCode);
-                                            },
-                                          );
-                                        },
-                                      );
-                                    },
-                                    child: SvgPicture.asset(
-                                      AppIconSvg.lang,
-                                      height: 30.h,
-                                      width: 30.w,
-                                    ),
+                                  child: Text(
+                                    _getLanguageFlag(
+                                        AppLocalizations.of(context)!
+                                            .locale
+                                            .languageCode),
+                                    style: TextStyle(fontSize: 22.sp),
                                   ),
                                 ),
                               ),

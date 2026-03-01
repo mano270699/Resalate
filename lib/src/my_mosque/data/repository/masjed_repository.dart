@@ -1,13 +1,17 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:resalate/core/util/token_util.dart';
+import 'package:resalate/src/my_mosque/data/models/countries_model.dart';
 
+import '../../../../core/util/localization/localization_cache_helper.dart';
 import '../../../../core/util/network_service.dart';
 
+import '../models/cities_model.dart';
 import '../models/follow_masjed_model.dart';
 import '../models/location_model.dart';
 import '../models/masjed_details_model.dart';
 import '../models/masjed_list_model.dart';
+import '../models/province_model.dart';
 import '../models/user_masjeds_model.dart';
 
 abstract class MasjidRepository {
@@ -20,6 +24,11 @@ abstract class MasjidRepository {
   Future<Either<String, MasjidDetailsResponse>> getMasjedsDetails({
     required int id,
   });
+  Future<Either<String, CountriesResponseModel>> getCountries();
+  Future<Either<String, ProvincesResponseModel>> getProvinces(
+      {required int cityId});
+  Future<Either<String, CitiesResponseModel>> getCities(
+      {required int countryId});
   Future<Either<String, UserMasjedsModel>> getUserMasjedsList();
   Future<Either<String, FollowMasjedResponse>> followMasjed({
     required int masjedId,
@@ -124,6 +133,58 @@ class MasjidRepositoryImpl extends MasjidRepository {
         "followers/$userId",
       );
       UserMasjedsModel res = UserMasjedsModel.fromJson(response.data);
+      return Right(res);
+    } catch (e, t) {
+      debugPrint("error:$e-- trace $t");
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, CitiesResponseModel>> getCities(
+      {required int countryId}) async {
+    try {
+      LocalizationCacheHelper localizationCacheHelper =
+          LocalizationCacheHelper();
+      final response = await _networkService.get(
+        "locations/cities/$countryId?lang=${localizationCacheHelper.getLanguageCode()}",
+      );
+      CitiesResponseModel res = CitiesResponseModel.fromJson(response.data);
+      return Right(res);
+    } catch (e, t) {
+      debugPrint("error:$e-- trace $t");
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, CountriesResponseModel>> getCountries() async {
+    try {
+      LocalizationCacheHelper localizationCacheHelper =
+          LocalizationCacheHelper();
+      final response = await _networkService.get(
+        "locations/countries?lang=${localizationCacheHelper.getLanguageCode()}",
+      );
+      CountriesResponseModel res =
+          CountriesResponseModel.fromJson(response.data);
+      return Right(res);
+    } catch (e, t) {
+      debugPrint("error:$e-- trace $t");
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, ProvincesResponseModel>> getProvinces(
+      {required int cityId}) async {
+    try {
+      LocalizationCacheHelper localizationCacheHelper =
+          LocalizationCacheHelper();
+      final response = await _networkService.get(
+        "locations/provinces/$cityId?lang=${localizationCacheHelper.getLanguageCode()}",
+      );
+      ProvincesResponseModel res =
+          ProvincesResponseModel.fromJson(response.data);
       return Right(res);
     } catch (e, t) {
       debugPrint("error:$e-- trace $t");

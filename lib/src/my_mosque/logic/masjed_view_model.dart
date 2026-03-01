@@ -2,6 +2,9 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:resalate/core/util/localization/app_localizations.dart';
 import 'package:resalate/core/util/token_util.dart';
+import 'package:resalate/src/my_mosque/data/models/countries_model.dart';
+import 'package:resalate/src/my_mosque/data/models/cities_model.dart';
+import 'package:resalate/src/my_mosque/data/models/province_model.dart';
 import 'package:resalate/src/my_mosque/data/models/masjed_list_model.dart';
 import 'package:resalate/src/my_mosque/data/repository/masjed_repository.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -22,6 +25,14 @@ class MasjedViewModel {
 
   int _currentPage = 1;
   bool _isLoadingMore = false;
+
+  // Active filter params (persist across pagination)
+  String? _activeCountry;
+  String? _activeProvince;
+  String? _activeCity;
+
+  // Key counter to force dropdown rebuild on reset
+  int filterSheetKey = 0;
 
   Future<void> getMasjedsData(int page,
       {bool isLoadMore = false,
@@ -76,7 +87,13 @@ class MasjedViewModel {
   void loadNextPage() {
     final currentData = masjidResponse.state.data;
     if ((currentData.currentPage ?? 0) < (currentData.totalPages ?? 0)) {
-      getMasjedsData(_currentPage + 1, isLoadMore: true);
+      getMasjedsData(
+        _currentPage + 1,
+        isLoadMore: true,
+        country: _activeCountry,
+        province: _activeProvince,
+        city: _activeCity,
+      );
     }
   }
 
@@ -91,6 +108,9 @@ class MasjedViewModel {
     String? city,
   }) async {
     _currentPage = 1;
+    _activeCountry = country;
+    _activeProvince = province;
+    _activeCity = city;
     await getMasjedsData(
       1,
       country: country,
@@ -156,9 +176,119 @@ class MasjedViewModel {
 
   GenericCubit<FollowMasjedResponse> followActionRes =
       GenericCubit(FollowMasjedResponse());
-  Locations? selectedCountry;
-  States? selectedProvince;
-  Cities? selectedCity;
+
+  // ==================== FILTER LOGIC ====================
+
+  // Selected filter values
+  CountryModel? selectedCountry;
+  ProvinceModel? selectedProvince;
+  CityModel? selectedCity;
+
+  // --- Countries ---
+  GenericCubit<CountriesResponseModel> countriesListRes =
+      GenericCubit(CountriesResponseModel());
+
+  Future<void> getCountries() async {
+    countriesListRes.onLoadingState();
+    try {
+      Either<String, CountriesResponseModel> response =
+          await masjidRepositoryImpl.getCountries();
+
+      response.fold(
+        (failure) => countriesListRes.onErrorState(Failure(failure)),
+        (res) => countriesListRes.onUpdateData(res),
+      );
+    } on Failure catch (e, s) {
+      debugPrint("GetCountries Error: $s");
+      countriesListRes.onErrorState(Failure('$e'));
+    }
+  }
+
+  // --- Provinces ---
+  GenericCubit<ProvincesResponseModel> provincesListRes =
+      GenericCubit(ProvincesResponseModel());
+
+  Future<void> getProvinces({required int countryId}) async {
+    provincesListRes.onLoadingState();
+    try {
+      Either<String, ProvincesResponseModel> response =
+          await masjidRepositoryImpl.getProvinces(cityId: countryId);
+
+      response.fold(
+        (failure) => provincesListRes.onErrorState(Failure(failure)),
+        (res) => provincesListRes.onUpdateData(res),
+      );
+    } on Failure catch (e, s) {
+      debugPrint("GetProvinces Error: $s");
+      provincesListRes.onErrorState(Failure('$e'));
+    }
+  }
+
+  // --- Cities ---
+  GenericCubit<CitiesResponseModel> citiesListRes =
+      GenericCubit(CitiesResponseModel());
+
+  Future<void> getCities({required int provinceId}) async {
+    citiesListRes.onLoadingState();
+    try {
+      Either<String, CitiesResponseModel> response =
+          await masjidRepositoryImpl.getCities(countryId: provinceId);
+
+      response.fold(
+        (failure) => citiesListRes.onErrorState(Failure(failure)),
+        (res) => citiesListRes.onUpdateData(res),
+      );
+    } on Failure catch (e, s) {
+      debugPrint("GetCities Error: $s");
+      citiesListRes.onErrorState(Failure('$e'));
+    }
+  }
+
+  // --- Selection Handlers ---
+  void selectCountry(CountryModel? country) {
+    selectedCountry = country;
+    selectedProvince = null;
+    selectedCity = null;
+    provincesListRes.onUpdateData(ProvincesResponseModel());
+    citiesListRes.onUpdateData(CitiesResponseModel());
+    if (country != null) {
+      getProvinces(countryId: country.id);
+    }
+  }
+
+  void selectProvince(ProvinceModel? province) {
+    selectedProvince = province;
+    selectedCity = null;
+    citiesListRes.onUpdateData(CitiesResponseModel());
+    if (province != null) {
+      getCities(provinceId: province.id);
+    }
+  }
+
+  void selectCity(CityModel? city) {
+    selectedCity = city;
+  }
+
+  // --- Actions ---
+  void resetSelection() {
+    selectedCountry = null;
+    selectedProvince = null;
+    selectedCity = null;
+    provincesListRes.onUpdateData(ProvincesResponseModel());
+    citiesListRes.onUpdateData(CitiesResponseModel());
+    filterSheetKey++;
+  }
+
+  void applySelection() {
+    filterMasjeds(
+      country: selectedCountry?.name,
+      province: selectedProvince?.name,
+      city: selectedCity?.name,
+    );
+  }
+
+  // ==================== LOCATION (old nested) ====================
+
   final GenericCubit<LocationsModels> getLocationsListRes =
       GenericCubit(LocationsModels());
   Future<void> getLocationsList() async {
@@ -169,7 +299,6 @@ class MasjedViewModel {
       response.fold(
         (failure) => getLocationsListRes.onErrorState(Failure(failure)),
         (res) {
-          countriesList.onUpdateData(res.locations ?? []);
           getLocationsListRes.onUpdateData(res);
         },
       );
@@ -179,52 +308,7 @@ class MasjedViewModel {
     }
   }
 
-  // --- Getters ---
-
-  GenericCubit<List<Locations>> countriesList = GenericCubit([]);
-  GenericCubit<List<States>> provincesList = GenericCubit([]);
-  GenericCubit<List<Cities>> citiesList = GenericCubit([]);
-  List<Locations> get countries =>
-      getLocationsListRes.state.data.locations ?? [];
-
-  List<States> get provinces => selectedCountry?.states ?? [];
-
-  List<Cities> get cities => selectedProvince?.cities ?? [];
-
-  // --- Selection Handlers ---
-  void selectCountry(Locations? country) {
-    selectedCountry = country;
-    selectedProvince = null;
-    selectedCity = null;
-    provincesList.onUpdateData(country?.states ?? []);
-    citiesList.onUpdateData([]); // reset cities
-  }
-
-  void selectProvince(States? province) {
-    selectedProvince = province;
-    selectedCity = null;
-    citiesList.onUpdateData(province?.cities ?? []);
-  }
-
-  void selectCity(Cities? city) {
-    selectedCity = city;
-  }
-
-  // --- Actions ---
-  void resetSelection() {
-    selectedCountry = null;
-    selectedProvince = null;
-    selectedCity = null;
-  }
-
-  void applySelection() {
-    // Trigger your filter API or business logic here
-    filterMasjeds(
-      country: selectedCountry?.country,
-      province: selectedProvince?.state,
-      city: selectedCity?.name,
-    );
-  }
+  // ==================== FOLLOW / UNFOLLOW ====================
 
   Future<void> followMasjed(BuildContext context,
       {required int masjedId}) async {
@@ -245,7 +329,7 @@ class MasjedViewModel {
           },
         );
       } on Failure catch (e, s) {
-        debugPrint("lllllllllllll:$s");
+        debugPrint("followMasjed Error: $s");
         followActionRes.onErrorState(Failure('$e'));
       }
     } else {
@@ -275,7 +359,7 @@ class MasjedViewModel {
           },
         );
       } on Failure catch (e, s) {
-        debugPrint("lllllllllllll:$s");
+        debugPrint("unfollowMasjed Error: $s");
         followActionRes.onErrorState(Failure('$e'));
       }
     } else {
@@ -285,6 +369,8 @@ class MasjedViewModel {
       }
     }
   }
+
+  // ==================== USER MASJEDS ====================
 
   GenericCubit<UserMasjedsModel> userMasjidResponse =
       GenericCubit(UserMasjedsModel());
@@ -304,7 +390,7 @@ class MasjedViewModel {
         },
       );
     } on Failure catch (e, s) {
-      debugPrint("lllllllllllll:$s");
+      debugPrint("getUserMasjeds Error: $s");
       userMasjidResponse.onErrorState(Failure('$e'));
     }
   }

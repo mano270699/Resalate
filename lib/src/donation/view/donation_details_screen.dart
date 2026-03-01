@@ -40,12 +40,15 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
     viewModel.getDonationsDetails(widget.donationId);
   }
 
+  // ── helpers ──────────────────────────────────────────────────────────────
+  Locale get _locale => AppLocalizations.of(context)!.locale;
+  String _tr(String key) => AppLocalizations.of(context)!.translate(key);
+
   @override
   Widget build(BuildContext context) {
     return Directionality(
       textDirection:
-          AppLocalizations.of(context)!.locale.languageCode == 'en' ||
-                  AppLocalizations.of(context)!.locale.languageCode == 'sv'
+          _locale.languageCode == 'en' || _locale.languageCode == 'sv'
               ? TextDirection.ltr
               : TextDirection.rtl,
       child: Scaffold(
@@ -68,11 +71,9 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
                 size: 30,
               )),
           title: AppText(
-            text: AppLocalizations.of(context)!.translate("Donation_details"),
+            text: _tr("Donation_details"),
             model: AppTextModel(
-              style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                  .headingMedium2
-                  .copyWith(
+              style: AppFontStyleGlobal(_locale).headingMedium2.copyWith(
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
                     color: AppColors.black,
@@ -81,7 +82,7 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
           ),
         ),
         body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
           child: BlocBuilder<GenericCubit<DonationsDetailsResponse>,
               GenericCubitState<DonationsDetailsResponse>>(
             bloc: viewModel.donationDetailsResponse,
@@ -101,15 +102,11 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
               if (data == null && state is GenericUpdatedState) {
                 return Center(
                   child: AppText(
-                    text: AppLocalizations.of(context)!
-                        .translate("no_donation_details_found"),
+                    text: _tr("no_donation_details_found"),
                     model: AppTextModel(
-                      style: AppFontStyleGlobal(
-                              AppLocalizations.of(context)!.locale)
+                      style: AppFontStyleGlobal(_locale)
                           .bodyMedium1
-                          .copyWith(
-                            color: AppColors.gray,
-                          ),
+                          .copyWith(color: AppColors.gray),
                     ),
                   ),
                 );
@@ -120,162 +117,128 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    /// Post Image
+                    /// ── Post Image with gradient overlay ──
                     if ((data?.image ?? "").isNotEmpty)
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.network(
-                          data!.image!,
-                          width: double.infinity,
-                          height: 200,
-                          fit: BoxFit.cover,
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16.r),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.12),
+                              blurRadius: 16,
+                              offset: const Offset(0, 6),
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16.r),
+                          child: Stack(
+                            children: [
+                              Image.network(
+                                data!.image!,
+                                width: double.infinity,
+                                height: 220.h,
+                                fit: BoxFit.cover,
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                child: Container(
+                                  height: 80.h,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        Colors.transparent,
+                                        Colors.black.withValues(alpha: 0.45),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
 
-                    const SizedBox(height: 12),
+                    SizedBox(height: 16.h),
 
-                    /// Title
+                    /// ── Title ──
                     AppText(
                       text: data?.title ?? "",
                       model: AppTextModel(
-                        style: AppFontStyleGlobal(
-                                AppLocalizations.of(context)!.locale)
-                            .headingMedium2
-                            .copyWith(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.black,
+                        style:
+                            AppFontStyleGlobal(_locale).headingMedium2.copyWith(
+                                  fontSize: 22.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.black,
+                                ),
+                      ),
+                    ),
+
+                    SizedBox(height: 10.h),
+
+                    /// ── Date chip ──
+                    if ((data?.date ?? '').isNotEmpty)
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 12.w, vertical: 6.h),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryColor.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(20.r),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.calendar_today_rounded,
+                                size: 14.sp, color: AppColors.primaryColor),
+                            SizedBox(width: 6.w),
+                            Text(
+                              data!.date!,
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.primaryColor,
+                              ),
                             ),
+                          ],
+                        ),
                       ),
-                    ),
 
-                    const SizedBox(height: 8),
+                    SizedBox(height: 16.h),
 
-                    AppText(
-                      text: "📅 ${data?.date ?? ''}",
-                      model: AppTextModel(
-                        style: AppFontStyleGlobal(
-                                AppLocalizations.of(context)!.locale)
-                            .bodyMedium1
-                            .copyWith(color: AppColors.gray, fontSize: 12.sp),
-                      ),
-                    ),
+                    /// ── Divider ──
+                    Divider(
+                        height: 1, thickness: 0.5, color: Colors.grey.shade200),
 
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.h),
 
-                    /// Content
+                    /// ── Content ──
                     AppText(
                       text: data?.content?.replaceAll(RegExp(r"<[^>]*>"), "") ??
                           "",
                       model: AppTextModel(
-                        style: AppFontStyleGlobal(
-                                AppLocalizations.of(context)!.locale)
-                            .bodyMedium1
-                            .copyWith(
-                              fontSize: 16,
-                              color: AppColors.black,
+                        style: AppFontStyleGlobal(_locale).bodyMedium1.copyWith(
+                              fontSize: 15.sp,
+                              height: 1.6,
+                              color: AppColors.lightBlack,
                             ),
                       ),
                     ),
 
-                    const SizedBox(height: 20),
+                    SizedBox(height: 24.h),
 
-                    /// Donation Progress
+                    /// ── Donation progress ──
                     if (data?.donation != null)
-                      _buildDonationSection(data?.donation ?? Donation()),
+                      _buildDonationSection(data!.donation!),
 
-                    // const SizedBox(height: 24),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              AppText(
-                                text: AppLocalizations.of(context)!
-                                    .translate('total'),
-                                model: AppTextModel(
-                                    textDirection: AppLocalizations.of(context)!
-                                                .locale
-                                                .languageCode ==
-                                            'en'
-                                        ? TextDirection.ltr
-                                        : TextDirection.rtl,
-                                    style: AppFontStyleGlobal(
-                                            AppLocalizations.of(context)!
-                                                .locale)
-                                        .subTitle1
-                                        .copyWith(
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.primaryColor,
-                                        )),
-                              ),
-                              AppText(
-                                text:
-                                    " ${data?.donation?.total.toString()} ${data?.donation?.currency}",
-                                model: AppTextModel(
-                                    style: AppFontStyleGlobal(
-                                            AppLocalizations.of(context)!
-                                                .locale)
-                                        .smallTab
-                                        .copyWith(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.scondaryColor,
-                                        )),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              AppText(
-                                text: AppLocalizations.of(context)!
-                                    .translate('paid'),
-                                model: AppTextModel(
-                                    textDirection: AppLocalizations.of(context)!
-                                                .locale
-                                                .languageCode ==
-                                            'en'
-                                        ? TextDirection.ltr
-                                        : TextDirection.rtl,
-                                    style: AppFontStyleGlobal(
-                                            AppLocalizations.of(context)!
-                                                .locale)
-                                        .subTitle1
-                                        .copyWith(
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.primaryColor,
-                                        )),
-                              ),
-                              AppText(
-                                text:
-                                    " ${data?.donation?.paid.toString()} ${data?.donation?.currency}",
-                                model: AppTextModel(
-                                    style: AppFontStyleGlobal(
-                                            AppLocalizations.of(context)!
-                                                .locale)
-                                        .smallTab
-                                        .copyWith(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.scondaryColor,
-                                        )),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    10.h.verticalSpace,
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24.h),
 
-                    /// Masjid Info
+                    /// ── Masjid Info ──
                     if (data?.masjid != null)
-                      _buildMasjidSection(data?.masjid ?? Masjid()),
+                      _buildMasjidSection(data!.masjid!),
                   ],
                 ),
               );
@@ -286,160 +249,228 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
     );
   }
 
-  Widget _buildDonationSection(
-    Donation donation,
-  ) {
+  // ═══════════════════════════════════════════════════════════════════════════
+  //  Donation Progress Section
+  // ═══════════════════════════════════════════════════════════════════════════
+  Widget _buildDonationSection(Donation donation) {
     final progress = (donation.percent ?? 0) / 100;
+    final remaining = ((donation.total ?? 0) - (donation.paid ?? 0))
+        .clamp(0, double.infinity);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppText(
-          text: AppLocalizations.of(context)!.translate("donation_progress"),
-          model: AppTextModel(
-            style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                .headingMedium2
-                .copyWith(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.black,
-                ),
-          ),
-        ),
-        const SizedBox(height: 8),
-
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: LinearPercentIndicator(
-            barRadius: const Radius.circular(8),
-            fillColor: AppColors.primaryColor.withValues(alpha: 0.5),
-            lineHeight: 30.h,
-
-            padding: EdgeInsets.zero,
-            percent: progress,
-            // 50% progress
-            center: AppText(
-              text: "${donation.percent}%",
-              model: AppTextModel(
-                  style:
-                      AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                          .label
-                          .copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.white,
-                          )),
-            ),
-
-            progressColor: AppColors.primaryColor,
-          ),
-        ),
-        // LinearProgressIndicator(
-        //   value: progress,
-        //   minHeight: 30.h,
-        //   borderRadius: BorderRadius.circular(8),
-        //   backgroundColor: Colors.grey[300],
-
-        //   valueColor:
-        //       const AlwaysStoppedAnimation<Color>(AppColors.primaryColor),
-        // ),
-        const SizedBox(height: 8),
-        // AppText(
-        //   text:
-        //       "${donation.paid}/${donation.total} ${donation.currency} (${donation.percent}%)",
-        //   model: AppTextModel(
-        //     style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-        //         .bodyMedium1
-        //         .copyWith(
-        //           fontWeight: FontWeight.w600,
-        //           color: AppColors.black,
-        //         ),
-        //   ),
-        // ),
-      ],
-    );
-  }
-
-  Widget _buildMasjidSection(
-    Masjid masjid,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AppText(
-          text: AppLocalizations.of(context)!.translate("masjid_info"),
-          model: AppTextModel(
-            style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                .headingMedium2
-                .copyWith(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.black,
-                ),
-          ),
-        ),
-        const SizedBox(height: 12),
+        /// Section header
         Row(
           children: [
-            CircleAvatar(
-              radius: 30,
-              backgroundImage: NetworkImage(masjid.photo ?? ""),
+            Container(
+              width: 4.w,
+              height: 20.h,
+              decoration: BoxDecoration(
+                color: AppColors.primaryColor,
+                borderRadius: BorderRadius.circular(2.r),
+              ),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AppText(
-                    text: masjid.name ?? "",
-                    model: AppTextModel(
-                      style: AppFontStyleGlobal(
-                              AppLocalizations.of(context)!.locale)
-                          .headingMedium2
-                          .copyWith(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.black,
-                          ),
+            SizedBox(width: 8.w),
+            AppText(
+              text: _tr("donation_progress"),
+              model: AppTextModel(
+                style: AppFontStyleGlobal(_locale).headingMedium2.copyWith(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.black,
                     ),
-                  ),
-                  AppText(
-                    text: masjid.email ?? "",
-                    model: AppTextModel(
-                      style: AppFontStyleGlobal(
-                              AppLocalizations.of(context)!.locale)
-                          .bodyMedium1
-                          .copyWith(
-                            color: AppColors.gray,
-                          ),
-                    ),
-                  ),
-                ],
               ),
             ),
           ],
         ),
-        const SizedBox(height: 20),
+
+        SizedBox(height: 14.h),
+
+        /// Progress bar
+        ClipRRect(
+          borderRadius: BorderRadius.circular(10.r),
+          child: LinearPercentIndicator(
+            barRadius: Radius.circular(10.r),
+            fillColor: AppColors.primaryColor.withValues(alpha: 0.12),
+            lineHeight: 32.h,
+            padding: EdgeInsets.zero,
+            percent: progress.clamp(0.0, 1.0),
+            center: AppText(
+              text: "${donation.percent}%",
+              model: AppTextModel(
+                  style: AppFontStyleGlobal(_locale).label.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.white,
+                        fontSize: 13.sp,
+                      )),
+            ),
+            progressColor: AppColors.primaryColor,
+          ),
+        ),
+
+        SizedBox(height: 16.h),
+
+        /// Stat cards row
+        Row(
+          children: [
+            Expanded(
+              child: _StatCard(
+                icon: Icons.account_balance_wallet_rounded,
+                iconColor: AppColors.primaryColor,
+                label: _tr('total'),
+                value: "${donation.total ?? 0} ${donation.currency ?? ''}",
+              ),
+            ),
+            SizedBox(width: 10.w),
+            Expanded(
+              child: _StatCard(
+                icon: Icons.check_circle_rounded,
+                iconColor: const Color(0xFF4CAF50),
+                label: _tr('paid'),
+                value: "${donation.paid ?? 0} ${donation.currency ?? ''}",
+              ),
+            ),
+            SizedBox(width: 10.w),
+            Expanded(
+              child: _StatCard(
+                icon: Icons.hourglass_bottom_rounded,
+                iconColor: const Color(0xFFF57C00),
+                label: _tr('remaining'),
+                value: "$remaining ${donation.currency ?? ''}",
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  //  Masjid Section
+  // ═══════════════════════════════════════════════════════════════════════════
+  Widget _buildMasjidSection(Masjid masjid) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        /// Section header
+        Row(
+          children: [
+            Container(
+              width: 4.w,
+              height: 20.h,
+              decoration: BoxDecoration(
+                color: AppColors.scondaryColor,
+                borderRadius: BorderRadius.circular(2.r),
+              ),
+            ),
+            SizedBox(width: 8.w),
+            AppText(
+              text: _tr("masjid_info"),
+              model: AppTextModel(
+                style: AppFontStyleGlobal(_locale).headingMedium2.copyWith(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.black,
+                    ),
+              ),
+            ),
+          ],
+        ),
+
+        SizedBox(height: 12.h),
+
+        /// Masjid card
+        Container(
+          padding: EdgeInsets.all(14.w),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(14.r),
+            border: Border.all(color: Colors.grey.shade100, width: 1),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: AppColors.primaryColor.withValues(alpha: 0.3),
+                    width: 2,
+                  ),
+                ),
+                child: CircleAvatar(
+                  radius: 30.r,
+                  backgroundImage: NetworkImage(masjid.photo ?? ""),
+                  backgroundColor: Colors.grey.shade100,
+                ),
+              ),
+              SizedBox(width: 14.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppText(
+                      text: masjid.name ?? "",
+                      model: AppTextModel(
+                        style:
+                            AppFontStyleGlobal(_locale).headingMedium2.copyWith(
+                                  fontSize: 17.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.lightBlack,
+                                ),
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Row(
+                      children: [
+                        Icon(Icons.email_outlined,
+                            size: 14.sp, color: AppColors.gray),
+                        SizedBox(width: 4.w),
+                        Expanded(
+                          child: Text(
+                            masjid.email ?? "",
+                            style: TextStyle(
+                              fontSize: 13.sp,
+                              color: AppColors.gray,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        SizedBox(height: 16.h),
+
+        /// Payment info expansion tile
         if (masjid.paymentInfo != null)
           CustomExpansionTile(
             content: PaymentOptionsSection(
               paymentInfo: masjid.paymentInfo!,
             ),
             title: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 16.w,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: AppText(
-                text:
-                    AppLocalizations.of(context)!.translate("payment_options"),
+                text: _tr("payment_options"),
                 model: AppTextModel(
-                  style:
-                      AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                          .subTitle2
-                          .copyWith(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.scondaryColor,
-                          ),
+                  style: AppFontStyleGlobal(_locale).subTitle2.copyWith(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.scondaryColor,
+                      ),
                 ),
               ),
             ),
@@ -447,6 +478,70 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
             initiallyExpanded: false,
           ),
       ],
+    );
+  }
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+//  Stat Card (Total / Paid / Remaining)
+// ═════════════════════════════════════════════════════════════════════════════
+class _StatCard extends StatelessWidget {
+  final IconData icon;
+  final Color iconColor;
+  final String label;
+  final String value;
+
+  const _StatCard({
+    required this.icon,
+    required this.iconColor,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
+      decoration: BoxDecoration(
+        color: iconColor.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: iconColor.withValues(alpha: 0.15), width: 1),
+      ),
+      child: Column(
+        children: [
+          Container(
+            width: 32.w,
+            height: 32.w,
+            decoration: BoxDecoration(
+              color: iconColor.withValues(alpha: 0.12),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: iconColor, size: 16.sp),
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 11.sp,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey.shade600,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 4.h),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 13.sp,
+              fontWeight: FontWeight.w700,
+              color: iconColor,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
     );
   }
 }

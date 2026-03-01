@@ -24,76 +24,142 @@ class CustomExpansionTile extends StatefulWidget {
 
 class _CustomExpansionTileState extends State<CustomExpansionTile>
     with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _expandAnimation;
+  late Animation<double> _iconRotation;
   late bool _isExpanded;
 
   @override
   void initState() {
     super.initState();
     _isExpanded = widget.initiallyExpanded;
+    _controller = AnimationController(
+      vsync: this,
+      duration: widget.animationDuration,
+    );
+    _expandAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    );
+    _iconRotation = Tween<double>(begin: 0.0, end: 0.5).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+
+    if (_isExpanded) {
+      _controller.value = 1.0;
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   void _toggleExpand() {
     setState(() {
       _isExpanded = !_isExpanded;
+      if (_isExpanded) {
+        _controller.forward();
+      } else {
+        _controller.reverse();
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection:
-          AppLocalizations.of(context)!.locale.languageCode == 'en' ||
-                  AppLocalizations.of(context)!.locale.languageCode == 'sv'
-              ? TextDirection.ltr
-              : TextDirection.rtl,
-      child: Padding(
-        padding: EdgeInsets.only(bottom: 16.h),
-        child: Column(
-          children: [
-            // HEADER (title + expand icon)
-            GestureDetector(
-              onTap: _toggleExpand,
-              child: Row(
-                textDirection:
-                    AppLocalizations.of(context)!.locale.languageCode == 'en'
-                        ? TextDirection.ltr
-                        : TextDirection.rtl,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Align(
-                      alignment: AlignmentDirectional.centerStart,
-                      child: widget.title,
-                    ),
-                  ),
-                  AnimatedRotation(
-                    duration: widget.animationDuration,
-                    turns: _isExpanded ? 0.5 : 0.0,
-                    child: Padding(
-                      padding: EdgeInsetsDirectional.only(end: 10.w),
-                      child: const Icon(
-                        Icons.expand_more,
-                        color: AppColors.scondaryColor,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+    final isLtr = AppLocalizations.of(context)!.locale.languageCode == 'en' ||
+        AppLocalizations.of(context)!.locale.languageCode == 'sv';
 
-            // EXPANDABLE CONTENT
-            AnimatedCrossFade(
-              duration: widget.animationDuration,
-              crossFadeState: _isExpanded
-                  ? CrossFadeState.showFirst
-                  : CrossFadeState.showSecond,
-              firstChild: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: widget.content,
+    return Directionality(
+      textDirection: isLtr ? TextDirection.ltr : TextDirection.rtl,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(14.r),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.06),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
               ),
-              secondChild: const SizedBox.shrink(),
-            ),
-          ],
+            ],
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // HEADER
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: _toggleExpand,
+                  splashColor: AppColors.scondaryColor.withValues(alpha: 0.08),
+                  highlightColor: AppColors.scondaryColor.withValues(alpha: 0.04),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 4.w,
+                      vertical: 14.h,
+                    ),
+                    child: Row(
+                      textDirection:
+                          isLtr ? TextDirection.ltr : TextDirection.rtl,
+                      children: [
+                        Expanded(
+                          child: Align(
+                            alignment: AlignmentDirectional.centerStart,
+                            child: widget.title,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsetsDirectional.only(end: 10.w),
+                          child: RotationTransition(
+                            turns: _iconRotation,
+                            child: Container(
+                              width: 28.w,
+                              height: 28.w,
+                              decoration: BoxDecoration(
+                                color: AppColors.scondaryColor.withValues(alpha: 0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.expand_more,
+                                color: AppColors.scondaryColor,
+                                size: 20.sp,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              // DIVIDER + EXPANDABLE CONTENT
+              SizeTransition(
+                sizeFactor: _expandAnimation,
+                axisAlignment: -1.0,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Divider(
+                      height: 1,
+                      thickness: 1,
+                      color: Colors.grey.shade200,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10.h),
+                      child: widget.content,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

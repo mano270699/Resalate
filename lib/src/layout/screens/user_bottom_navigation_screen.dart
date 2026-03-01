@@ -27,10 +27,18 @@ class MainBottomNavigationScreen extends StatefulWidget {
 class _MainBottomNavigationScreenState
     extends State<MainBottomNavigationScreen> {
   final viewModel = sl<MainScreenViewModel>();
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel.pageControllerIndexChanged(
+        index: viewModel.screenIndex.state.data);
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> screens = [
-      HomePage(),
+      HomePage(homeViewModel: viewModel),
       DonationListScreen(),
       MasjedListScreen(),
       ProfileScreen()
@@ -59,7 +67,12 @@ class _MainBottomNavigationScreenState
                   ? TextDirection.ltr
                   : TextDirection.rtl,
           child: Scaffold(
-            body: screens[indexState.data],
+            body: PageView(
+              controller: viewModel.pageController,
+              physics:
+                  const NeverScrollableScrollPhysics(), // Disable swipe gestures to only allow tap navigation
+              children: screens,
+            ),
             bottomNavigationBar: Container(
               height: 86.h,
               decoration: BoxDecoration(
@@ -99,9 +112,11 @@ class _MainBottomNavigationScreenState
                           height: 25,
                           width: 25,
                           allowDrawingOutsideViewBox: true,
-                          // color: indexState.data == index
-                          //     ? AppColors.primaryColor
-                          //     : AppColors.lightBlack,
+                          colorFilter: ColorFilter.mode(
+                              indexState.data == index
+                                  ? AppColors.primaryColor
+                                  : AppColors.scondaryColor,
+                              BlendMode.srcIn),
                         ));
                   })),
             ),

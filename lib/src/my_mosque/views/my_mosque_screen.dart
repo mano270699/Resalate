@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:resalate/core/blocs/generic_cubit/generic_cubit.dart';
 import 'package:resalate/src/my_mosque/logic/masjed_view_model.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../../../core/base/dependency_injection.dart';
 import '../../../core/common/app_colors/app_colors.dart';
@@ -39,6 +41,7 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final viewModel = sl<MasjedViewModel>();
+  double? _distanceKm;
 
   @override
   void initState() {
@@ -51,6 +54,49 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  Future<void> _calculateDistance(double? lat, double? lng) async {
+    if (lat == null || lng == null) return;
+    try {
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied ||
+            permission == LocationPermission.deniedForever) {
+          return;
+        }
+      }
+      if (permission == LocationPermission.deniedForever) {
+        return;
+      }
+      final position = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.low,
+        ),
+      );
+      final distanceInMeters = Geolocator.distanceBetween(
+        position.latitude,
+        position.longitude,
+        lat,
+        lng,
+      );
+      if (mounted) {
+        setState(() {
+          _distanceKm = distanceInMeters / 1000;
+        });
+      }
+    } catch (_) {}
+  }
+
+  String _formatDistance(double km) {
+    if (km < 1) {
+      return '${(km * 1000).toInt()} m';
+    } else if (km < 10) {
+      return '${km.toStringAsFixed(1)} km';
+    } else {
+      return '${km.toInt()} km';
+    }
   }
 
   @override
@@ -92,6 +138,13 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                 GenericCubitState<MasjidDetailsResponse>>(
               bloc: viewModel.masjedDetailsRes,
               builder: (context, state) {
+                // Trigger distance calculation when data arrives
+                if (state is GenericUpdatedState && _distanceKm == null) {
+                  _calculateDistance(
+                    state.data.masjid?.lat,
+                    state.data.masjid?.lng,
+                  );
+                }
                 return Skeletonizer(
                   enabled: state is GenericLoadingState,
                   child: NestedScrollView(
@@ -300,9 +353,123 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                                     SocialMedia(),
                               )),
                         ),
+
+                        // Distance + Directions row
+                        if (state.data.masjid?.lat != null &&
+                            state.data.masjid?.lng != null)
+                          SliverToBoxAdapter(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16.w,
+                                vertical: 10.h,
+                              ),
+                              child: Row(
+                                children: [
+                                  // Distance badge
+                                  if (_distanceKm != null)
+                                    Expanded(
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 12.h),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.scondaryColor
+                                              .withValues(alpha: 0.08),
+                                          borderRadius:
+                                              BorderRadius.circular(12.r),
+                                          border: Border.all(
+                                            color: AppColors.scondaryColor
+                                                .withValues(alpha: 0.2),
+                                            width: 1,
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.location_on_rounded,
+                                              color: AppColors.scondaryColor,
+                                              size: 20.sp,
+                                            ),
+                                            SizedBox(width: 6.w),
+                                            Text(
+                                              _formatDistance(_distanceKm!),
+                                              style: TextStyle(
+                                                color: AppColors.scondaryColor,
+                                                fontSize: 14.sp,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  if (_distanceKm != null)
+                                    SizedBox(width: 10.w),
+                                  // Directions button
+                                  Expanded(
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        onTap: () async {
+                                          final url =
+                                              'https://www.google.com/maps/dir/?api=1&destination=${state.data.masjid!.lat},${state.data.masjid!.lng}';
+                                          final uri = Uri.parse(url);
+                                          if (await canLaunchUrl(uri)) {
+                                            await launchUrl(uri,
+                                                mode: LaunchMode
+                                                    .externalApplication);
+                                          }
+                                        },
+                                        borderRadius:
+                                            BorderRadius.circular(12.r),
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 12.h),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.primaryColor
+                                                .withValues(alpha: 0.1),
+                                            borderRadius:
+                                                BorderRadius.circular(12.r),
+                                            border: Border.all(
+                                              color: AppColors.primaryColor
+                                                  .withValues(alpha: 0.3),
+                                              width: 1,
+                                            ),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.directions_rounded,
+                                                color: AppColors.primaryColor,
+                                                size: 20.sp,
+                                              ),
+                                              SizedBox(width: 8.w),
+                                              Text(
+                                                AppLocalizations.of(context)!
+                                                    .translate('direction'),
+                                                style: TextStyle(
+                                                  color: AppColors.primaryColor,
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
                         SliverToBoxAdapter(
                           child: SizedBox(
-                            height: 20.h,
+                            height: 10.h,
                           ),
                         ),
 

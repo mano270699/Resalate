@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:resalate/src/lessons/view/lesson_details_screen.dart';
@@ -31,7 +32,6 @@ class LessonItem extends StatelessWidget {
           );
         },
         child: Container(
-          height: 200.h,
           // width: 180.h,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10), color: AppColors.white),
@@ -45,8 +45,8 @@ class LessonItem extends StatelessWidget {
                   child: SizedBox(
                       height: 100.h,
                       width: double.infinity,
-                      child: Image.network(
-                        lesson.image ?? "",
+                      child: CachedNetworkImage(
+                        imageUrl: lesson.image ?? "",
                         fit: BoxFit.cover,
                       ))),
               10.h.verticalSpace,
@@ -93,6 +93,7 @@ class LessonItem extends StatelessWidget {
                               color: AppColors.scondaryColor,
                             )),
               ),
+              10.h.verticalSpace
             ],
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:resalate/src/live_feed/view/live_feed_details_screen.dart';
@@ -47,7 +48,7 @@ class LiveFeedItem extends StatelessWidget {
           );
         },
         child: Container(
-          height: 200.h,
+          // height: 200.h,
           // width: 180.h,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10), color: AppColors.white),
@@ -59,10 +60,11 @@ class LiveFeedItem extends StatelessWidget {
                       topLeft: Radius.circular(10),
                       topRight: Radius.circular(10)),
                   child: SizedBox(
-                      height: 100.h,
+                      height: 120.h,
                       width: double.infinity,
-                      child: Image.network(
-                        postItem.image ?? "",
+                      child: CachedNetworkImage(
+                        imageUrl: postItem.image ??
+                            "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/960px-Placeholder_view_vector.svg.png",
                         fit: BoxFit.cover,
                       ))),
               10.h.verticalSpace,

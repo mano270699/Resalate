@@ -23,6 +23,8 @@ import '../../../core/common/app_icon_svg.dart';
 import '../../../core/shared_components/app_text/app_text.dart';
 import '../../../core/shared_components/app_text/models/app_text_model.dart';
 import '../../../core/util/localization/app_localizations.dart';
+import '../../../core/util/localization/cubit/localization_cubit.dart';
+import '../../profile/views/widgets/language_dialog.dart';
 import '../../donation/view/donation_details_screen.dart';
 import '../../from_mosque_to_mosque/views/from_mosque_to_mosque_screen.dart';
 import '../../funerals/view/funerals_details_screen.dart';
@@ -34,9 +36,12 @@ import 'widgets/donation_item.dart';
 import 'widgets/live_feed_item.dart';
 import 'widgets/partenar_section.dart';
 import 'widgets/resalty_numbers_item.dart';
+import '../../layout/screens/main_screen_view_model.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({super.key});
+  HomePage({super.key, required this.homeViewModel});
+
+  final MainScreenViewModel homeViewModel;
   static const String routeName = 'Home Screen';
   final viewModel = sl<HomeViewModel>()
     ..getHomeData()
@@ -44,6 +49,20 @@ class HomePage extends StatelessWidget {
     ..getLiveFeedData()
     ..getLessonsData()
     ..getFuneralsData();
+
+  String _getLanguageFlag(String languageCode) {
+    switch (languageCode) {
+      case 'en':
+        return '🇬🇧';
+      case 'ar':
+        return '🇸🇦';
+      case 'sv':
+        return '🇸🇪';
+      default:
+        return '🌐';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -56,27 +75,64 @@ class HomePage extends StatelessWidget {
         appBar: AppBar(
           toolbarHeight: 70.h,
           automaticallyImplyLeading: false,
-          title: SizedBox(
-            width: 200.w,
-            child: SvgPicture.asset(
-              AppLocalizations.of(context)!.locale.languageCode == "en"
-                  ? AppIconSvg.rowLogo
-                  : AppIconSvg.rowLogoAr,
-            ),
+          centerTitle: false,
+          title: SvgPicture.asset(
+            AppLocalizations.of(context)!.locale.languageCode == "en"
+                ? AppIconSvg.rowLogo
+                : AppIconSvg.rowLogoAr,
+            height: 150.h,
           ),
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                NearestMosque.routeName,
-              );
-            },
-            child: Icon(
-              Icons.search,
-              size: 30,
-              color: AppColors.scondaryColor,
+          actions: [
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, NearestMosque.routeName);
+              },
+              child: Icon(
+                Icons.search,
+                size: 28,
+                color: AppColors.scondaryColor,
+              ),
             ),
-          ),
+            SizedBox(width: 8.w),
+            BlocBuilder<LocalizationCubit, LocalizationState>(
+              builder: (context, state) {
+                return GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return LanguageDialog(
+                          currentLanguage:
+                              AppLocalizations.of(context)!.locale.languageCode,
+                          onLanguageSelected: (String languageCode) {
+                            context
+                                .read<LocalizationCubit>()
+                                .changeLanguage(languageCode);
+                          },
+                        );
+                      },
+                    );
+                  },
+                  child: Container(
+                    height: 35.h,
+                    width: 35.h,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.white,
+                    ),
+                    child: Center(
+                      child: Text(
+                        _getLanguageFlag(
+                            AppLocalizations.of(context)!.locale.languageCode),
+                        style: TextStyle(fontSize: 22.sp),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+            SizedBox(width: 16.w),
+          ],
         ),
         body: SingleChildScrollView(
           child: BlocBuilder<GenericCubit<HomeDataModel>,
@@ -87,35 +143,45 @@ class HomePage extends StatelessWidget {
                 enabled: state is GenericLoadingState,
                 child: Column(
                   children: [
-                    CustomBannerSlider(
-                      images: state.data.home?.gallery ?? [],
-                    ),
+                    state is GenericLoadingState
+                        ? Container(
+                            height: 200.h,
+                            color: Colors.grey[200], // Will shimmer
+                          )
+                        : CustomBannerSlider(
+                            images: state.data.home?.gallery ?? []),
                     10.h.verticalSpace,
                     Center(
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16.w),
-                        child: Text(
-                          "${state.data.home?.ayah1}",
-                          textAlign: TextAlign.center,
-                          textDirection: AppLocalizations.of(context)!
-                                      .locale
-                                      .languageCode ==
-                                  'en'
-                              ? TextDirection.ltr
-                              : TextDirection.rtl,
-                          style: ArabicTextStyle(
-                            color: AppColors.primaryColor,
-                            arabicFont: ArabicFont.scheherazade,
-                            fontSize: 28.sp,
+                        child: Skeletonizer(
+                          enabled: state is GenericLoadingState,
+                          child: Text(
+                            "${state.data.home?.ayah1}",
+                            textAlign: TextAlign.center,
+                            textDirection: AppLocalizations.of(context)!
+                                        .locale
+                                        .languageCode ==
+                                    'en'
+                                ? TextDirection.ltr
+                                : TextDirection.rtl,
+                            style: ArabicTextStyle(
+                              color: AppColors.primaryColor,
+                              arabicFont: ArabicFont.scheherazade,
+                              fontSize: 28.sp,
+                            ),
                           ),
                         ),
                       ),
                     ),
                     10.h.verticalSpace,
-                    PartenerSection(
-                      desc: state.data.home?.aboutSection!.description ?? "",
-                      title: state.data.home?.aboutSection!.title ?? "",
-                      url: state.data.home?.aboutSection!.link ?? "",
+                    Skeletonizer(
+                      enabled: state is GenericLoadingState,
+                      child: PartenerSection(
+                        desc: state.data.home?.aboutSection!.description ?? "",
+                        title: state.data.home?.aboutSection!.title ?? "",
+                        url: state.data.home?.aboutSection!.link ?? "",
+                      ),
                     ),
                     15.h.verticalSpace,
                     Padding(
@@ -230,19 +296,24 @@ class HomePage extends StatelessWidget {
                                   ),
                             ),
                           ),
-                          // AppText(
-                          //   text: AppLocalizations.of(context)!
-                          //       .translate('show_more'),
-                          //   model: AppTextModel(
-                          //     style: AppFontStyleGlobal(
-                          //             AppLocalizations.of(context)!.locale)
-                          //         .subTitle2
-                          //         .copyWith(
-                          //           fontWeight: FontWeight.w500,
-                          //           color: AppColors.primaryColor,
-                          //         ),
-                          //   ),
-                          // ),
+                          GestureDetector(
+                            onTap: () {
+                              homeViewModel.screenIndexChanged(index: 1);
+                            },
+                            child: AppText(
+                              text: AppLocalizations.of(context)!
+                                  .translate('show_more'),
+                              model: AppTextModel(
+                                style: AppFontStyleGlobal(
+                                        AppLocalizations.of(context)!.locale)
+                                    .subTitle2
+                                    .copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.primaryColor,
+                                    ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -423,7 +494,16 @@ class HomePage extends StatelessWidget {
                         return Skeletonizer(
                           enabled: lessonState is GenericLoadingState,
                           child: SizedBox(
-                            height: 245.h,
+                            height: AppLocalizations.of(context)!
+                                            .locale
+                                            .languageCode ==
+                                        'sv' ||
+                                    AppLocalizations.of(context)!
+                                            .locale
+                                            .languageCode ==
+                                        'en'
+                                ? 262.h
+                                : 245.h,
                             child: ListView.separated(
                               clipBehavior: Clip.none,
                               scrollDirection: Axis.horizontal,
@@ -498,7 +578,7 @@ class HomePage extends StatelessWidget {
                         return Skeletonizer(
                           enabled: funeralsState is GenericLoadingState,
                           child: SizedBox(
-                            height: 240.h,
+                            height: 270.h,
                             child: ListView.separated(
                               clipBehavior: Clip.none,
                               scrollDirection: Axis.horizontal,
@@ -562,60 +642,8 @@ class HomePage extends StatelessWidget {
                     20.h.verticalSpace,
                     SizedBox(
                       height: 100.h,
-                      child: ListView.separated(
-                        clipBehavior: Clip.none,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: state.data.home?.sponser.length ?? 0,
-                        separatorBuilder: (context, index) =>
-                            SizedBox(width: 8.w),
-                        itemBuilder: (context, index) {
-                          final sponsor = state.data.home?.sponser[index];
-                          final url = sponsor?.url ?? "";
-
-                          return Padding(
-                            padding: EdgeInsetsDirectional.only(
-                                start: 10.w, end: 10.w),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12.r),
-                              child: SizedBox(
-                                height: 100.h,
-                                width: 100.w,
-                                child: url.toLowerCase().endsWith(".svg")
-                                    ? SvgPicture.network(
-                                        url,
-                                        fit: BoxFit.contain,
-                                        placeholderBuilder: (context) => Center(
-                                          child: CircularProgressIndicator(
-                                              color: AppColors.primaryColor,
-                                              strokeWidth: 2),
-                                        ),
-                                      )
-                                    : Image.network(
-                                        url,
-                                        fit: BoxFit.cover,
-                                        loadingBuilder:
-                                            (context, child, loadingProgress) {
-                                          if (loadingProgress == null) {
-                                            return child;
-                                          }
-                                          return Center(
-                                            child: CircularProgressIndicator(
-                                                color: AppColors.primaryColor,
-                                                strokeWidth: 2),
-                                          );
-                                        },
-                                        errorBuilder:
-                                            (context, error, stackTrace) =>
-                                                Icon(
-                                          Icons.broken_image,
-                                          size: 40,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                              ),
-                            ),
-                          );
-                        },
+                      child: _AutoScrollingSponsorList(
+                        sponsors: state.data.home?.sponser ?? [],
                       ),
                     ),
                     20.h.verticalSpace,
@@ -674,6 +702,128 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _AutoScrollingSponsorList extends StatefulWidget {
+  final List<dynamic> sponsors;
+
+  const _AutoScrollingSponsorList({required this.sponsors});
+
+  @override
+  State<_AutoScrollingSponsorList> createState() =>
+      _AutoScrollingSponsorListState();
+}
+
+class _AutoScrollingSponsorListState extends State<_AutoScrollingSponsorList> {
+  late ScrollController _scrollController;
+  bool _isReversing = false;
+  bool _isScrolling = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _startScrolling());
+  }
+
+  void _startScrolling() async {
+    if (!mounted) return;
+    _isScrolling = true;
+    _scroll();
+  }
+
+  void _scroll() async {
+    if (!mounted || !_isScrolling) return;
+
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final minScroll = _scrollController.position.minScrollExtent;
+    final target = _isReversing ? minScroll : maxScroll;
+    final current = _scrollController.offset;
+    final distance = (target - current).abs();
+
+    // Speed: pixels per second
+    const speed = 50.0;
+    final duration = Duration(milliseconds: (distance / speed * 1000).toInt());
+
+    if (duration.inMilliseconds == 0) {
+      _isReversing = !_isReversing;
+      _scroll();
+      return;
+    }
+
+    await _scrollController.animateTo(
+      target,
+      duration: duration,
+      curve: Curves.linear,
+    );
+
+    if (mounted) {
+      _isReversing = !_isReversing;
+      _scroll();
+    }
+  }
+
+  @override
+  void dispose() {
+    _isScrolling = false;
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      controller: _scrollController,
+      clipBehavior: Clip.none,
+      scrollDirection: Axis.horizontal,
+      itemCount: widget.sponsors.length,
+      separatorBuilder: (context, index) => SizedBox(width: 3.w),
+      itemBuilder: (context, index) {
+        final sponsor = widget.sponsors[index];
+        final url = sponsor?.url ?? "";
+
+        return Padding(
+          padding: EdgeInsetsDirectional.only(start: 5.w, end: 5.w),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12.r),
+            child: SizedBox(
+              height: 100.h,
+              width: 100.w,
+              child: url.toLowerCase().endsWith(".svg")
+                  ? SvgPicture.network(
+                      url,
+                      fit: BoxFit.contain,
+                      placeholderBuilder: (context) => Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.primaryColor,
+                          strokeWidth: 2,
+                        ),
+                      ),
+                    )
+                  : Image.network(
+                      url,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.primaryColor,
+                            strokeWidth: 2,
+                          ),
+                        );
+                      },
+                      errorBuilder: (context, error, stackTrace) => Icon(
+                        Icons.broken_image,
+                        size: 40,
+                        color: Colors.grey,
+                      ),
+                    ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

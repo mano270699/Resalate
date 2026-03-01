@@ -137,7 +137,7 @@ class NearbyMasjedsViewModel {
     );
   }
 
-  GenericCubit<int> radiusFilter = GenericCubit(200);
+  GenericCubit<int> radiusFilter = GenericCubit(500000);
 
   /// Fetch masjids from repository
   Future<void> getNearbyMasjedsList(BuildContext context) async {

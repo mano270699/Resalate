@@ -48,8 +48,8 @@ class SocialMediaItem extends StatelessWidget {
     addItem(FontAwesomeIcons.snapchat, socialMedia.snapchatUrl,
         color: Colors.yellow[700]);
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Wrap(
+      alignment: WrapAlignment.center,
       children: items,
     );
   }

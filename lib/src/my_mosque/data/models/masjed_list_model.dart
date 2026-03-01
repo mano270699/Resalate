@@ -40,8 +40,15 @@ class Masjid {
   final String? country;
   final String? province;
   final String? city;
+  final String? location;
+  final double? lat;
+  final double? lng;
+  int isFollowing; // Added to handle local state update
 
   Masjid({
+    this.location,
+    this.lat,
+    this.lng,
     this.id,
     this.name,
     this.image,
@@ -53,6 +60,7 @@ class Masjid {
     this.country,
     this.province,
     this.city,
+    this.isFollowing = 0,
   });
 
   factory Masjid.fromJson(Map<String, dynamic> json) {
@@ -72,6 +80,10 @@ class Masjid {
       country: json["country"],
       province: json["province"],
       city: json["city"],
+      lat: json["lat"],
+      lng: json["lng"],
+      location: json["location"],
+      isFollowing: json["is_following"] ?? 0,
     );
   }
 }

@@ -36,6 +36,7 @@ class ResaltyNumbersWidgets extends StatelessWidget {
               AppText(
                 text: numbers.title,
                 model: AppTextModel(
+                    textAlign: TextAlign.center,
                     style:
                         AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
                             .headingMedium2

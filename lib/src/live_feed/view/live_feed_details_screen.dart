@@ -29,21 +29,21 @@ class LiveFeedDetailsScreen extends StatefulWidget {
 
 class _LiveFeedDetailsScreenState extends State<LiveFeedDetailsScreen> {
   final viewModel = sl<LiveFeedViewModel>();
+
   @override
   void initState() {
     viewModel.getLiveFeedDetails(id: widget.id);
     super.initState();
   }
 
+  // ── helpers ──────────────────────────────────────────────────────────────
+  Locale get _locale => AppLocalizations.of(context)!.locale;
+  String _tr(String key) => AppLocalizations.of(context)!.translate(key);
+
   Future<void> openYouTube(String videoUrl) async {
     final Uri url = Uri.parse(videoUrl);
-
-    // This forces YouTube app if installed, otherwise fallback to browser
     if (await canLaunchUrl(url)) {
-      await launchUrl(
-        url,
-        mode: LaunchMode.externalApplication, // open in YouTube app
-      );
+      await launchUrl(url, mode: LaunchMode.externalApplication);
     } else {
       throw 'Could not launch $url';
     }
@@ -59,8 +59,7 @@ class _LiveFeedDetailsScreenState extends State<LiveFeedDetailsScreen> {
   Widget build(BuildContext context) {
     return Directionality(
       textDirection:
-          AppLocalizations.of(context)!.locale.languageCode == 'en' ||
-                  AppLocalizations.of(context)!.locale.languageCode == 'sv'
+          _locale.languageCode == 'en' || _locale.languageCode == 'sv'
               ? TextDirection.ltr
               : TextDirection.rtl,
       child: Scaffold(
@@ -82,8 +81,15 @@ class _LiveFeedDetailsScreenState extends State<LiveFeedDetailsScreen> {
                 color: AppColors.black,
                 size: 30,
               )),
-          title: Text(
-            AppLocalizations.of(context)!.translate("Live_Details"),
+          title: AppText(
+            text: _tr("Live_Details"),
+            model: AppTextModel(
+              style: AppFontStyleGlobal(_locale).headingMedium2.copyWith(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.black,
+                  ),
+            ),
           ),
         ),
         body: BlocBuilder<GenericCubit<LiveFeedDetailsModel>,
@@ -93,110 +99,264 @@ class _LiveFeedDetailsScreenState extends State<LiveFeedDetailsScreen> {
               return Skeletonizer(
                 enabled: state is GenericLoadingState,
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(40),
-                            child: Image.network(
-                              state.data.post?.masjid?.photo ?? "",
-                              width: 60,
-                              height: 60,
-                              fit: BoxFit.cover,
+                      /// ── Masjid Info Card ──
+                      Container(
+                        padding: EdgeInsets.all(14.w),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(14.r),
+                          border:
+                              Border.all(color: Colors.grey.shade100, width: 1),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.05),
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
                             ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(state.data.post?.masjid?.name ?? "",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium),
-                                Text(state.data.post?.masjid?.email ?? "",
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall),
-                              ],
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color:
+                                      AppColors.primaryColor.withValues(alpha: 0.3),
+                                  width: 2,
+                                ),
+                              ),
+                              child: CircleAvatar(
+                                radius: 28.r,
+                                backgroundImage: NetworkImage(
+                                  state.data.post?.masjid?.photo ?? "",
+                                ),
+                                backgroundColor: Colors.grey.shade100,
+                              ),
                             ),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  AppText(
+                                    text: state.data.post?.masjid?.name ?? "",
+                                    model: AppTextModel(
+                                      style: AppFontStyleGlobal(_locale)
+                                          .headingMedium2
+                                          .copyWith(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.w700,
+                                            color: AppColors.lightBlack,
+                                          ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.h),
+                                  Row(
+                                    children: [
+                                      Icon(Icons.email_outlined,
+                                          size: 14.sp, color: AppColors.gray),
+                                      SizedBox(width: 4.w),
+                                      Expanded(
+                                        child: Text(
+                                          state.data.post?.masjid?.email ?? "",
+                                          style: TextStyle(
+                                            fontSize: 12.sp,
+                                            color: AppColors.gray,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(height: 20.h),
+
+                      /// ── Post Title ──
+                      AppText(
+                        text: state.data.post?.title ?? "",
+                        model: AppTextModel(
+                          style: AppFontStyleGlobal(_locale)
+                              .headingMedium2
+                              .copyWith(
+                                fontSize: 22.sp,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.black,
+                              ),
+                        ),
+                      ),
+
+                      SizedBox(height: 12.h),
+
+                      /// ── Date chip ──
+                      if ((state.data.post?.date ?? '').isNotEmpty)
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 12.w, vertical: 6.h),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryColor.withValues(alpha: 0.08),
+                            borderRadius: BorderRadius.circular(20.r),
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-
-                      /// Post Title
-                      Text(
-                        state.data.post?.title ?? "",
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                      const SizedBox(height: 10),
-
-                      /// Post Content (HTML)
-
-                      Html(
-                        data: state.data.post?.content ??
-                            "", // render HTML content
-                        style: {
-                          "body": Style(
-                            fontSize: FontSize(14),
-                            color: Colors.grey[700],
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.calendar_today_rounded,
+                                  size: 14.sp, color: AppColors.primaryColor),
+                              SizedBox(width: 6.w),
+                              Text(
+                                "${_tr("Published")}${state.data.post!.date!}",
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.primaryColor,
+                                ),
+                              ),
+                            ],
                           ),
-                        },
-                      ),
-                      const SizedBox(height: 20),
+                        ),
 
+                      SizedBox(height: 16.h),
+
+                      /// ── Divider ──
+                      Divider(
+                          height: 1,
+                          thickness: 0.5,
+                          color: Colors.grey.shade200),
+
+                      SizedBox(height: 16.h),
+
+                      /// ── Post Content (HTML) ──
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(14.w),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12.r),
+                          border:
+                              Border.all(color: Colors.grey.shade100, width: 1),
+                        ),
+                        child: Html(
+                          data: state.data.post?.content ?? "",
+                          style: {
+                            "body": Style(
+                              fontSize: FontSize(14.sp),
+                              color: AppColors.lightBlack,
+                              lineHeight: LineHeight(1.6),
+                              margin: Margins.zero,
+                              padding: HtmlPaddings.zero,
+                            ),
+                          },
+                        ),
+                      ),
+
+                      SizedBox(height: 20.h),
+
+                      /// ── YouTube Player ──
                       BlocBuilder<GenericCubit<YoutubePlayerController?>,
                           GenericCubitState<YoutubePlayerController?>>(
                         bloc: viewModel.youtubeController,
-                        builder: (context, state) {
-                          if (state.data != null) {
-                            return YoutubePlayer(
-                              controller: state.data!,
-                              showVideoProgressIndicator: true,
+                        builder: (context, ytState) {
+                          if (ytState.data != null) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14.r),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.1),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(14.r),
+                                child: YoutubePlayer(
+                                  controller: ytState.data!,
+                                  showVideoProgressIndicator: true,
+                                  progressIndicatorColor:
+                                      AppColors.primaryColor,
+                                  progressColors: ProgressBarColors(
+                                    playedColor: AppColors.primaryColor,
+                                    handleColor: AppColors.primaryColor,
+                                    bufferedColor:
+                                        AppColors.primaryColor.withValues(alpha: 0.3),
+                                    backgroundColor: Colors.grey.shade300,
+                                  ),
+                                ),
+                              ),
                             );
                           } else {
                             return SizedBox.shrink();
                           }
                         },
                       ),
-                      const SizedBox(height: 20),
 
-                      /// Date
-                      Text(
-                        "${AppLocalizations.of(context)!.translate("Published")} ${state.data.post?.date ?? ""}",
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      20.h.verticalSpace,
+                      SizedBox(height: 24.h),
+
+                      /// ── Open YouTube Button ──
                       GestureDetector(
                         onTap: () {
                           openYouTube(state.data.post?.iframe ?? "");
                         },
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10.w),
-                          decoration: BoxDecoration(
-                              color: AppColors.scondaryColor,
-                              borderRadius: BorderRadius.circular(8)),
-                          height: 35.h,
+                          height: 48.h,
                           width: double.infinity,
-                          child: Center(
-                            child: AppText(
-                              text: AppLocalizations.of(context)!
-                                  .translate('open_youtube'),
-                              model: AppTextModel(
-                                  style: AppFontStyleGlobal(
-                                          AppLocalizations.of(context)!.locale)
-                                      .subTitle2
-                                      .copyWith(
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.white,
-                                      )),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                AppColors.scondaryColor,
+                                AppColors.scondaryColor.withValues(alpha: 0.85),
+                              ],
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
                             ),
+                            borderRadius: BorderRadius.circular(12.r),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.scondaryColor.withValues(alpha: 0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.play_circle_fill_rounded,
+                                color: AppColors.white,
+                                size: 22.sp,
+                              ),
+                              SizedBox(width: 8.w),
+                              AppText(
+                                text: _tr('open_youtube'),
+                                model: AppTextModel(
+                                    style: AppFontStyleGlobal(_locale)
+                                        .subTitle2
+                                        .copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.white,
+                                          fontSize: 15.sp,
+                                        )),
+                              ),
+                            ],
                           ),
                         ),
-                      )
+                      ),
+
+                      SizedBox(height: 20.h),
                     ],
                   ),
                 ),

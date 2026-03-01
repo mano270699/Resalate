@@ -40,7 +40,12 @@ class Masjid {
   final String? location;
   final bool? isFollowing;
 
+  final double? lat;
+  final double? lng;
+
   Masjid({
+    this.lat,
+    this.lng,
     this.id,
     this.name,
     this.image,
@@ -89,6 +94,8 @@ class Masjid {
           .toList(),
       location: json['location'],
       isFollowing: json['is_following'],
+      lat: json["lat"],
+      lng: json["lng"],
     );
   }
 
@@ -111,6 +118,8 @@ class Masjid {
             memorizationDates?.map((e) => e.toJson()).toList(),
         "location": location,
         "is_following": isFollowing,
+        "lat": lat,
+        "lng": lng
       };
 }
 

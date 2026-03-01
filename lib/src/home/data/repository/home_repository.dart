@@ -40,8 +40,10 @@ class HomeRepositoryImpl extends HomeRepository {
   @override
   Future<Either<String, DonationsResponse>> getDonationData() async {
     try {
+      LocalizationCacheHelper localizationCacheHelper =
+          LocalizationCacheHelper();
       final response = await _networkService.get(
-        "donations?per_page=5&page=1",
+        "donations?per_page=5&page=1&lang=${localizationCacheHelper.getLanguageCode()}",
       );
       DonationsResponse res = DonationsResponse.fromJson(response.data);
       return Right(res);
@@ -55,8 +57,10 @@ class HomeRepositoryImpl extends HomeRepository {
   Future<Either<String, LiveFeedsResponse>> getLiveFeed(
       {required int page}) async {
     try {
+      LocalizationCacheHelper localizationCacheHelper =
+          LocalizationCacheHelper();
       final response = await _networkService.get(
-        "live-feed?per_page=10&page=$page",
+        "live-feed?per_page=10&page=$page&lang=${localizationCacheHelper.getLanguageCode()}",
       );
       LiveFeedsResponse res = LiveFeedsResponse.fromJson(response.data);
       return Right(res);
@@ -70,8 +74,10 @@ class HomeRepositoryImpl extends HomeRepository {
   Future<Either<String, LessonsResponse>> getLessons(
       {required int page}) async {
     try {
+      LocalizationCacheHelper localizationCacheHelper =
+          LocalizationCacheHelper();
       final response = await _networkService.get(
-        "lessons?per_page=10&page=$page",
+        "lessons?per_page=10&page=$page&lang=${localizationCacheHelper.getLanguageCode()}",
       );
       LessonsResponse res = LessonsResponse.fromJson(response.data);
       return Right(res);
@@ -85,8 +91,10 @@ class HomeRepositoryImpl extends HomeRepository {
   Future<Either<String, FuneralsResponse>> getFuneralsData(
       {required int page}) async {
     try {
+      LocalizationCacheHelper localizationCacheHelper =
+          LocalizationCacheHelper();
       final response = await _networkService.get(
-        "funerals?per_page=10&page=$page",
+        "funerals?per_page=10&page=$page&lang=${localizationCacheHelper.getLanguageCode()}",
       );
       FuneralsResponse res = FuneralsResponse.fromJson(response.data);
       return Right(res);

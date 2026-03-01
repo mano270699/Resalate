@@ -28,6 +28,23 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           "🔔 Notification: ${message.notification!.title}/${message.notification!.body}");
     }
   }
+
+  // To display notifications for data-only messages in the background/terminated state
+  final FlutterLocalNotificationsPlugin fln = FlutterLocalNotificationsPlugin();
+
+  // Initialize the plugin in the background isolate to provide the default icon.
+  // Without this, showing a notification without an explicit icon will crash with 'no valid small icon'.
+  const androidInit = AndroidInitializationSettings('notification_icon');
+  const iOSInit = DarwinInitializationSettings();
+  await fln.initialize(
+      const InitializationSettings(android: androidInit, iOS: iOSInit));
+
+  // Make sure not to duplicate notifications if FCM already shows them for messages with 'notification' payload
+  // However, it's safer to always show it if the backend relies on data-only push notifications, OR if we want to ensure our custom styles.
+  // Actually, if message.notification != null, FCM system tray will show it automatically. To prevent double showing:
+  if (message.notification == null) {
+    await NotificationHelper.showNotification(message, fln, true);
+  }
 }
 
 void main() async {

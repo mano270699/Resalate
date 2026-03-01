@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:resalate/core/util/token_util.dart';
 import 'package:resalate/src/notification/data/models/notification_model.dart';
+import '../../../../core/util/localization/localization_cache_helper.dart';
 import '../../../../core/util/network_service.dart';
 
 abstract class NotificationRepository {
@@ -15,8 +16,10 @@ class NotificationRepositoryImpl extends NotificationRepository {
   @override
   Future<Either<String, NotificationModel>> getNotifications() async {
     try {
-      final response = await _networkService
-          .get("notifications/${await UserIdUtil.getUserIdFromMemory()}");
+      LocalizationCacheHelper localizationCacheHelper =
+          LocalizationCacheHelper();
+      final response = await _networkService.get(
+          "notifications/${await UserIdUtil.getUserIdFromMemory()}?lang=${localizationCacheHelper.getLanguageCode()}");
       NotificationModel res = NotificationModel.fromJson(response.data);
       return Right(res);
     } catch (e, t) {
