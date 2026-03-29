@@ -119,7 +119,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           return state.data
                               ? Positioned(
                                   left: 10.w,
-                                  top: 30.h,
+                                  top: 40.h,
                                   child: GestureDetector(
                                     onTap: () {
                                       Navigator.pushNamed(context,
@@ -140,7 +140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                       Positioned(
                         right: 10.w,
-                        top: 30.h,
+                        top: 40.h,
                         child:
                             BlocBuilder<LocalizationCubit, LocalizationState>(
                           builder: (context, state) {

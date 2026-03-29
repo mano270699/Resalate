@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:resalate/src/home/data/models/funerial_model.dart';
 import 'package:resalate/src/home/data/models/lessons_model.dart';
 import 'package:resalate/src/home/data/models/live_model.dart';
+import 'package:resalate/src/home/data/models/partners_model.dart';
 import 'package:resalate/src/home/data/repository/home_repository.dart';
 import '../../../core/blocs/generic_cubit/generic_cubit.dart';
 import '../../../core/common/models/failure.dart';
@@ -304,5 +305,29 @@ class HomeViewModel {
     final pagination = allFuneralsRes.state.data.pagination;
     if (pagination == null) return false;
     return pagination.currentPage! < pagination.totalPages!;
+  }
+
+  // Partners
+  GenericCubit<PartnersResponse> partnersResponse =
+      GenericCubit(PartnersResponse());
+
+  Future<void> getPartnersData() async {
+    partnersResponse.onLoadingState();
+    try {
+      Either<String, PartnersResponse> response =
+          await homeRepositoryImpl.getPartners();
+
+      response.fold(
+        (failure) {
+          partnersResponse.onErrorState(Failure(failure));
+        },
+        (data) async {
+          partnersResponse.onUpdateData(data);
+        },
+      );
+    } on Failure catch (e, s) {
+      debugPrint("Partners error: $s");
+      partnersResponse.onErrorState(Failure('$e'));
+    }
   }
 }

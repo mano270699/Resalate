@@ -77,6 +77,7 @@ dependencies:
   http_parser: ^4.1.2
   geolocator: ^14.0.2
   youtube_player_flutter: ^9.1.2
+  shimmer: ^3.0.0
   
 
 
@@ -100,46 +101,19 @@ flutter:
     - assets/icons/
 
   fonts:
-    - family: Nunito
+    - family: Tajawal
       fonts:
-        - asset: assets/fonts/Nunito/static/Nunito-Black.ttf
-          weight: 900
-        - asset: assets/fonts/Nunito/static/Nunito-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/Nunito/static/Nunito-ExtraBold.ttf
-          weight: 800
-        - asset: assets/fonts/Nunito/static/Nunito-ExtraLight.ttf
+        - asset: assets/fonts/tajawal/Tajawal-ExtraLight.ttf
           weight: 200
-        - asset: assets/fonts/Nunito/static/Nunito-Light.ttf
+        - asset: assets/fonts/tajawal/Tajawal-Light.ttf
           weight: 300
-        - asset: assets/fonts/Nunito/static/Nunito-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/Nunito/static/Nunito-Regular.ttf
+        - asset: assets/fonts/tajawal/Tajawal-Regular.ttf
           weight: 400
-        - asset: assets/fonts/Nunito/static/Nunito-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/Nunito/static/Nunito-SemiBold.ttf
-          weight: 600
-    - family: Noto Sans Arabic
-      fonts:
-        - asset: assets/fonts/Noto_Sans_Arabic/static/NotoSansArabic/NotoSansArabic-Black.ttf
-          weight: 900
-        - asset: assets/fonts/Noto_Sans_Arabic/static/NotoSansArabic/NotoSansArabic-Bold.ttf
+        - asset: assets/fonts/tajawal/Tajawal-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/tajawal/Tajawal-Bold.ttf
           weight: 700
-        - asset: assets/fonts/Noto_Sans_Arabic/static/NotoSansArabic/NotoSansArabic-ExtraBold.ttf
+        - asset: assets/fonts/tajawal/Tajawal-ExtraBold.ttf
           weight: 800
-        - asset: assets/fonts/Noto_Sans_Arabic/static/NotoSansArabic/NotoSansArabic-ExtraLight.ttf
-          weight: 200
-        - asset: assets/fonts/Noto_Sans_Arabic/static/NotoSansArabic/NotoSansArabic-Light.ttf
-          weight: 300
-        - asset: assets/fonts/Noto_Sans_Arabic/static/NotoSansArabic/NotoSansArabic-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/Noto_Sans_Arabic/static/NotoSansArabic/NotoSansArabic-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/Noto_Sans_Arabic/static/NotoSansArabic/NotoSansArabic-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/Noto_Sans_Arabic/static/NotoSansArabic/NotoSansArabic-Thin.ttf
-          weight: 100
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages
+        - asset: assets/fonts/tajawal/Tajawal-Black.ttf
+          weight: 900

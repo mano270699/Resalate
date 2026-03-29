@@ -17,91 +17,79 @@ class LiveFeedItem extends StatelessWidget {
   });
   final PostItem postItem;
 
-  // Future<void> openYouTube(String videoUrl) async {
-  //   final Uri url = Uri.parse(videoUrl);
-
-  //   // This forces YouTube app if installed, otherwise fallback to browser
-  //   if (await canLaunchUrl(url)) {
-  //     await launchUrl(
-  //       url,
-  //       mode: LaunchMode.externalApplication, // open in YouTube app
-  //     );
-  //   } else {
-  //     throw 'Could not launch $url';
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsetsDirectional.only(start: 10.w),
-      child: GestureDetector(
-        onTap: () {
-          // openYouTube(postItem.link ?? "");
+    final textDir =
+        AppLocalizations.of(context)!.locale.languageCode == 'en' ||
+                AppLocalizations.of(context)!.locale.languageCode == 'sv'
+            ? TextDirection.ltr
+            : TextDirection.rtl;
 
-          Navigator.pushNamed(
-            context,
-            LiveFeedDetailsScreen.routeName,
-            arguments: {
-              "id": postItem.id,
-            },
-          );
-        },
-        child: Container(
-          // height: 200.h,
-          // width: 180.h,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10), color: AppColors.white),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10)),
-                  child: SizedBox(
-                      height: 120.h,
-                      width: double.infinity,
-                      child: CachedNetworkImage(
-                        imageUrl: postItem.image ??
-                            "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/960px-Placeholder_view_vector.svg.png",
-                        fit: BoxFit.cover,
-                      ))),
-              10.h.verticalSpace,
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w),
-                child: AppText(
-                  text: postItem.title ?? "",
-                  model: AppTextModel(
-                      style: AppFontStyleGlobal(
-                              AppLocalizations.of(context)!.locale)
-                          .headingMedium2
-                          .copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.primaryColor,
-                          )),
-                ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(
+          context,
+          LiveFeedDetailsScreen.routeName,
+          arguments: {
+            "id": postItem.id,
+          },
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10), color: AppColors.white),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ClipRRect(
+                borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10)),
+                child: SizedBox(
+                    height: 120.h,
+                    width: double.infinity,
+                    child: CachedNetworkImage(
+                      imageUrl: postItem.image ??
+                          "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/960px-Placeholder_view_vector.svg.png",
+                      fit: BoxFit.cover,
+                    ))),
+            10.h.verticalSpace,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
+              child: AppText(
+                text: postItem.title ?? "",
+                model: AppTextModel(
+                    textDirection: textDir,
+                    style: AppFontStyleGlobal(
+                            AppLocalizations.of(context)!.locale)
+                        .headingMedium2
+                        .copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primaryColor,
+                        )),
               ),
-              10.h.verticalSpace,
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w),
-                child: AppText(
-                  text: postItem.excerpt ?? "",
-                  model: AppTextModel(
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppFontStyleGlobal(
-                              AppLocalizations.of(context)!.locale)
-                          .subTitle2
-                          .copyWith(
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.primaryColor,
-                          )),
-                ),
+            ),
+            10.h.verticalSpace,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
+              child: AppText(
+                text: postItem.excerpt ?? "",
+                model: AppTextModel(
+                    textDirection: textDir,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppFontStyleGlobal(
+                            AppLocalizations.of(context)!.locale)
+                        .subTitle2
+                        .copyWith(
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.primaryColor,
+                        )),
               ),
-              10.h.verticalSpace,
-            ],
-          ),
+            ),
+            10.h.verticalSpace,
+          ],
         ),
       ),
     );

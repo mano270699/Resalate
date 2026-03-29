@@ -178,6 +178,17 @@ class _FuneralsDetailsScreenState extends State<FuneralsDetailsScreen> {
                                   AppText(
                                     text: state.data.post?.masjid?.name ?? "",
                                     model: AppTextModel(
+                                      textDirection:
+                                          AppLocalizations.of(context)!
+                                                          .locale
+                                                          .languageCode ==
+                                                      'en' ||
+                                                  AppLocalizations.of(context)!
+                                                          .locale
+                                                          .languageCode ==
+                                                      'sv'
+                                              ? TextDirection.ltr
+                                              : TextDirection.rtl,
                                       style: AppFontStyleGlobal(_locale)
                                           .headingMedium2
                                           .copyWith(
@@ -219,6 +230,16 @@ class _FuneralsDetailsScreenState extends State<FuneralsDetailsScreen> {
                       AppText(
                         text: state.data.post?.title ?? "",
                         model: AppTextModel(
+                          textDirection: AppLocalizations.of(context)!
+                                          .locale
+                                          .languageCode ==
+                                      'en' ||
+                                  AppLocalizations.of(context)!
+                                          .locale
+                                          .languageCode ==
+                                      'sv'
+                              ? TextDirection.ltr
+                              : TextDirection.rtl,
                           style: AppFontStyleGlobal(_locale)
                               .headingMedium2
                               .copyWith(
@@ -288,6 +309,16 @@ class _FuneralsDetailsScreenState extends State<FuneralsDetailsScreen> {
                               lineHeight: LineHeight(1.6),
                               margin: Margins.zero,
                               padding: HtmlPaddings.zero,
+                              direction: AppLocalizations.of(context)!
+                                              .locale
+                                              .languageCode ==
+                                          'en' ||
+                                      AppLocalizations.of(context)!
+                                              .locale
+                                              .languageCode ==
+                                          'sv'
+                                  ? TextDirection.ltr
+                                  : TextDirection.rtl,
                             ),
                           },
                         ),

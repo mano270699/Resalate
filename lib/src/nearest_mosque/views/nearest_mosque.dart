@@ -258,7 +258,7 @@ class _NearestMosqueState extends State<NearestMosque> {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          childAspectRatio: showItem == 2 ? 0.57 : 1.25,
+          childAspectRatio: showItem == 2 ? 0.65 : 1.5,
           crossAxisCount: showItem,
           crossAxisSpacing: 10.w,
           mainAxisSpacing: 10.h,

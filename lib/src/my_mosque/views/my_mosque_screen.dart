@@ -27,6 +27,9 @@ import 'widgets/live_feed.dart';
 import 'widgets/memorization_date.dart';
 import 'widgets/payment_section_option.dart';
 import 'widgets/social_media_item.dart';
+import '../data/models/announcement_model.dart';
+import 'widgets/announcement_item.dart';
+import 'announcement_details_screen.dart';
 
 class MyMosqueScreen extends StatefulWidget {
   const MyMosqueScreen({super.key, required this.id});
@@ -244,30 +247,39 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Row(
-                                      children: [
-                                        CircleAvatar(
-                                          radius: 20,
-                                          backgroundImage: NetworkImage(
-                                              state.data.masjid?.image ?? ""),
-                                        ),
-                                        SizedBox(width: 8.w),
-                                        AppText(
-                                          text: "${state.data.masjid?.name}",
-                                          model: AppTextModel(
-                                            style: AppFontStyleGlobal(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .locale)
-                                                .headingMedium2
-                                                .copyWith(
-                                                  fontWeight: FontWeight.w700,
-                                                  color: AppColors.black,
-                                                ),
+                                    Flexible(
+                                      child: Row(
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 20,
+                                            backgroundImage: NetworkImage(
+                                                state.data.masjid?.image ?? ""),
                                           ),
-                                        ),
-                                      ],
+                                          SizedBox(width: 8.w),
+                                          Flexible(
+                                            child: AppText(
+                                              text:
+                                                  "${state.data.masjid?.name}",
+                                              model: AppTextModel(
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: AppFontStyleGlobal(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .locale)
+                                                    .headingMedium2
+                                                    .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      color: AppColors.black,
+                                                    ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
+                                    SizedBox(width: 8.w),
                                     BlocBuilder<GenericCubit<bool>,
                                         GenericCubitState<bool>>(
                                       bloc: viewModel.isUserFollowMasjed,
@@ -466,6 +478,106 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                               ),
                             ),
                           ),
+
+                        SliverToBoxAdapter(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.w),
+                            child: AppText(
+                              text: AppLocalizations.of(context)!
+                                  .translate('annoncements'),
+                              model: AppTextModel(
+                                textDirection: AppLocalizations.of(context)!
+                                                .locale
+                                                .languageCode ==
+                                            'en' ||
+                                        AppLocalizations.of(context)!
+                                                .locale
+                                                .languageCode ==
+                                            'sv'
+                                    ? TextDirection.ltr
+                                    : TextDirection.rtl,
+                                style: AppFontStyleGlobal(
+                                        AppLocalizations.of(context)!.locale)
+                                    .label
+                                    .copyWith(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 20.sp,
+                                      color: AppColors.scondaryColor,
+                                    ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SliverToBoxAdapter(
+                          child: SizedBox(height: 10.h),
+                        ),
+                        SliverToBoxAdapter(
+                          child: BlocBuilder<
+                              GenericCubit<AnnouncementsResponse>,
+                              GenericCubitState<AnnouncementsResponse>>(
+                            bloc: viewModel.announcementsRes,
+                            builder: (context, announcementState) {
+                              final announcements =
+                                  announcementState.data.announcements ?? [];
+                              // if (announcements.isEmpty) {
+                              //   return const SizedBox.shrink();
+                              // }
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Skeletonizer(
+                                    enabled: announcementState
+                                        is GenericLoadingState,
+                                    child: SizedBox(
+                                      height: 300.h,
+                                      child: ListView.separated(
+                                        scrollDirection: Axis.horizontal,
+                                        clipBehavior: Clip.none,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 16.w),
+                                        itemCount: announcementState
+                                                is GenericLoadingState
+                                            ? 3
+                                            : announcements.length,
+                                        separatorBuilder: (_, __) =>
+                                            SizedBox(width: 10.w),
+                                        itemBuilder: (context, index) {
+                                          final item = announcementState
+                                                  is GenericLoadingState
+                                              ? Announcement(
+                                                  title:
+                                                      'Loading announcement title',
+                                                  excerpt:
+                                                      'Loading excerpt text here',
+                                                  date: '2026-01-01',
+                                                )
+                                              : announcements[index];
+                                          return AnnouncementItem(
+                                            announcement: item,
+                                            onTap: () {
+                                              if (announcementState
+                                                  is! GenericLoadingState) {
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  AnnouncementDetailsScreen
+                                                      .routeName,
+                                                  arguments: {
+                                                    "id":
+                                                        announcements[index].id,
+                                                  },
+                                                );
+                                              }
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
 
                         SliverToBoxAdapter(
                           child: SizedBox(
@@ -674,9 +786,9 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
-                            childAspectRatio: 0.72,
-                            crossAxisSpacing: 12,
-                            mainAxisSpacing: 12,
+                            childAspectRatio: 0.79,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
                           ),
                           itemBuilder: (_, index) => DonationItem(
                             donation: state.data.posts?.donations?[index] ??
@@ -684,14 +796,15 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                           ),
                         ),
                         GridView.builder(
-                          padding: EdgeInsets.all(5.w),
+                          padding: EdgeInsets.all(12.w),
                           itemCount:
                               state.data.posts?.masjidToMasjid?.length ?? 0,
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
-                            childAspectRatio: 0.68,
-                            mainAxisSpacing: 5,
+                            childAspectRatio: 0.66,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
                           ),
                           itemBuilder: (_, index) => FromMasjedToMasjed(
                             postItem:
@@ -711,7 +824,8 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                               SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             childAspectRatio: 0.70,
-                            mainAxisSpacing: 5,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
                           ),
                           itemBuilder: (_, index) => FuneralsItem(
                             postItem: state.data.posts?.funerals?[index] ??

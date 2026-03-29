@@ -72,6 +72,7 @@ class _FromMosqueToMosqueScreenState extends State<FromMosqueToMosqueScreen> {
               enabled: masjedToMasjedState is GenericLoadingState,
               child: ListView.separated(
                 controller: _scrollController,
+                padding: EdgeInsets.symmetric(vertical: 16.h),
                 itemBuilder: (context, index) {
                   final isLoading = masjedToMasjedState is GenericLoadingState;
 
@@ -100,7 +101,7 @@ class _FromMosqueToMosqueScreenState extends State<FromMosqueToMosqueScreen> {
                     posts: post,
                   );
                 },
-                separatorBuilder: (context, index) => SizedBox(height: 10.h),
+                separatorBuilder: (context, index) => SizedBox(height: 14.h),
                 itemCount: (masjedToMasjedState is GenericLoadingState)
                     ? 5
                     : posts!.length + (hasMore ? 1 : 0),

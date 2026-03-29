@@ -28,7 +28,7 @@ class ItemMasjedToMasjed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsetsDirectional.only(start: 10.w, end: 10.w),
+      padding: EdgeInsetsDirectional.only(start: 16.w, end: 16.w),
       child: GestureDetector(
         onTap: () {
           Navigator.pushNamed(
@@ -36,80 +36,130 @@ class ItemMasjedToMasjed extends StatelessWidget {
               arguments: {"id": posts.id});
         },
         child: Container(
-          height: 270.h,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10), color: AppColors.white),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10)),
-                    child: SizedBox(
-                        height: 85.h,
-                        width: MediaQuery.of(context).size.width,
-                        child: Image.network(
-                          posts.image ?? "",
-                          fit: BoxFit.cover,
-                        ))),
-                10.h.verticalSpace,
-                AppText(
-                  text: posts.title ?? "",
-                  model: AppTextModel(
-                      style: AppFontStyleGlobal(
-                              AppLocalizations.of(context)!.locale)
-                          .headingMedium2
-                          .copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.primaryColor,
-                          )),
+            borderRadius: BorderRadius.circular(16),
+            color: AppColors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.06),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Image section with rounded top corners
+              ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  topRight: Radius.circular(16),
                 ),
-                10.h.verticalSpace,
-                AppText(
-                  text: posts.excerpt ?? "",
-                  model: AppTextModel(
-                      style: AppFontStyleGlobal(
-                              AppLocalizations.of(context)!.locale)
-                          .smallTab
-                          .copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.gray,
-                          )),
-                ),
-                20.h.verticalSpace,
-                GestureDetector(
-                  onTap: () {
-                    openWhatsApp("whatsAppNumber");
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w),
-                    decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(8)),
-                    height: 40.h,
-                    width: double.infinity,
-                    child: Center(
-                      child: AppText(
-                        text:
-                            AppLocalizations.of(context)!.translate("whatsApp"),
-                        model: AppTextModel(
-                            style: AppFontStyleGlobal(
-                                    AppLocalizations.of(context)!.locale)
-                                .subTitle2
-                                .copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.white,
-                                )),
+                child: SizedBox(
+                  height: 160.h,
+                  width: double.infinity,
+                  child: Image.network(
+                    posts.image ?? "",
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      color: AppColors.cardBg,
+                      child: Center(
+                        child: Icon(
+                          Icons.mosque_rounded,
+                          size: 48.sp,
+                          color: AppColors.primaryColor.withValues(alpha: 0.3),
+                        ),
                       ),
                     ),
                   ),
-                )
-              ],
-            ),
+                ),
+              ),
+
+              // Content section
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title
+                    AppText(
+                      text: posts.title ?? "",
+                      model: AppTextModel(
+                        style: AppFontStyleGlobal(
+                                AppLocalizations.of(context)!.locale)
+                            .headingMedium2
+                            .copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.primaryColor,
+                            ),
+                      ),
+                    ),
+                    8.h.verticalSpace,
+
+                    // Excerpt / description
+                    if ((posts.excerpt ?? "").isNotEmpty)
+                      AppText(
+                        text: posts.excerpt ?? "",
+                        model: AppTextModel(
+                          maxLines: 2,
+                          style: AppFontStyleGlobal(
+                                  AppLocalizations.of(context)!.locale)
+                              .smallTab
+                              .copyWith(
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.gray,
+                                height: 1.4,
+                              ),
+                        ),
+                      ),
+                    14.h.verticalSpace,
+
+                    // WhatsApp button
+                    GestureDetector(
+                      onTap: () {
+                        openWhatsApp("whatsAppNumber");
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 10.h),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF25D366),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        width: double.infinity,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.chat_rounded,
+                              color: AppColors.white,
+                              size: 18.sp,
+                            ),
+                            SizedBox(width: 8.w),
+                            AppText(
+                              text: AppLocalizations.of(context)!
+                                  .translate("whatsApp"),
+                              model: AppTextModel(
+                                style: AppFontStyleGlobal(
+                                        AppLocalizations.of(context)!.locale)
+                                    .subTitle2
+                                    .copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.white,
+                                    ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),

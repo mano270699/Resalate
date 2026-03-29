@@ -126,8 +126,8 @@ class _LiveFeedDetailsScreenState extends State<LiveFeedDetailsScreen> {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                  color:
-                                      AppColors.primaryColor.withValues(alpha: 0.3),
+                                  color: AppColors.primaryColor
+                                      .withValues(alpha: 0.3),
                                   width: 2,
                                 ),
                               ),
@@ -147,6 +147,11 @@ class _LiveFeedDetailsScreenState extends State<LiveFeedDetailsScreen> {
                                   AppText(
                                     text: state.data.post?.masjid?.name ?? "",
                                     model: AppTextModel(
+                                      textDirection:
+                                          _locale.languageCode == 'en' ||
+                                                  _locale.languageCode == 'sv'
+                                              ? TextDirection.ltr
+                                              : TextDirection.rtl,
                                       style: AppFontStyleGlobal(_locale)
                                           .headingMedium2
                                           .copyWith(
@@ -188,6 +193,10 @@ class _LiveFeedDetailsScreenState extends State<LiveFeedDetailsScreen> {
                       AppText(
                         text: state.data.post?.title ?? "",
                         model: AppTextModel(
+                          textDirection: _locale.languageCode == 'en' ||
+                                  _locale.languageCode == 'sv'
+                              ? TextDirection.ltr
+                              : TextDirection.rtl,
                           style: AppFontStyleGlobal(_locale)
                               .headingMedium2
                               .copyWith(
@@ -206,7 +215,8 @@ class _LiveFeedDetailsScreenState extends State<LiveFeedDetailsScreen> {
                           padding: EdgeInsets.symmetric(
                               horizontal: 12.w, vertical: 6.h),
                           decoration: BoxDecoration(
-                            color: AppColors.primaryColor.withValues(alpha: 0.08),
+                            color:
+                                AppColors.primaryColor.withValues(alpha: 0.08),
                             borderRadius: BorderRadius.circular(20.r),
                           ),
                           child: Row(
@@ -251,6 +261,10 @@ class _LiveFeedDetailsScreenState extends State<LiveFeedDetailsScreen> {
                           data: state.data.post?.content ?? "",
                           style: {
                             "body": Style(
+                              direction: _locale.languageCode == 'en' ||
+                                      _locale.languageCode == 'sv'
+                                  ? TextDirection.ltr
+                                  : TextDirection.rtl,
                               fontSize: FontSize(14.sp),
                               color: AppColors.lightBlack,
                               lineHeight: LineHeight(1.6),
@@ -290,8 +304,8 @@ class _LiveFeedDetailsScreenState extends State<LiveFeedDetailsScreen> {
                                   progressColors: ProgressBarColors(
                                     playedColor: AppColors.primaryColor,
                                     handleColor: AppColors.primaryColor,
-                                    bufferedColor:
-                                        AppColors.primaryColor.withValues(alpha: 0.3),
+                                    bufferedColor: AppColors.primaryColor
+                                        .withValues(alpha: 0.3),
                                     backgroundColor: Colors.grey.shade300,
                                   ),
                                 ),
@@ -325,7 +339,8 @@ class _LiveFeedDetailsScreenState extends State<LiveFeedDetailsScreen> {
                             borderRadius: BorderRadius.circular(12.r),
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.scondaryColor.withValues(alpha: 0.3),
+                                color: AppColors.scondaryColor
+                                    .withValues(alpha: 0.3),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                               ),

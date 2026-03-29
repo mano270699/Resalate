@@ -253,9 +253,10 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   Future<Either<String, FCMTokenModel>> updateFCMToken() async {
     try {
-      final response = await _networkService.post(
-          "save-fcm-token?user_id=${await UserIdUtil.getUserIdFromMemory()}&fcm_token=${await FCMTokenUtil.getFCMTokenFromMemory()}",
-          {});
+      final userId = await UserIdUtil.getUserIdFromMemory();
+      final fcmToken = await FCMTokenUtil.getFCMTokenFromMemory();
+      final response = await _networkService
+          .post("save-fcm-token?user_id=$userId&fcm_token=$fcmToken", {});
       FCMTokenModel res = FCMTokenModel.fromJson(response.data);
       return Right(res);
     } catch (e, t) {

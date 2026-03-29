@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:resalate/core/blocs/generic_cubit/generic_cubit.dart';
 import 'package:resalate/src/home/data/models/donation_model.dart';
 import 'package:resalate/src/home/data/models/funerial_model.dart';
 import 'package:resalate/src/home/data/models/lessons_model.dart';
 import 'package:resalate/src/home/data/models/live_model.dart';
+import 'package:resalate/src/home/data/models/partners_model.dart';
 import 'package:resalate/src/home/logic/home_view_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:resalate/src/home/views/all_feed_screen.dart';
 import 'package:resalate/src/home/views/all_funerals_screen.dart';
 import 'package:resalate/src/home/views/all_lesson_screen.dart';
@@ -38,17 +41,29 @@ import 'widgets/partenar_section.dart';
 import 'widgets/resalty_numbers_item.dart';
 import '../../layout/screens/main_screen_view_model.dart';
 
-class HomePage extends StatelessWidget {
-  HomePage({super.key, required this.homeViewModel});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key, required this.homeViewModel});
 
   final MainScreenViewModel homeViewModel;
   static const String routeName = 'Home Screen';
-  final viewModel = sl<HomeViewModel>()
-    ..getHomeData()
-    ..getDonationsData()
-    ..getLiveFeedData()
-    ..getLessonsData()
-    ..getFuneralsData();
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final viewModel = sl<HomeViewModel>();
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel.getHomeData();
+    viewModel.getDonationsData();
+    viewModel.getLiveFeedData();
+    viewModel.getLessonsData();
+    viewModel.getFuneralsData();
+    viewModel.getPartnersData();
+  }
 
   String _getLanguageFlag(String languageCode) {
     switch (languageCode) {
@@ -77,7 +92,8 @@ class HomePage extends StatelessWidget {
           automaticallyImplyLeading: false,
           centerTitle: false,
           title: SvgPicture.asset(
-            AppLocalizations.of(context)!.locale.languageCode == "en"
+            AppLocalizations.of(context)!.locale.languageCode == 'en' ||
+                    AppLocalizations.of(context)!.locale.languageCode == 'sv'
                 ? AppIconSvg.rowLogo
                 : AppIconSvg.rowLogoAr,
             height: 150.h,
@@ -108,6 +124,12 @@ class HomePage extends StatelessWidget {
                             context
                                 .read<LocalizationCubit>()
                                 .changeLanguage(languageCode);
+                            viewModel.getHomeData();
+                            viewModel.getDonationsData();
+                            viewModel.getLiveFeedData();
+                            viewModel.getLessonsData();
+                            viewModel.getFuneralsData();
+                            viewModel.getPartnersData();
                           },
                         );
                       },
@@ -160,9 +182,13 @@ class HomePage extends StatelessWidget {
                             "${state.data.home?.ayah1}",
                             textAlign: TextAlign.center,
                             textDirection: AppLocalizations.of(context)!
-                                        .locale
-                                        .languageCode ==
-                                    'en'
+                                            .locale
+                                            .languageCode ==
+                                        'en' ||
+                                    AppLocalizations.of(context)!
+                                            .locale
+                                            .languageCode ==
+                                        'sv'
                                 ? TextDirection.ltr
                                 : TextDirection.rtl,
                             style: ArabicTextStyle(
@@ -298,7 +324,7 @@ class HomePage extends StatelessWidget {
                           ),
                           GestureDetector(
                             onTap: () {
-                              homeViewModel.screenIndexChanged(index: 1);
+                              widget.homeViewModel.screenIndexChanged(index: 1);
                             },
                             child: AppText(
                               text: AppLocalizations.of(context)!
@@ -325,7 +351,7 @@ class HomePage extends StatelessWidget {
                         return Skeletonizer(
                           enabled: donationState is GenericLoadingState,
                           child: SizedBox(
-                            height: 342.h,
+                            height: 400.h,
                             child: ListView.separated(
                               clipBehavior: Clip.none,
                               scrollDirection: Axis.horizontal,
@@ -353,7 +379,7 @@ class HomePage extends StatelessWidget {
                                         .data.posts![index].donation?.total
                                         .toString() ??
                                     "",
-                                remaining: donationState
+                                paid: donationState
                                         .data.posts![index].donation?.paid
                                         .toString() ??
                                     "",
@@ -502,8 +528,8 @@ class HomePage extends StatelessWidget {
                                             .locale
                                             .languageCode ==
                                         'en'
-                                ? 262.h
-                                : 245.h,
+                                ? 265.h
+                                : 260.h,
                             child: ListView.separated(
                               clipBehavior: Clip.none,
                               scrollDirection: Axis.horizontal,
@@ -578,7 +604,16 @@ class HomePage extends StatelessWidget {
                         return Skeletonizer(
                           enabled: funeralsState is GenericLoadingState,
                           child: SizedBox(
-                            height: 270.h,
+                            height: AppLocalizations.of(context)!
+                                            .locale
+                                            .languageCode ==
+                                        'sv' ||
+                                    AppLocalizations.of(context)!
+                                            .locale
+                                            .languageCode ==
+                                        'en'
+                                ? 265.h
+                                : 260.h,
                             child: ListView.separated(
                               clipBehavior: Clip.none,
                               scrollDirection: Axis.horizontal,
@@ -647,6 +682,39 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                     20.h.verticalSpace,
+                    // Partners Section
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      child: Row(
+                        children: [
+                          AppText(
+                            text: AppLocalizations.of(context)!
+                                .translate('partners'),
+                            model: AppTextModel(
+                              style: AppFontStyleGlobal(
+                                      AppLocalizations.of(context)!.locale)
+                                  .label
+                                  .copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 20.sp,
+                                    color: AppColors.scondaryColor,
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    20.h.verticalSpace,
+                    BlocBuilder<GenericCubit<PartnersResponse>,
+                        GenericCubitState<PartnersResponse>>(
+                      bloc: viewModel.partnersResponse,
+                      builder: (context, partnersState) {
+                        return _AutoScrollingPartnerList(
+                          partners: partnersState.data.partners ?? [],
+                        );
+                      },
+                    ),
+                    20.h.verticalSpace,
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.w),
                       child: Row(
@@ -681,9 +749,13 @@ class HomePage extends StatelessWidget {
                           "${state.data.home?.ayah2}",
                           textAlign: TextAlign.center,
                           textDirection: AppLocalizations.of(context)!
-                                      .locale
-                                      .languageCode ==
-                                  'en'
+                                          .locale
+                                          .languageCode ==
+                                      'en' ||
+                                  AppLocalizations.of(context)!
+                                          .locale
+                                          .languageCode ==
+                                      'sv'
                               ? TextDirection.rtl
                               : TextDirection.ltr,
                           style: ArabicTextStyle(
@@ -718,8 +790,10 @@ class _AutoScrollingSponsorList extends StatefulWidget {
 
 class _AutoScrollingSponsorListState extends State<_AutoScrollingSponsorList> {
   late ScrollController _scrollController;
-  bool _isReversing = false;
   bool _isScrolling = false;
+
+  // We duplicate items to create a seamless loop
+  static const int _multiplier = 100;
 
   @override
   void initState() {
@@ -728,8 +802,16 @@ class _AutoScrollingSponsorListState extends State<_AutoScrollingSponsorList> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _startScrolling());
   }
 
-  void _startScrolling() async {
-    if (!mounted) return;
+  @override
+  void didUpdateWidget(covariant _AutoScrollingSponsorList oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!_isScrolling && widget.sponsors.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _startScrolling());
+    }
+  }
+
+  void _startScrolling() {
+    if (!mounted || widget.sponsors.isEmpty) return;
     _isScrolling = true;
     _scroll();
   }
@@ -738,30 +820,31 @@ class _AutoScrollingSponsorListState extends State<_AutoScrollingSponsorList> {
     if (!mounted || !_isScrolling) return;
 
     final maxScroll = _scrollController.position.maxScrollExtent;
-    final minScroll = _scrollController.position.minScrollExtent;
-    final target = _isReversing ? minScroll : maxScroll;
     final current = _scrollController.offset;
-    final distance = (target - current).abs();
+    final remaining = maxScroll - current;
 
-    // Speed: pixels per second
-    const speed = 50.0;
-    final duration = Duration(milliseconds: (distance / speed * 1000).toInt());
-
-    if (duration.inMilliseconds == 0) {
-      _isReversing = !_isReversing;
-      _scroll();
+    if (remaining <= 0) {
+      // Jump back to the start seamlessly
+      _scrollController.jumpTo(0);
+      await Future.delayed(const Duration(milliseconds: 50));
+      if (mounted && _isScrolling) _scroll();
       return;
     }
 
+    // Speed: pixels per second
+    const speed = 40.0;
+    final duration = Duration(milliseconds: (remaining / speed * 1000).toInt());
+
     await _scrollController.animateTo(
-      target,
+      maxScroll,
       duration: duration,
       curve: Curves.linear,
     );
 
-    if (mounted) {
-      _isReversing = !_isReversing;
-      _scroll();
+    if (mounted && _isScrolling) {
+      _scrollController.jumpTo(0);
+      await Future.delayed(const Duration(milliseconds: 50));
+      if (mounted && _isScrolling) _scroll();
     }
   }
 
@@ -774,14 +857,17 @@ class _AutoScrollingSponsorListState extends State<_AutoScrollingSponsorList> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.sponsors.isEmpty) return const SizedBox.shrink();
+
     return ListView.separated(
       controller: _scrollController,
       clipBehavior: Clip.none,
       scrollDirection: Axis.horizontal,
-      itemCount: widget.sponsors.length,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: widget.sponsors.length * _multiplier,
       separatorBuilder: (context, index) => SizedBox(width: 3.w),
       itemBuilder: (context, index) {
-        final sponsor = widget.sponsors[index];
+        final sponsor = widget.sponsors[index % widget.sponsors.length];
         final url = sponsor?.url ?? "";
 
         return Padding(
@@ -826,4 +912,156 @@ class _AutoScrollingSponsorListState extends State<_AutoScrollingSponsorList> {
       },
     );
   }
+}
+
+class _AutoScrollingPartnerList extends StatefulWidget {
+  final List<Partner> partners;
+
+  const _AutoScrollingPartnerList({required this.partners});
+
+  @override
+  State<_AutoScrollingPartnerList> createState() =>
+      _AutoScrollingPartnerListState();
+}
+
+class _AutoScrollingPartnerListState extends State<_AutoScrollingPartnerList> {
+  late ScrollController _scrollController;
+  int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (!mounted) return;
+
+    int newIndex;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+
+    // If scrolled to the very edge, force the last index
+    if (maxScroll > 0 && _scrollController.offset >= maxScroll - 10) {
+      newIndex = widget.partners.length - 1;
+    } else {
+      newIndex = (_scrollController.offset / 208.w).round();
+    }
+
+    newIndex = newIndex.clamp(0, widget.partners.length - 1);
+
+    if (newIndex != _currentIndex) {
+      setState(() {
+        _currentIndex = newIndex;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _launchUrl(String url) async {
+    if (url.isEmpty) return;
+
+    String finalUrl = url.trim();
+    if (!finalUrl.startsWith('http')) {
+      finalUrl = 'https://$finalUrl';
+    }
+
+    final Uri uri = Uri.parse(finalUrl);
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        debugPrint("Could not launch $finalUrl");
+      }
+    } catch (e) {
+      debugPrint("Launch error: $e");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.partners.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          height: 130.h,
+          child: ListView.separated(
+            controller: _scrollController,
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            itemCount: widget.partners.length,
+            separatorBuilder: (context, index) => SizedBox(width: 8.w),
+            itemBuilder: (context, index) {
+              final partner = widget.partners[index];
+              final imageUrl = partner.image ?? "";
+              final partnerUrl = partner.url ?? "";
+
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(12.r),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () => _launchUrl(partnerUrl),
+                    child: SizedBox(
+                      height: 200.h,
+                      width: 200.w,
+                      child: _buildImage(imageUrl),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        10.h.verticalSpace,
+        AnimatedSmoothIndicator(
+          activeIndex: _currentIndex,
+          count: widget.partners.length,
+          effect: ExpandingDotsEffect(
+            dotHeight: 8.h,
+            dotWidth: 8.w,
+            activeDotColor: AppColors.primaryColor,
+            dotColor: Colors.grey.shade300,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildImage(String imageUrl) {
+    if (imageUrl.toLowerCase().endsWith(".svg")) {
+      return SvgPicture.network(
+        imageUrl,
+        fit: BoxFit.fill,
+        placeholderBuilder: (_) => _loader(),
+      );
+    }
+    return Image.network(
+      imageUrl,
+      fit: BoxFit.fill,
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return _loader();
+      },
+      errorBuilder: (_, __, ___) =>
+          const Icon(Icons.broken_image, color: Colors.grey),
+    );
+  }
+
+  Widget _loader() => const Center(
+        child: SizedBox(
+          width: 20,
+          height: 20,
+          child: CircularProgressIndicator(strokeWidth: 2),
+        ),
+      );
 }

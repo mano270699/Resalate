@@ -19,6 +19,7 @@ import '../../src/lessons/logic/lesson_viewmodel.dart';
 import '../../src/live_feed/data/repository/live_feed_repository.dart';
 import '../../src/live_feed/logic/live_feed_viewmodel.dart';
 import '../../src/my_mosque/data/repository/masjed_repository.dart';
+import '../../src/my_mosque/logic/announcement_viewmodel.dart';
 import '../../src/my_mosque/logic/masjed_view_model.dart';
 import '../../src/nearest_mosque/data/repository/nearby_masjeds_repository.dart';
 import '../../src/nearest_mosque/logic/nearby_masjeds_view_model.dart';
@@ -81,6 +82,7 @@ Future<void> init() async {
   sl.registerFactory(() => AuthViewModel(authRepositoryImpl: sl()));
   sl.registerFactory(() => HomeViewModel(sl()));
   sl.registerFactory(() => MasjedViewModel(sl()));
+  sl.registerFactory(() => AnnouncementViewModel(sl()));
   sl.registerFactory(() => ProfileViewModel(sl()));
   sl.registerFactory(() => NotificationViewModel(sl()));
   sl.registerFactory(() => MasjedToMasjedViewModel(sl()));

@@ -11,6 +11,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../core/blocs/generic_cubit/generic_cubit.dart';
 import '../../../core/common/models/failure.dart';
+import '../data/models/announcement_model.dart';
 import '../data/models/follow_masjed_model.dart';
 import '../data/models/location_model.dart';
 import '../data/models/masjed_details_model.dart';
@@ -162,6 +163,8 @@ class MasjedViewModel {
           controllerCubit.onUpdateData(controller);
           isUserFollowMasjed.onUpdateData(res.masjid!.isFollowing ?? false);
           masjedDetailsRes.onUpdateData(res);
+          // Fetch announcements for this mosque
+          getAnnouncements(userId: res.masjid!.id ?? 0);
         },
       );
     } on Failure catch (e, s) {
@@ -173,6 +176,31 @@ class MasjedViewModel {
   GenericCubit<WebViewController> controllerCubit =
       GenericCubit(WebViewController());
   late final WebViewController controller;
+
+  // ==================== ANNOUNCEMENTS ====================
+
+  GenericCubit<AnnouncementsResponse> announcementsRes =
+      GenericCubit(AnnouncementsResponse());
+
+  Future<void> getAnnouncements({required int userId}) async {
+    announcementsRes.onLoadingState();
+    try {
+      Either<String, AnnouncementsResponse> response =
+          await masjidRepositoryImpl.getAnnouncements(userId: userId);
+
+      response.fold(
+        (failure) {
+          announcementsRes.onErrorState(Failure(failure));
+        },
+        (res) async {
+          announcementsRes.onUpdateData(res);
+        },
+      );
+    } on Failure catch (e, s) {
+      debugPrint("getAnnouncements Error: $s");
+      announcementsRes.onErrorState(Failure('$e'));
+    }
+  }
 
   GenericCubit<FollowMasjedResponse> followActionRes =
       GenericCubit(FollowMasjedResponse());

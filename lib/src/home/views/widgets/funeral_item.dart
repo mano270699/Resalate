@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/util/localization/app_localizations.dart';
 import '../../data/models/funerial_model.dart';
 
 class FuneralItem extends StatelessWidget {
@@ -74,23 +75,53 @@ class FuneralItem extends StatelessWidget {
                   children: [
                     Text(
                       post.title ?? '',
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
+                      textDirection:
+                          AppLocalizations.of(context)!.locale.languageCode ==
+                                      'en' ||
+                                  AppLocalizations.of(context)!
+                                          .locale
+                                          .languageCode ==
+                                      'sv'
+                              ? TextDirection.ltr
+                              : TextDirection.rtl,
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87),
                     ),
                     SizedBox(height: 4),
-                    Text(
-                      post.excerpt ?? '',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 14, color: Colors.black54),
+                    SizedBox(
+                      height: 35.h,
+                      child: Text(
+                        "${post.excerpt}",
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        textDirection:
+                            AppLocalizations.of(context)!.locale.languageCode ==
+                                        'en' ||
+                                    AppLocalizations.of(context)!
+                                            .locale
+                                            .languageCode ==
+                                        'sv'
+                                ? TextDirection.ltr
+                                : TextDirection.rtl,
+                        style: TextStyle(fontSize: 14, color: Colors.black54),
+                      ),
                     ),
                     SizedBox(height: 6),
                     Text(
                       post.date ?? '',
+                      textDirection:
+                          AppLocalizations.of(context)!.locale.languageCode ==
+                                      'en' ||
+                                  AppLocalizations.of(context)!
+                                          .locale
+                                          .languageCode ==
+                                      'sv'
+                              ? TextDirection.ltr
+                              : TextDirection.rtl,
                       style: TextStyle(fontSize: 12, color: Colors.blueGrey),
                     ),
                   ],
@@ -109,8 +140,8 @@ class FuneralItem extends StatelessWidget {
                       ClipOval(
                         child: CachedNetworkImage(
                           imageUrl: post.masjid!.photo ?? '',
-                          height: 20,
-                          width: 20,
+                          height: 20.h,
+                          width: 20.w,
                           fit: BoxFit.cover,
                           placeholder: (ctx, _) => Container(
                               color: Colors.grey[300], height: 20, width: 20),
@@ -130,7 +161,7 @@ class FuneralItem extends StatelessWidget {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                  fontSize: 10,
+                                  fontSize: 12.sp,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black87),
                             ),
@@ -139,7 +170,7 @@ class FuneralItem extends StatelessWidget {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                  fontSize: 10, color: Colors.black54),
+                                  fontSize: 12.sp, color: Colors.black54),
                             ),
                           ],
                         ),

@@ -13,6 +13,7 @@
   "donate_now": "Donera nu",
   "live_feed": "Direktsändning",
   "sponsors": "Sponsorer",
+  "partners": "Partners",
   "resalty_in_numbers": "Resalty i siffror",
   "nearest_mosques": "Närmaste moskéer",
   "direction": "Vägbeskrivning",
@@ -20,7 +21,10 @@
   "do_not_have_account": "Har du inget konto?",
   "user_name": "Användarnamn",
   "password": "Lösenord",
+  "learn_more": "Läs mer",
+  "cancel": "Avbryt",
   "confirm_password": "Bekräfta lösenord",
+  "confirm": "Bekräfta",
   "name": "Namn",
   "email": "E-post",
   "phone": "Telefonnummer",
@@ -106,7 +110,16 @@
   "Location_permissions_are_permanently_denied": "Platsbehörigheter är permanent nekade",
   "An_error_occurred_while_fetching_nearby_mosques": "Ett fel uppstod vid hämtning av närliggande moskéer.",
   "Could_not_get_location": "Kunde inte hämta plats. Tillåt platsåtkomst för att hitta närliggande moskéer.",
-  "Select_Language": "Välj språk"
+  "Select_Language": "Välj språk",
+  "directions": "riktning",
+  "change_password": "Ändra lösenord",
+  "old_password": "Gammalt lösenord",
+  "new_password": "Nytt lösenord",
+  "success": "Framgång",
+  "error": "Fel",
+  "annoncements": "Meddelanden",
+  "announcement": "Meddelande",
+  "announcement_details": "Meddelandedetaljer",
+  "read_more": "Läs mer",
+  "details": "Detaljer"
 }
-
-

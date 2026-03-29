@@ -157,8 +157,8 @@ class _LessonDetailsScreenState extends State<LessonDetailsScreen> {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                  color:
-                                      AppColors.primaryColor.withValues(alpha: 0.3),
+                                  color: AppColors.primaryColor
+                                      .withValues(alpha: 0.3),
                                   width: 2,
                                 ),
                               ),
@@ -178,6 +178,11 @@ class _LessonDetailsScreenState extends State<LessonDetailsScreen> {
                                   AppText(
                                     text: state.data.lesson?.masjid?.name ?? "",
                                     model: AppTextModel(
+                                      textDirection:
+                                          _locale.languageCode == 'en' ||
+                                                  _locale.languageCode == 'sv'
+                                              ? TextDirection.ltr
+                                              : TextDirection.rtl,
                                       style: AppFontStyleGlobal(_locale)
                                           .headingMedium2
                                           .copyWith(
@@ -220,6 +225,10 @@ class _LessonDetailsScreenState extends State<LessonDetailsScreen> {
                       AppText(
                         text: state.data.lesson?.title ?? "",
                         model: AppTextModel(
+                          textDirection: _locale.languageCode == 'en' ||
+                                  _locale.languageCode == 'sv'
+                              ? TextDirection.ltr
+                              : TextDirection.rtl,
                           style: AppFontStyleGlobal(_locale)
                               .headingMedium2
                               .copyWith(
@@ -244,7 +253,8 @@ class _LessonDetailsScreenState extends State<LessonDetailsScreen> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 12.w, vertical: 6.h),
                               decoration: BoxDecoration(
-                                color: AppColors.primaryColor.withValues(alpha: 0.08),
+                                color: AppColors.primaryColor
+                                    .withValues(alpha: 0.08),
                                 borderRadius: BorderRadius.circular(20.r),
                               ),
                               child: Row(
@@ -274,8 +284,8 @@ class _LessonDetailsScreenState extends State<LessonDetailsScreen> {
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 10.w, vertical: 5.h),
                                 decoration: BoxDecoration(
-                                  color:
-                                      AppColors.scondaryColor.withValues(alpha: 0.08),
+                                  color: AppColors.scondaryColor
+                                      .withValues(alpha: 0.08),
                                   borderRadius: BorderRadius.circular(20.r),
                                   border: Border.all(
                                     color: AppColors.scondaryColor
@@ -329,6 +339,10 @@ class _LessonDetailsScreenState extends State<LessonDetailsScreen> {
                           data: state.data.lesson?.content ?? "",
                           style: {
                             "body": Style(
+                              direction: _locale.languageCode == 'en' ||
+                                      _locale.languageCode == 'sv'
+                                  ? TextDirection.ltr
+                                  : TextDirection.rtl,
                               fontSize: FontSize(14.sp),
                               color: AppColors.lightBlack,
                               lineHeight: LineHeight(1.6),

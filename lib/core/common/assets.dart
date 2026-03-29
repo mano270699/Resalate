@@ -5,4 +5,5 @@ class Assets {
   static const String apple = 'assets/images/apple.png';
   static const String googleImage = 'assets/images/google.webp';
   static const String bank = 'assets/images/bank.png';
+  static const String placeholderImage = 'assets/images/placeholder.png';
 }

@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:resalate/core/push_notification/notification_helper.dart';
+import 'package:resalate/src/donation/view/donation_details_screen.dart';
+import 'package:resalate/src/funerals/view/funerals_details_screen.dart';
+import 'package:resalate/src/from_mosque_to_mosque/views/from_mosque_to_mosque_details_screen.dart';
+import 'package:resalate/src/lessons/view/lesson_details_screen.dart';
+import 'package:resalate/src/live_feed/view/live_feed_details_screen.dart';
 
 import '../../data/models/notification_model.dart';
 
@@ -35,9 +40,50 @@ class NotificationItem extends StatelessWidget {
     }
   }
 
-  void _openUrl(String? url) async {
-    if (url != null && url != "false" && await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+  void _handleNotificationTap(BuildContext context) {
+    final postId = notification.postId;
+    final postType = notification.postType;
+
+    if (postId == null || postType == null) {
+      debugPrint(
+          "❌ Notification tap skipped. Missing postId or postType: ${notification.toJson()}");
+      return;
+    }
+
+    NotificationHelper.isFromNotifiction = true;
+
+    if (postType == "donations") {
+      Navigator.pushNamed(
+        context,
+        DonationDetailsScreen.routeName,
+        arguments: {"id": postId},
+      );
+    } else if (postType == "masjid-to-masjid") {
+      Navigator.pushNamed(
+        context,
+        FromMosqueToMosqueDetailsScreen.routeName,
+        arguments: {"id": postId},
+      );
+    } else if (postType == "funerals") {
+      Navigator.pushNamed(
+        context,
+        FuneralsDetailsScreen.routeName,
+        arguments: {"id": postId},
+      );
+    } else if (postType == "lessons") {
+      Navigator.pushNamed(
+        context,
+        LessonDetailsScreen.routeName,
+        arguments: {"id": postId},
+      );
+    } else if (postType == "live-feed") {
+      Navigator.pushNamed(
+        context,
+        LiveFeedDetailsScreen.routeName,
+        arguments: {"id": postId},
+      );
+    } else {
+      debugPrint("❌ Unsupported notification post type: $postType");
     }
   }
 
@@ -46,11 +92,10 @@ class NotificationItem extends StatelessWidget {
     final seen = notification.seen ?? false;
     final title = notification.title ?? "";
     final postType = notification.postType;
-    final url = notification.postUrl;
     final createdAt = notification.createdAt;
 
     return InkWell(
-      onTap: () => _openUrl(url),
+      onTap: () => _handleNotificationTap(context),
       child: Container(
         padding: const EdgeInsets.all(12),
         margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),

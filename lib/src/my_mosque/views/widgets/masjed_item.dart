@@ -9,6 +9,7 @@ import 'package:resalate/core/common/app_font_style/app_font_style_global.dart';
 import 'package:resalate/core/shared_components/app_snack_bar/app_snack_bar.dart';
 import 'package:resalate/core/shared_components/app_text/app_text.dart';
 import 'package:resalate/core/shared_components/app_text/models/app_text_model.dart';
+import 'package:resalate/core/shared_components/app_cached_network_image.dart';
 import 'package:resalate/core/util/localization/app_localizations.dart';
 import 'package:resalate/src/my_mosque/data/models/masjed_list_model.dart';
 import 'package:resalate/src/my_mosque/data/models/follow_masjed_model.dart';
@@ -117,8 +118,8 @@ class _MasjidItemState extends State<MasjidItem> {
               alignment: Alignment.center,
               fit: StackFit.passthrough,
               children: [
-                Image.network(
-                  widget.masjid.cover ??
+                AppCachedNetworkImage(
+                  image: widget.masjid.cover ??
                       "https://praysalat.com/assets/images/placeholder-2.jpg",
                   height: 150,
                   width: double.infinity,
@@ -226,6 +227,7 @@ class _MasjidItemState extends State<MasjidItem> {
 
                           return InkWell(
                             onTap: () {
+                              debugPrint("isFollowing::$isFollowing");
                               if (isFollowing) {
                                 widget.viewModel.unfollowMasjed(context,
                                     masjedId: widget.masjid.id ?? 0);
@@ -331,7 +333,8 @@ class _MasjidItemState extends State<MasjidItem> {
                                         size: 18.sp),
                                     SizedBox(width: 4.w),
                                     Text(
-                                      'Directions',
+                                      AppLocalizations.of(context)!
+                                          .translate("directions"),
                                       style: TextStyle(
                                         color: AppColors.primaryColor,
                                         fontSize: 12.sp,

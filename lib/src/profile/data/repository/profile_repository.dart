@@ -40,6 +40,10 @@ abstract class ProfileRepository {
   });
   Future<Either<String, DefaultModel>> logout();
   Future<Either<String, DefaultModel>> deleteAccount();
+  Future<Either<String, DefaultModel>> changePassword(
+      {required String oldPassword,
+      required String newPassword,
+      required String confirmPassword});
 }
 
 class ProfileRepositoryImpl extends ProfileRepository {
@@ -199,6 +203,33 @@ class ProfileRepositoryImpl extends ProfileRepository {
       final response = await _networkService.post(
         "logout?lang=${localizationCacheHelper.getLanguageCode()}",
         {},
+        headers: {
+          "Authorization": "Bearer ${await TokenUtil.getTokenFromMemory()}"
+        },
+      );
+      DefaultModel res = DefaultModel.fromJson(response.data);
+      return Right(res);
+    } catch (e, t) {
+      debugPrint("error:$e-- trace $t");
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, DefaultModel>> changePassword(
+      {required String oldPassword,
+      required String newPassword,
+      required String confirmPassword}) async {
+    try {
+      LocalizationCacheHelper localizationCacheHelper =
+          LocalizationCacheHelper();
+      final response = await _networkService.post(
+        "change-password?lang=${localizationCacheHelper.getLanguageCode()}",
+        {
+          "old_password": oldPassword,
+          "new_password": newPassword,
+          "confirm_password": confirmPassword
+        },
         headers: {
           "Authorization": "Bearer ${await TokenUtil.getTokenFromMemory()}"
         },

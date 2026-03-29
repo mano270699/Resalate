@@ -106,9 +106,10 @@ class AuthViewModel {
             registerResponse.onErrorState(Failure(failure));
           },
           (user) async {
-            await authRepositoryImpl.updateFCMToken();
             TokenUtil.saveToken(user.token ?? "");
             UserIdUtil.saveUserId(user.user!.id.toString());
+
+            await authRepositoryImpl.updateFCMToken();
             registerResponse.onUpdateData(user);
 
             password.clear();
@@ -153,11 +154,11 @@ class AuthViewModel {
             loginResponse.onErrorState(Failure(failure));
           },
           (user) async {
-            await authRepositoryImpl.updateFCMToken();
             TokenUtil.saveToken(user.token ?? "");
             UserIdUtil.saveUserId(user.user!.id.toString());
             userNameEmail.clear();
             loginPassword.clear();
+            await authRepositoryImpl.updateFCMToken();
             loginResponse.onUpdateData(user);
           },
         );

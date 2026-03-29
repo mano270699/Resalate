@@ -66,9 +66,13 @@ class PartenerSection extends StatelessWidget {
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
                               textDirection: AppLocalizations.of(context)!
-                                          .locale
-                                          .languageCode ==
-                                      'en'
+                                              .locale
+                                              .languageCode ==
+                                          'en' ||
+                                      AppLocalizations.of(context)!
+                                              .locale
+                                              .languageCode ==
+                                          'sv'
                                   ? TextDirection.ltr
                                   : TextDirection.rtl,
                               style: AppFontStyleGlobal(
@@ -107,7 +111,8 @@ class PartenerSection extends StatelessWidget {
                   width: double.infinity,
                   child: Center(
                     child: AppText(
-                      text: "learn more",
+                      text:
+                          AppLocalizations.of(context)!.translate("learn_more"),
                       model: AppTextModel(
                           style: AppFontStyleGlobal(
                                   AppLocalizations.of(context)!.locale)

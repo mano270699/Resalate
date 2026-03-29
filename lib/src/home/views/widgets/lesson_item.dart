@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/util/localization/app_localizations.dart';
 import '../../data/models/lessons_model.dart';
 
 class LessonItem extends StatelessWidget {
@@ -17,18 +18,18 @@ class LessonItem extends StatelessWidget {
   Widget build(BuildContext context) {
     // Default text style to avoid repetition
     final TextStyle titleStyle = TextStyle(
-      fontSize: 16,
+      fontSize: 16.sp,
       fontWeight: FontWeight.bold,
       color: Colors.black87,
     );
 
     final TextStyle excerptStyle = TextStyle(
-      fontSize: 14,
+      fontSize: 14.sp,
       color: Colors.black54,
     );
 
     final TextStyle masjidStyle = TextStyle(
-      fontSize: 10,
+      fontSize: 12.sp,
       color: Colors.black54,
     );
 
@@ -78,23 +79,53 @@ class LessonItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      lesson.title ?? 'No Title',
-                      maxLines: 2,
+                      "${lesson.title}",
+                      maxLines: 1,
+                      textDirection:
+                          AppLocalizations.of(context)!.locale.languageCode ==
+                                      'en' ||
+                                  AppLocalizations.of(context)!
+                                          .locale
+                                          .languageCode ==
+                                      'sv'
+                              ? TextDirection.ltr
+                              : TextDirection.rtl,
                       overflow: TextOverflow.ellipsis,
                       style: titleStyle,
                     ),
                     SizedBox(height: 4),
-                    Text(
-                      lesson.excerpt ?? 'No Excerpt Available',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: excerptStyle,
+                    SizedBox(
+                      height: 35.h,
+                      child: Text(
+                        "${lesson.excerpt}",
+                        maxLines: 2,
+                        textDirection:
+                            AppLocalizations.of(context)!.locale.languageCode ==
+                                        'en' ||
+                                    AppLocalizations.of(context)!
+                                            .locale
+                                            .languageCode ==
+                                        'sv'
+                                ? TextDirection.ltr
+                                : TextDirection.rtl,
+                        overflow: TextOverflow.ellipsis,
+                        style: excerptStyle,
+                      ),
                     ),
                     SizedBox(height: 6),
                     if (lesson.categories != null &&
                         lesson.categories!.isNotEmpty)
                       Text(
                         lesson.categories!.map((c) => c.name).join(", "),
+                        textDirection:
+                            AppLocalizations.of(context)!.locale.languageCode ==
+                                        'en' ||
+                                    AppLocalizations.of(context)!
+                                            .locale
+                                            .languageCode ==
+                                        'sv'
+                                ? TextDirection.ltr
+                                : TextDirection.rtl,
                         style: TextStyle(fontSize: 12, color: Colors.blueGrey),
                       ),
                   ],
@@ -116,8 +147,8 @@ class LessonItem extends StatelessWidget {
                         ClipOval(
                           child: CachedNetworkImage(
                             imageUrl: lesson.masjid!.photo!,
-                            height: 20,
-                            width: 20,
+                            height: 22.h,
+                            width: 22.w,
                             fit: BoxFit.cover,
                             placeholder: (ctx, _) => Container(
                                 color: Colors.grey[300], height: 20, width: 20),
@@ -142,12 +173,32 @@ class LessonItem extends StatelessWidget {
                             Text(
                               lesson.masjid!.name ?? 'No Masjid Name',
                               maxLines: 1,
+                              textDirection: AppLocalizations.of(context)!
+                                              .locale
+                                              .languageCode ==
+                                          'en' ||
+                                      AppLocalizations.of(context)!
+                                              .locale
+                                              .languageCode ==
+                                          'sv'
+                                  ? TextDirection.ltr
+                                  : TextDirection.rtl,
                               overflow: TextOverflow.ellipsis,
-                              style: titleStyle.copyWith(fontSize: 10),
+                              style: titleStyle.copyWith(fontSize: 12.sp),
                             ),
                             Text(
                               lesson.masjid!.email ?? 'No Email Available',
                               maxLines: 1,
+                              textDirection: AppLocalizations.of(context)!
+                                              .locale
+                                              .languageCode ==
+                                          'en' ||
+                                      AppLocalizations.of(context)!
+                                              .locale
+                                              .languageCode ==
+                                          'sv'
+                                  ? TextDirection.ltr
+                                  : TextDirection.rtl,
                               overflow: TextOverflow.ellipsis,
                               style: masjidStyle,
                             ),

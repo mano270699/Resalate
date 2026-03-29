@@ -5,7 +5,7 @@ import '../../base/app_font_style.dart';
 
 class AppFontStyleEn extends AppFontStyle {
   @override
-  String get fontFamily => 'Nunito';
+  String get fontFamily => 'Tajawal';
   double get height => 1.2;
   @override
   TextStyle get heading1 => TextStyle(

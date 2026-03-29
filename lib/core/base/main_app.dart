@@ -7,6 +7,7 @@ import 'package:resalate/src/splash_screen/view/splash_screen.dart';
 
 // import '../../src/main_screen/view/main_screen.dart';
 import '../common/app_colors/app_colors.dart';
+import '../push_notification/notification_helper.dart';
 import '../util/environment/environment.dart';
 import '../util/localization/app_localizations.dart';
 import '../util/localization/cubit/localization_cubit.dart';
@@ -21,6 +22,12 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
+  @override
+  void initState() {
+    super.initState();
+    NotificationHelper.handleInitialMessage();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -43,12 +50,12 @@ class _MainAppState extends State<MainApp> {
                     builder: DevicePreview.appBuilder,
                     title: 'Resalate',
                     theme: ThemeData(
-                      fontFamily: "Noto Sans Arabic",
-                      fontFamilyFallback: ["Noto Sans Arabic"],
+                      fontFamily: "Tajawal",
+                      fontFamilyFallback: ["Tajawal"],
                       scaffoldBackgroundColor:
                           AppColors.scaffoldBackgroundColor,
                       appBarTheme: const AppBarTheme(
-                        color: AppColors.appBar,
+                        backgroundColor: AppColors.appBar,
                         elevation: 0,
                       ),
                       progressIndicatorTheme: const ProgressIndicatorThemeData(

@@ -23,6 +23,7 @@ import '../../../core/util/loading.dart';
 import '../../../core/util/localization/app_localizations.dart';
 import '../data/models/update_user_data.dart';
 import '../logic/profile_view_model.dart';
+import 'widgets/change_password_dialog.dart';
 import 'widgets/image_pic_bootomsheet.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -310,12 +311,43 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               20.h.verticalSpace,
                               Padding(
                                 padding: EdgeInsetsDirectional.only(
-                                    bottom: 14, start: 16.w, end: 16.w),
+                                  bottom: 14,
+                                ),
+                                child: AppButton(
+                                  model: AppButtonModel(
+                                      child: AppText(
+                                        text: AppLocalizations.of(context)!
+                                            .translate('edit_profile'),
+                                        model: AppTextModel(
+                                            style: AppFontStyleGlobal(
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .locale)
+                                                .label
+                                                .copyWith(
+                                                    color: AppColors.white)),
+                                      ),
+                                      decoration:
+                                          ComponentStyle.buttonDecoration,
+                                      buttonStyle: ButtonStyle(
+                                        fixedSize: WidgetStateProperty.all(
+                                          Size(345.w, 45.h),
+                                        ),
+                                      )),
+                                  onPressed: () {
+                                    widget.viewModel.updateProfile(context);
+                                  },
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.only(
+                                  bottom: 14,
+                                ),
                                 child: AppButton(
                                   model: AppButtonModel(
                                     child: AppText(
                                       text: AppLocalizations.of(context)!
-                                          .translate('edit_profile'),
+                                          .translate('change_password'),
                                       model: AppTextModel(
                                           style: AppFontStyleGlobal(
                                                   AppLocalizations.of(context)!
@@ -325,10 +357,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                   color: AppColors.white)),
                                     ),
                                     decoration: ComponentStyle.buttonDecoration,
-                                    buttonStyle: ComponentStyle.buttonStyle,
+                                    buttonStyle: ButtonStyle(
+                                      fixedSize: WidgetStateProperty.all(
+                                        Size(345.w, 45.h),
+                                      ),
+                                    ),
                                   ),
                                   onPressed: () {
-                                    widget.viewModel.updateProfile(context);
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) =>
+                                          ChangePasswordDialog(
+                                        viewModel: widget.viewModel,
+                                      ),
+                                    );
                                   },
                                 ),
                               ),

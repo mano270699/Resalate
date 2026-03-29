@@ -125,6 +125,13 @@ class NotificationHelper {
       );
       debugPrint(
           "📲 iOS Notification Permission: ${settings.authorizationStatus}");
+
+      await FirebaseMessaging.instance
+          .setForegroundNotificationPresentationOptions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
     }
 
     // --- Wait for APNs token ---
@@ -262,8 +269,16 @@ class NotificationHelper {
       sound: RawResourceAndroidNotificationSound(
           'notification'), // Ensure 'notification.mp3' etc. is in android/app/src/main/res/raw
     );
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
+    const DarwinNotificationDetails iosPlatformChannelSpecifics =
+        DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+    );
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: iosPlatformChannelSpecifics,
+    );
     await fln.show(
         DateTime.now().millisecondsSinceEpoch.toUnsigned(30), // Use unique ID
         title,
@@ -299,8 +314,16 @@ class NotificationHelper {
       playSound: true,
       sound: const RawResourceAndroidNotificationSound('notification'),
     );
-    NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
+    const DarwinNotificationDetails iosPlatformChannelSpecifics =
+        DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+    );
+    NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: iosPlatformChannelSpecifics,
+    );
     await fln.show(
         DateTime.now().millisecondsSinceEpoch.toUnsigned(31), // Use unique ID
         title,
@@ -365,8 +388,17 @@ class NotificationHelper {
       importance: Importance.max,
       sound: const RawResourceAndroidNotificationSound('notification'),
     );
-    final NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
+    const DarwinNotificationDetails iosPlatformChannelSpecifics =
+        DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+      attachments: <DarwinNotificationAttachment>[],
+    );
+    final NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: iosPlatformChannelSpecifics,
+    );
     await fln.show(
         DateTime.now().millisecondsSinceEpoch.toUnsigned(31), // Use unique ID
         title,
@@ -438,7 +470,14 @@ class NotificationHelper {
 
   // --- Fixed and safer conversion ---
   static NotificationBody convertNotification(Map<String, dynamic> data) {
+    int? parsedId;
+    if (data['id'] != null) {
+      parsedId = int.tryParse(data['id'].toString());
+    }
+
     return NotificationBody(
-        id: int.parse(data['id'].toString()), type: data['type']);
+      id: parsedId,
+      type: data['type']?.toString() ?? data['post_type']?.toString(),
+    );
   }
 }

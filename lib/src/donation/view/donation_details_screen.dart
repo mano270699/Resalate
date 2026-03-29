@@ -169,6 +169,15 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
                     AppText(
                       text: data?.title ?? "",
                       model: AppTextModel(
+                        textDirection:
+                            AppLocalizations.of(context)!.locale.languageCode ==
+                                        'en' ||
+                                    AppLocalizations.of(context)!
+                                            .locale
+                                            .languageCode ==
+                                        'sv'
+                                ? TextDirection.ltr
+                                : TextDirection.rtl,
                         style:
                             AppFontStyleGlobal(_locale).headingMedium2.copyWith(
                                   fontSize: 22.sp,
@@ -197,6 +206,16 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
                             SizedBox(width: 6.w),
                             Text(
                               data!.date!,
+                              textDirection: AppLocalizations.of(context)!
+                                              .locale
+                                              .languageCode ==
+                                          'en' ||
+                                      AppLocalizations.of(context)!
+                                              .locale
+                                              .languageCode ==
+                                          'sv'
+                                  ? TextDirection.ltr
+                                  : TextDirection.rtl,
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w600,
@@ -220,6 +239,15 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
                       text: data?.content?.replaceAll(RegExp(r"<[^>]*>"), "") ??
                           "",
                       model: AppTextModel(
+                        textDirection:
+                            AppLocalizations.of(context)!.locale.languageCode ==
+                                        'en' ||
+                                    AppLocalizations.of(context)!
+                                            .locale
+                                            .languageCode ==
+                                        'sv'
+                                ? TextDirection.ltr
+                                : TextDirection.rtl,
                         style: AppFontStyleGlobal(_locale).bodyMedium1.copyWith(
                               fontSize: 15.sp,
                               height: 1.6,
@@ -419,6 +447,15 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
                     AppText(
                       text: masjid.name ?? "",
                       model: AppTextModel(
+                        textDirection:
+                            AppLocalizations.of(context)!.locale.languageCode ==
+                                        'en' ||
+                                    AppLocalizations.of(context)!
+                                            .locale
+                                            .languageCode ==
+                                        'sv'
+                                ? TextDirection.ltr
+                                : TextDirection.rtl,
                         style:
                             AppFontStyleGlobal(_locale).headingMedium2.copyWith(
                                   fontSize: 17.sp,
@@ -466,6 +503,14 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
               child: AppText(
                 text: _tr("payment_options"),
                 model: AppTextModel(
+                  textDirection: AppLocalizations.of(context)!
+                                  .locale
+                                  .languageCode ==
+                              'en' ||
+                          AppLocalizations.of(context)!.locale.languageCode ==
+                              'sv'
+                      ? TextDirection.ltr
+                      : TextDirection.rtl,
                   style: AppFontStyleGlobal(_locale).subTitle2.copyWith(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.w700,

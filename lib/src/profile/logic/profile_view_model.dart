@@ -90,6 +90,17 @@ class ProfileViewModel {
   GenericCubit<String> contactPhoneValidation = GenericCubit('');
   GenericCubit<String> contactSubjectValidation = GenericCubit('');
   GenericCubit<String> contactMessageValidation = GenericCubit('');
+
+  TextEditingController oldPassword = TextEditingController();
+  TextEditingController newPassword = TextEditingController();
+  TextEditingController confirmPassword = TextEditingController();
+
+  GenericCubit<String> oldPasswordValidation = GenericCubit('');
+  GenericCubit<String> newPasswordValidation = GenericCubit('');
+  GenericCubit<String> confirmPasswordValidation = GenericCubit('');
+
+  GenericCubit<DefaultModel> changePasswordRes = GenericCubit(DefaultModel());
+
   setProfileData(User user) {
     name.text = user.name ?? "";
     phone.text = user.phone ?? "";
@@ -339,6 +350,56 @@ class ProfileViewModel {
     } on Failure catch (e, s) {
       debugPrint("lllllllllllll:$s");
       profileAction.onErrorState(Failure('$e'));
+    }
+  }
+
+  Future<void> changePassword({
+    required BuildContext context,
+  }) async {
+    oldPasswordValidation
+        .onUpdateData(Validation.fieldRequiredValidation(oldPassword.text));
+    newPasswordValidation
+        .onUpdateData(Validation.passwordValidation(newPassword.text));
+    confirmPasswordValidation.onUpdateData(
+        Validation.passwordConfirmationValidation(confirmPassword.text,
+            passWord: newPassword.text));
+
+    if ((oldPasswordValidation.state.data.isEmpty) &&
+        (newPasswordValidation.state.data.isEmpty) &&
+        (confirmPasswordValidation.state.data.isEmpty)) {
+      try {
+        changePasswordRes.onLoadingState();
+        Either<String, DefaultModel> response =
+            await profileRepositoryImpl.changePassword(
+          oldPassword: oldPassword.text,
+          newPassword: newPassword.text,
+          confirmPassword: confirmPassword.text,
+        );
+
+        response.fold(
+          (failure) {
+            debugPrint("failure::$failure");
+            changePasswordRes.onErrorState(Failure(failure));
+          },
+          (res) async {
+            changePasswordRes.onUpdateData(res);
+
+            oldPassword.clear();
+            newPassword.clear();
+            confirmPassword.clear();
+
+            Navigator.pop(context);
+          },
+        );
+      } on Failure catch (e, s) {
+        debugPrint("lllllllllllll:$s");
+        changePasswordRes.onErrorState(Failure('$e'));
+      }
+    } else {
+      if (kDebugMode) {
+        print("in Loading state");
+      }
+      return;
     }
   }
 }

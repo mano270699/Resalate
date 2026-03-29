@@ -33,7 +33,7 @@ class AppTextFieldModel {
   AppTextFieldModel({
     this.onFieldSubmitted,
     required this.keyboardType,
-    this.maxLines,
+    this.maxLines = 1,
     this.minLines = 1,
     this.obscureInputText = false,
     this.onChangeInput,

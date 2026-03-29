@@ -100,7 +100,7 @@ class _DonationListScreenState extends State<DonationListScreen> {
                       image: "", // skeletonizes
                       desc: "Loading description",
                       total: "0",
-                      remaining: "0",
+                      paid: "0",
                       currency: "USD",
                     );
                   }
@@ -131,7 +131,7 @@ class _DonationListScreenState extends State<DonationListScreen> {
                     image: post.image ?? "",
                     desc: post.excerpt ?? "",
                     total: post.donation?.total.toString() ?? "",
-                    remaining: post.donation?.paid.toString() ?? "",
+                    paid: post.donation?.paid.toString() ?? "",
                     currency: post.donation?.currency.toString() ?? "",
                   );
                 },

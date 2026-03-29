@@ -6,6 +6,7 @@ import 'package:resalate/core/common/app_icon_svg.dart';
 
 import '../../../../core/common/app_colors/app_colors.dart';
 import '../../../../core/common/app_font_style/app_font_style_global.dart';
+import '../../../../core/shared_components/app_cached_network_image.dart';
 import '../../../../core/shared_components/app_text/app_text.dart';
 import '../../../../core/shared_components/app_text/models/app_text_model.dart';
 import '../../../../core/util/localization/app_localizations.dart';
@@ -19,215 +20,267 @@ class DonationItem extends StatelessWidget {
       required this.desc,
       required this.percentage,
       required this.total,
-      required this.remaining,
+      required this.paid,
       required this.currency});
+
   final String image;
   final String title;
   final String desc;
   final String percentage;
   final String total;
-  final String remaining;
+  final String paid;
   final String currency;
   final void Function()? onTap;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsetsDirectional.only(start: 10.w),
-      child: Container(
-        height: 342.h,
-        width: MediaQuery.of(context).size.width - 70.w,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10), color: AppColors.white),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                  borderRadius: const BorderRadius.only(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            height: 400.h,
+            width: MediaQuery.of(context).size.width - 40.w,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: AppColors.white,
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10)),
-                  child: SizedBox(
+                      topRight: Radius.circular(10),
+                    ),
+                    child: SizedBox(
                       height: 125.h,
                       width: MediaQuery.of(context).size.width,
                       child: image.isNotEmpty
-                          ? Image.network(
-                              image,
+                          ? AppCachedNetworkImage(
+                              image: image,
                               fit: BoxFit.cover,
                             )
-                          : SvgPicture.asset(AppIconSvg.splashLogo))),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 30.h,
-                decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
+                          : SvgPicture.asset(AppIconSvg.splashLogo),
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 30.h,
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(10),
-                        bottomRight: Radius.circular(10)),
-                    color: Colors.amber.withValues(alpha: 0.2)),
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(10),
-                      bottomRight: Radius.circular(10)),
-                  child: LinearPercentIndicator(
-                    // barRadius: const Radius.circular(10),
-                    fillColor: AppColors.primaryColor.withValues(alpha: 0.5),
-                    lineHeight: 30.h,
-
-                    padding: EdgeInsets.zero,
-                    percent: double.parse((int.parse(percentage) / 100)
-                        .toString()), // 50% progress
-                    center: AppText(
-                      text: "$percentage%",
-                      model: AppTextModel(
-                          style: AppFontStyleGlobal(
-                                  AppLocalizations.of(context)!.locale)
-                              .label
-                              .copyWith(
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.white,
-                              )),
+                        bottomRight: Radius.circular(10),
+                      ),
+                      color: Colors.amber.withValues(alpha: 0.2),
                     ),
-
-                    progressColor: AppColors.primaryColor,
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10),
+                      ),
+                      child: LinearPercentIndicator(
+                        fillColor:
+                            AppColors.primaryColor.withValues(alpha: 0.5),
+                        lineHeight: 30.h,
+                        padding: EdgeInsets.zero,
+                        percent: double.parse(
+                            (int.parse(percentage) / 100).toString()),
+                        center: AppText(
+                          text: "$percentage%",
+                          model: AppTextModel(
+                            style: AppFontStyleGlobal(
+                                    AppLocalizations.of(context)!.locale)
+                                .label
+                                .copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.white,
+                                ),
+                          ),
+                        ),
+                        progressColor: AppColors.primaryColor,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              10.h.verticalSpace,
-              AppText(
-                text: title,
-                model: AppTextModel(
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style:
-                        AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                            .headingMedium2
-                            .copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.primaryColor,
-                            )),
-              ),
-              AppText(
-                text: desc,
-                model: AppTextModel(
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style:
-                        AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                            .headingMedium2
-                            .copyWith(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.gray,
-                            )),
-              ),
-              10.h.verticalSpace,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        AppText(
-                          text:
+                  10.h.verticalSpace,
+                  AppText(
+                    text: title,
+                    model: AppTextModel(
+                      textDirection:
+                          AppLocalizations.of(context)!.locale.languageCode ==
+                                      'en' ||
+                                  AppLocalizations.of(context)!
+                                          .locale
+                                          .languageCode ==
+                                      'sv'
+                              ? TextDirection.ltr
+                              : TextDirection.rtl,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppFontStyleGlobal(
+                              AppLocalizations.of(context)!.locale)
+                          .headingMedium2
+                          .copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primaryColor,
+                          ),
+                    ),
+                  ),
+                  AppText(
+                    text: desc,
+                    model: AppTextModel(
+                      textDirection:
+                          AppLocalizations.of(context)!.locale.languageCode ==
+                                      'en' ||
+                                  AppLocalizations.of(context)!
+                                          .locale
+                                          .languageCode ==
+                                      'sv'
+                              ? TextDirection.ltr
+                              : TextDirection.rtl,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppFontStyleGlobal(
+                              AppLocalizations.of(context)!.locale)
+                          .headingMedium2
+                          .copyWith(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.gray,
+                          ),
+                    ),
+                  ),
+                  10.h.verticalSpace,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _StatCard(
+                          icon: Icons.account_balance_wallet_rounded,
+                          iconColor: AppColors.primaryColor,
+                          label:
                               AppLocalizations.of(context)!.translate('total'),
-                          model: AppTextModel(
-                              textDirection: AppLocalizations.of(context)!
-                                          .locale
-                                          .languageCode ==
-                                      'en'
-                                  ? TextDirection.ltr
-                                  : TextDirection.rtl,
-                              style: AppFontStyleGlobal(
-                                      AppLocalizations.of(context)!.locale)
-                                  .subTitle1
-                                  .copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.primaryColor,
-                                  )),
+                          value: "${double.parse(total)} $currency",
                         ),
-                        AppText(
-                          text: " ${double.parse(total)} $currency",
-                          model: AppTextModel(
-                              style: AppFontStyleGlobal(
-                                      AppLocalizations.of(context)!.locale)
-                                  .smallTab
-                                  .copyWith(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.scondaryColor,
-                                  )),
+                      ),
+                      5.w.horizontalSpace,
+                      Expanded(
+                        child: _StatCard(
+                          icon: Icons.hourglass_bottom_rounded,
+                          iconColor: const Color(0xFFF57C00),
+                          label: AppLocalizations.of(context)!
+                              .translate('remaining'),
+                          value:
+                              "${(double.parse(total) - double.parse(paid))} $currency",
                         ),
-                      ],
-                    ),
+                      ),
+                      5.w.horizontalSpace,
+                      Expanded(
+                        child: _StatCard(
+                          icon: Icons.paid,
+                          iconColor: const Color(0xFF4CAF50),
+                          label:
+                              AppLocalizations.of(context)!.translate('paid'),
+                          value: "${double.parse(paid)} $currency",
+                        ),
+                      ),
+                    ],
                   ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        AppText(
-                          text: AppLocalizations.of(context)!.translate('paid'),
-                          model: AppTextModel(
-                              textDirection: AppLocalizations.of(context)!
-                                          .locale
-                                          .languageCode ==
-                                      'en'
-                                  ? TextDirection.ltr
-                                  : TextDirection.rtl,
-                              style: AppFontStyleGlobal(
-                                      AppLocalizations.of(context)!.locale)
-                                  .subTitle1
-                                  .copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.primaryColor,
-                                  )),
-                        ),
-                        AppText(
-                          text: " ${double.parse(remaining)} $currency",
-                          model: AppTextModel(
-                              style: AppFontStyleGlobal(
-                                      AppLocalizations.of(context)!.locale)
-                                  .smallTab
-                                  .copyWith(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.scondaryColor,
-                                  )),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              10.h.verticalSpace,
-              GestureDetector(
-                onTap: onTap,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w),
-                  decoration: BoxDecoration(
+                  const Spacer(),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10.w),
+                    decoration: BoxDecoration(
                       color: AppColors.scondaryColor,
-                      borderRadius: BorderRadius.circular(8)),
-                  height: 40.h,
-                  width: double.infinity,
-                  child: Center(
-                    child: AppText(
-                      text:
-                          AppLocalizations.of(context)!.translate('donate_now'),
-                      model: AppTextModel(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    height: 40.h,
+                    width: double.infinity,
+                    child: Center(
+                      child: AppText(
+                        text: AppLocalizations.of(context)!
+                            .translate('donate_now'),
+                        model: AppTextModel(
                           style: AppFontStyleGlobal(
                                   AppLocalizations.of(context)!.locale)
                               .subTitle2
                               .copyWith(
                                 fontWeight: FontWeight.w500,
                                 color: AppColors.white,
-                              )),
+                              ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              )
-            ],
+                ],
+              ),
+            ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _StatCard extends StatelessWidget {
+  final IconData icon;
+  final Color iconColor;
+  final String label;
+  final String value;
+
+  const _StatCard({
+    required this.icon,
+    required this.iconColor,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+      decoration: BoxDecoration(
+        color: iconColor.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: iconColor.withValues(alpha: 0.15), width: 1),
+      ),
+      child: Column(
+        children: [
+          Container(
+            width: 32.w,
+            height: 32.w,
+            decoration: BoxDecoration(
+              color: iconColor.withValues(alpha: 0.12),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: iconColor, size: 16.sp),
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 11.sp,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey.shade600,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 4.h),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 11.sp,
+              fontWeight: FontWeight.w700,
+              color: Colors.black87,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }

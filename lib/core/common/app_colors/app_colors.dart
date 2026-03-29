@@ -11,6 +11,7 @@ class AppColors {
   static const Color gray = Color(0xFFC0C0C0);
   static const Color error = Colors.red;
   static const Color success = Color(0xFF64D8E8);
+  static const Color lightGray = Color(0xFFF5F5F5);
   static const Color roundButton = Color(0xFF6B9FFA);
   static const Color scaffoldBackgroundColor = Color(0xFFECE9F9);
   static const Color appBar = Color(0xFFFFFFFF);

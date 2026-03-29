@@ -6,6 +6,7 @@ import 'package:resalate/src/my_mosque/data/models/countries_model.dart';
 import '../../../../core/util/localization/localization_cache_helper.dart';
 import '../../../../core/util/network_service.dart';
 
+import '../models/announcement_model.dart';
 import '../models/cities_model.dart';
 import '../models/follow_masjed_model.dart';
 import '../models/location_model.dart';
@@ -37,6 +38,10 @@ abstract class MasjidRepository {
     required int masjedId,
   });
   Future<Either<String, LocationsModels>> getLocations();
+  Future<Either<String, AnnouncementsResponse>> getAnnouncements(
+      {required int userId});
+  Future<Either<String, AnnouncementDetailsResponse>> getAnnouncementDetails(
+      {required int id});
 }
 
 class MasjidRepositoryImpl extends MasjidRepository {
@@ -185,6 +190,42 @@ class MasjidRepositoryImpl extends MasjidRepository {
       );
       ProvincesResponseModel res =
           ProvincesResponseModel.fromJson(response.data);
+      return Right(res);
+    } catch (e, t) {
+      debugPrint("error:$e-- trace $t");
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, AnnouncementsResponse>> getAnnouncements(
+      {required int userId}) async {
+    try {
+      LocalizationCacheHelper localizationCacheHelper =
+          LocalizationCacheHelper();
+      final response = await _networkService.get(
+        "announcements?lang=${localizationCacheHelper.getLanguageCode()}&user=$userId",
+      );
+      AnnouncementsResponse res =
+          AnnouncementsResponse.fromJson(response.data);
+      return Right(res);
+    } catch (e, t) {
+      debugPrint("error:$e-- trace $t");
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, AnnouncementDetailsResponse>> getAnnouncementDetails(
+      {required int id}) async {
+    try {
+      LocalizationCacheHelper localizationCacheHelper =
+          LocalizationCacheHelper();
+      final response = await _networkService.get(
+        "announcement/$id?lang=${localizationCacheHelper.getLanguageCode()}",
+      );
+      AnnouncementDetailsResponse res =
+          AnnouncementDetailsResponse.fromJson(response.data);
       return Right(res);
     } catch (e, t) {
       debugPrint("error:$e-- trace $t");
