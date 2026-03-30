@@ -781,6 +781,7 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                       controller: _tabController,
                       children: [
                         GridView.builder(
+                          shrinkWrap: true,
                           padding: EdgeInsets.all(12.w),
                           itemCount: state.data.posts?.donations?.length ?? 0,
                           gridDelegate:
@@ -796,6 +797,7 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                           ),
                         ),
                         GridView.builder(
+                          shrinkWrap: true,
                           padding: EdgeInsets.all(12.w),
                           itemCount:
                               state.data.posts?.masjidToMasjid?.length ?? 0,
@@ -818,6 +820,7 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
 
                         /// Funerals
                         GridView.builder(
+                          shrinkWrap: true,
                           padding: EdgeInsets.all(12.w),
                           itemCount: state.data.posts?.funerals?.length ?? 0,
                           gridDelegate:

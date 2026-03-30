@@ -45,7 +45,6 @@ class FromMasjedToMasjed extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
             children: [
               ClipRRect(
                   borderRadius: const BorderRadius.only(
@@ -58,37 +57,44 @@ class FromMasjedToMasjed extends StatelessWidget {
                         image: postItem.image ?? "",
                         fit: BoxFit.cover,
                       ))),
-              10.h.verticalSpace,
-              AppText(
-                text: postItem.title ?? "",
-                model: AppTextModel(
-                    textDirection: textDir,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppFontStyleGlobal(
-                            AppLocalizations.of(context)!.locale)
-                        .bodyLight1
-                        .copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.primaryColor,
-                        )),
+              8.h.verticalSpace,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppText(
+                      text: postItem.title ?? "",
+                      model: AppTextModel(
+                          textDirection: textDir,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppFontStyleGlobal(
+                                  AppLocalizations.of(context)!.locale)
+                              .bodyLight1
+                              .copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.primaryColor,
+                              )),
+                    ),
+                    6.h.verticalSpace,
+                    AppText(
+                      text: postItem.excerpt ?? "",
+                      model: AppTextModel(
+                          textDirection: textDir,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppFontStyleGlobal(
+                                  AppLocalizations.of(context)!.locale)
+                              .smallTab
+                              .copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.gray,
+                              )),
+                    ),
+                  ],
+                ),
               ),
-              10.h.verticalSpace,
-              AppText(
-                text: postItem.excerpt ?? "",
-                model: AppTextModel(
-                    textDirection: textDir,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppFontStyleGlobal(
-                            AppLocalizations.of(context)!.locale)
-                        .smallTab
-                        .copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.gray,
-                        )),
-              ),
-              10.h.verticalSpace,
+              8.h.verticalSpace,
               GestureDetector(
                 onTap: () {
                   openWhatsApp(whatsAppLink);
