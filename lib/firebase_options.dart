@@ -60,20 +60,24 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAbg4FU-u0NS3nDxR2uTdTmx79if40ZABc',
-    appId: '1:280879038347:ios:02a6ced19803d55390f98e',
+    appId: '1:280879038347:ios:bc34a28ca1a191ef90f98e',
     messagingSenderId: '280879038347',
     projectId: 'resalate-a3ad0',
     storageBucket: 'resalate-a3ad0.firebasestorage.app',
-    iosBundleId: 'com.resalate.app',
+    androidClientId: '280879038347-1dhqtrfspjflkgq6tftf3m3ofdcslcu4.apps.googleusercontent.com',
+    iosClientId: '280879038347-rc2j368j8ai90bo5mt5rlhafh82nogh7.apps.googleusercontent.com',
+    iosBundleId: 'com.resalate.resalateapp',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyAbg4FU-u0NS3nDxR2uTdTmx79if40ZABc',
-    appId: '1:280879038347:ios:02a6ced19803d55390f98e',
+    appId: '1:280879038347:ios:bc34a28ca1a191ef90f98e',
     messagingSenderId: '280879038347',
     projectId: 'resalate-a3ad0',
     storageBucket: 'resalate-a3ad0.firebasestorage.app',
-    iosBundleId: 'com.resalate.app',
+    androidClientId: '280879038347-1dhqtrfspjflkgq6tftf3m3ofdcslcu4.apps.googleusercontent.com',
+    iosClientId: '280879038347-rc2j368j8ai90bo5mt5rlhafh82nogh7.apps.googleusercontent.com',
+    iosBundleId: 'com.resalate.resalateapp',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(

@@ -15,6 +15,14 @@ class LiveFeedViewModel {
   GenericCubit<LiveFeedDetailsModel> liveDetailsRes =
       GenericCubit(LiveFeedDetailsModel());
   GenericCubit<YoutubePlayerController?> youtubeController = GenericCubit(null);
+
+  /// Extract video ID from the malformed iframe URL returned by the API.
+  static String? extractVideoId(String? rawValue) {
+    if (rawValue == null || rawValue.trim().isEmpty) return null;
+    // YoutubePlayer.convertUrlToId handles most URL formats
+    return YoutubePlayer.convertUrlToId(rawValue);
+  }
+
   Future<void> getLiveFeedDetails({required int id}) async {
     liveDetailsRes.onLoadingState();
     try {
@@ -26,13 +34,15 @@ class LiveFeedViewModel {
           liveDetailsRes.onErrorState(Failure(failure));
         },
         (res) async {
-          if (res.post!.iframe != null && res.post!.iframe!.isNotEmpty) {
-            final videoId =
-                YoutubePlayer.convertUrlToId(res.post!.iframe ?? "");
+          if (res.post?.iframe != null && res.post!.iframe!.isNotEmpty) {
+            final videoId = extractVideoId(res.post!.iframe!);
             if (videoId != null) {
               youtubeController.onUpdateData(YoutubePlayerController(
                 initialVideoId: videoId,
-                flags: const YoutubePlayerFlags(autoPlay: false, isLive: true),
+                flags: const YoutubePlayerFlags(
+                  autoPlay: false,
+                  isLive: true,
+                ),
               ));
             }
           }

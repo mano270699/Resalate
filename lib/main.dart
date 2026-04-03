@@ -57,23 +57,12 @@ void main() async {
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
   await di.init();
-// 4. Local Notifications Initialization (Must be done BEFORE requesting permission on iOS)
+  // Local notification setup also requests iOS notification permission.
   await NotificationHelper.initialize(flutterLocalNotificationsPlugin);
 
-  // 5. Request Permission
   if (Platform.isAndroid) {
     PermissionStatus status = await Permission.notification.request();
     if (kDebugMode) print("🔔 Android Notification Permission: $status");
-  } else if (Platform.isIOS) {
-    final settings = await FirebaseMessaging.instance.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
-
-    if (kDebugMode) {
-      print("📲 iOS Notification Permission: ${settings.authorizationStatus}");
-    }
   }
 
   runApp(const MainApp());

@@ -74,7 +74,7 @@ class _MainBottomNavigationScreenState
               children: screens,
             ),
             bottomNavigationBar: Container(
-              height: 86.h,
+              height: 90.h,
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(

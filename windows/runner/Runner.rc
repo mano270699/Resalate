@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "mozare3_partner" "\0"
+            VALUE "FileDescription", "resalate" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "mozare3_partner" "\0"
+            VALUE "InternalName", "resalate" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "mozare3_partner.exe" "\0"
-            VALUE "ProductName", "mozare3_partner" "\0"
+            VALUE "OriginalFilename", "resalate.exe" "\0"
+            VALUE "ProductName", "resalate" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

@@ -1,4 +1,4 @@
-# mozare3_partner
+# resalate
 
 A new Flutter project.
 

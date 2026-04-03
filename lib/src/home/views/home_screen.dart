@@ -639,6 +639,41 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                     10.h.verticalSpace,
+
+                    // Partners Section
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      child: Row(
+                        children: [
+                          AppText(
+                            text: AppLocalizations.of(context)!
+                                .translate('partners'),
+                            model: AppTextModel(
+                              style: AppFontStyleGlobal(
+                                      AppLocalizations.of(context)!.locale)
+                                  .label
+                                  .copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 20.sp,
+                                    color: AppColors.scondaryColor,
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    20.h.verticalSpace,
+                    BlocBuilder<GenericCubit<PartnersResponse>,
+                        GenericCubitState<PartnersResponse>>(
+                      bloc: viewModel.partnersResponse,
+                      builder: (context, partnersState) {
+                        return _AutoScrollingPartnerList(
+                          partners: partnersState.data.partners ?? [],
+                        );
+                      },
+                    ),
+
+                    20.h.verticalSpace,
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.w),
                       child: Row(
@@ -682,38 +717,6 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     20.h.verticalSpace,
-                    // Partners Section
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
-                      child: Row(
-                        children: [
-                          AppText(
-                            text: AppLocalizations.of(context)!
-                                .translate('partners'),
-                            model: AppTextModel(
-                              style: AppFontStyleGlobal(
-                                      AppLocalizations.of(context)!.locale)
-                                  .label
-                                  .copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 20.sp,
-                                    color: AppColors.scondaryColor,
-                                  ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    20.h.verticalSpace,
-                    BlocBuilder<GenericCubit<PartnersResponse>,
-                        GenericCubitState<PartnersResponse>>(
-                      bloc: viewModel.partnersResponse,
-                      builder: (context, partnersState) {
-                        return _AutoScrollingPartnerList(
-                          partners: partnersState.data.partners ?? [],
-                        );
-                      },
-                    ),
                     20.h.verticalSpace,
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.w),

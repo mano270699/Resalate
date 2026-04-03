@@ -168,6 +168,11 @@ class NotificationHelper {
       FirebaseCrashlytics.instance.recordError(e, s);
     }
 
+    FirebaseMessaging.instance.onTokenRefresh.listen((token) {
+      debugPrint("🔁 FCM Token refreshed: $token");
+      FCMTokenUtil.saveFCMToken(token);
+    });
+
     // --- FCM Listeners ---
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       debugPrint('🟢 Foreground message: ${message.data}');
