@@ -54,85 +54,103 @@ class _AllLessonsScreenState extends State<AllLessonsScreen> {
     return Directionality(
       textDirection:
           AppLocalizations.of(context)!.locale.languageCode == 'en' ||
-                  AppLocalizations.of(context)!.locale.languageCode == 'sv'
-              ? TextDirection.ltr
-              : TextDirection.rtl,
+              AppLocalizations.of(context)!.locale.languageCode == 'sv'
+          ? TextDirection.ltr
+          : TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
           title: AppText(
             text: AppLocalizations.of(context)!.translate("lessons"),
             model: AppTextModel(
-              style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                  .bodyMedium1
-                  .copyWith(
-                    color: AppColors.black,
-                  ),
+              style: AppFontStyleGlobal(
+                AppLocalizations.of(context)!.locale,
+              ).bodyMedium1.copyWith(color: AppColors.black),
             ),
           ),
         ),
-        body: BlocBuilder<GenericCubit<LessonsResponse>,
-            GenericCubitState<LessonsResponse>>(
-          bloc: viewModel.allLessonsRes,
-          builder: (context, lessonsState) {
-            // if (donationState is GenericLoadingState) {
-            //   return const Center(child: CircularProgressIndicator());
-            // }
+        body:
+            BlocBuilder<
+              GenericCubit<LessonsResponse>,
+              GenericCubitState<LessonsResponse>
+            >(
+              bloc: viewModel.allLessonsRes,
+              builder: (context, lessonsState) {
+                // if (donationState is GenericLoadingState) {
+                //   return const Center(child: CircularProgressIndicator());
+                // }
 
-            if (lessonsState is GenericErrorState) {
-              return Center(
-                  child: Text(lessonsState.responseError!.errorMessage));
-            }
-
-            final posts = lessonsState.data.lessons;
-            final hasMore = viewModel.hasMorePages;
-
-            return Skeletonizer(
-              enabled: lessonsState is GenericLoadingState,
-              child: ListView.separated(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-                controller: _scrollController,
-                itemBuilder: (context, index) {
-                  final isLoading = lessonsState is GenericLoadingState;
-
-                  // Fake placeholders when loading
-                  if (isLoading) {
-                    return LessonItem(
-                      lesson: Lesson(),
-                      onTap: () {},
-                    );
-                  }
-
-                  // Normal state
-                  if (index == posts!.length) {
-                    return hasMore
-                        ? const Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: Center(
-                                child: CircularProgressIndicator(
-                              color: AppColors.primaryColor,
-                            )),
-                          )
-                        : const SizedBox.shrink();
-                  }
-
-                  final post = posts[index];
-                  return LessonItem(
-                    lesson: post,
-                    onTap: () {
-                      Navigator.pushNamed(
-                          context, LessonDetailsScreen.routeName,
-                          arguments: {"id": post.id});
-                    },
+                if (lessonsState is GenericErrorState) {
+                  return Center(
+                    child: Text(lessonsState.responseError!.errorMessage),
                   );
-                },
-                separatorBuilder: (context, index) => SizedBox(height: 10.h),
-                itemCount: (lessonsState is GenericLoadingState)
-                    ? 5 // show 5 skeleton DonationItems
-                    : posts!.length + (hasMore ? 1 : 0),
-              ),
-            );
-          },
-        ),
+                }
+
+                final posts = lessonsState.data.lessons;
+                final hasMore = viewModel.hasMorePages;
+
+                return Skeletonizer(
+                  enabled: lessonsState is GenericLoadingState,
+                  child: ListView.separated(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16.w,
+                      vertical: 12.h,
+                    ),
+                    controller: _scrollController,
+                    itemBuilder: (context, index) {
+                      final isLoading = lessonsState is GenericLoadingState;
+
+                      // Fake placeholders when loading
+                      if (isLoading) {
+                        return Align(
+                          alignment: Alignment.topCenter,
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 760),
+                            child: LessonItem(lesson: Lesson(), onTap: () {}),
+                          ),
+                        );
+                      }
+
+                      // Normal state
+                      if (index == posts!.length) {
+                        return hasMore
+                            ? const Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.primaryColor,
+                                  ),
+                                ),
+                              )
+                            : const SizedBox.shrink();
+                      }
+
+                      final post = posts[index];
+                      return Align(
+                        alignment: Alignment.topCenter,
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 760),
+                          child: LessonItem(
+                            lesson: post,
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                LessonDetailsScreen.routeName,
+                                arguments: {"id": post.id},
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                    separatorBuilder: (context, index) =>
+                        SizedBox(height: 14.h),
+                    itemCount: (lessonsState is GenericLoadingState)
+                        ? 5 // show 5 skeleton DonationItems
+                        : posts!.length + (hasMore ? 1 : 0),
+                  ),
+                );
+              },
+            ),
       ),
     );
   }

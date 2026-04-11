@@ -16,12 +16,15 @@ class AppButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: model.padding ?? const EdgeInsets.symmetric(vertical: 8),
-      child: Container(
-        decoration: model.decoration,
-        child: TextButton(
-          style: model.buttonStyle,
-          onPressed: onPressed,
-          child: model.child,
+      child: SizedBox(
+        width: model.width,
+        child: Container(
+          decoration: model.decoration,
+          child: TextButton(
+            style: model.buttonStyle,
+            onPressed: onPressed,
+            child: model.child,
+          ),
         ),
       ),
     );

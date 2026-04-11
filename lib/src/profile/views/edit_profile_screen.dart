@@ -85,299 +85,342 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   }
                 },
                 child: SingleChildScrollView(
-                  child: Skeletonizer(
-                    enabled: profileState is GenericLoadingState,
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          // -- IMAGE with ICON
-                          Stack(
-                            children: [
-                              SizedBox(
-                                  width: 120,
-                                  height: 120,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(100),
-                                    child: BlocBuilder<GenericCubit<File>,
-                                        GenericCubitState<File>>(
-                                      bloc: widget.viewModel.imageFile,
-                                      builder: (context, state) {
-                                        return state.data.path.isNotEmpty
-                                            ? Image.file(state.data)
-                                            : CachedNetworkImage(
-                                                imageUrl: profileState
-                                                        .data.user?.image ??
-                                                    "",
-                                                // placeholder: (context, url) =>
-                                                //     const Center(
-                                                //         child:
-                                                //             CircularProgressIndicator()),
-                                                errorWidget:
-                                                    (context, url, error) =>
-                                                        const Icon(Icons.error),
-                                                imageBuilder:
-                                                    (context, imageProvider) =>
-                                                        Container(
-                                                  width: 120.w,
-                                                  height: 120.w,
-                                                  decoration: BoxDecoration(
-                                                    image: DecorationImage(
-                                                      image: imageProvider,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                  ),
-                                                ),
-                                              );
-                                      },
+                  child: SafeArea(
+                    top: false,
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 760),
+                        child: Skeletonizer(
+                          enabled: profileState is GenericLoadingState,
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              children: [
+                                // -- IMAGE with ICON
+                                Stack(
+                                  children: [
+                                    SizedBox(
+                                        width: 120,
+                                        height: 120,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          child: BlocBuilder<GenericCubit<File>,
+                                              GenericCubitState<File>>(
+                                            bloc: widget.viewModel.imageFile,
+                                            builder: (context, state) {
+                                              return state.data.path.isNotEmpty
+                                                  ? Image.file(state.data)
+                                                  : CachedNetworkImage(
+                                                      imageUrl: profileState
+                                                              .data
+                                                              .user
+                                                              ?.image ??
+                                                          "",
+                                                      // placeholder: (context, url) =>
+                                                      //     const Center(
+                                                      //         child:
+                                                      //             CircularProgressIndicator()),
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          const Icon(
+                                                              Icons.error),
+                                                      imageBuilder: (context,
+                                                              imageProvider) =>
+                                                          Container(
+                                                        width: 120.w,
+                                                        height: 120.w,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          image:
+                                                              DecorationImage(
+                                                            image:
+                                                                imageProvider,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                        ),
+                                                      ),
+                                                    );
+                                            },
+                                          ),
+                                        )),
+                                    Positioned(
+                                      bottom: 0,
+                                      right: 0,
+                                      child: GestureDetector(
+                                        onTap: () => ImagePickerBottomSheet
+                                            .addAssetImage(
+                                          context,
+                                          onTapCamera: () {
+                                            Navigator.pop(context);
+                                            widget.viewModel.pickImage(
+                                              source: ImageSource.camera,
+                                            );
+                                          },
+                                          onTapGallery: () {
+                                            Navigator.pop(context);
+                                            widget.viewModel.pickImage(
+                                              source: ImageSource.gallery,
+                                            );
+                                          },
+                                        ),
+                                        child: Container(
+                                          width: 35,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                              color: AppColors.primaryColor),
+                                          child: const Icon(Icons.camera_alt,
+                                              color: Colors.white, size: 20),
+                                        ),
+                                      ),
                                     ),
-                                  )),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: GestureDetector(
-                                  onTap: () =>
-                                      ImagePickerBottomSheet.addAssetImage(
-                                    context,
-                                    onTapCamera: () {
-                                      Navigator.pop(context);
-                                      widget.viewModel.pickImage(
-                                        source: ImageSource.camera,
-                                      );
-                                    },
-                                    onTapGallery: () {
-                                      Navigator.pop(context);
-                                      widget.viewModel.pickImage(
-                                        source: ImageSource.gallery,
-                                      );
-                                    },
-                                  ),
-                                  child: Container(
-                                    width: 35,
-                                    height: 35,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        color: AppColors.primaryColor),
-                                    child: const Icon(Icons.camera_alt,
-                                        color: Colors.white, size: 20),
-                                  ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 50),
+                                const SizedBox(height: 50),
 
-                          Column(
-                            children: [
-                              20.h.verticalSpace,
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12.r),
-                                child: BlocBuilder<GenericCubit<String>,
-                                    GenericCubitState<String>>(
-                                  bloc: widget.viewModel.emailValidation,
-                                  builder: (context, validation) {
-                                    return AppTextField(
-                                      model: AppTextFieldModel(
-                                        appTextModel: AppTextModel(
-                                            style: AppFontStyleGlobal(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .locale)
-                                                .bodyRegular1
-                                                .copyWith(
-                                                  color: AppColors.primaryColor,
-                                                )),
-                                        controller: widget.viewModel.name,
-                                        keyboardType: TextInputType.text,
-                                        textInputAction: TextInputAction.done,
-                                        borderRadius:
-                                            BorderRadius.circular(12.r),
-                                        decoration:
-                                            ComponentStyle.inputDecoration(
-                                          AppLocalizations.of(context)!.locale,
-                                        ).copyWith(
-                                          fillColor: AppColors.white,
-                                          contentPadding:
-                                              EdgeInsetsDirectional.only(
-                                                  start: 10.w),
-                                          filled: true,
-                                          hintText:
-                                              AppLocalizations.of(context)!
-                                                  .translate('name'),
-                                        ),
-                                        errorText: validation.data.isNotEmpty
-                                            ? AppLocalizations.of(context)!
-                                                .translate(validation.data)
-                                            : null,
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                              20.h.verticalSpace,
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12.r),
-                                child: BlocBuilder<GenericCubit<String>,
-                                    GenericCubitState<String>>(
-                                  bloc: widget.viewModel.phoneNumberValidation,
-                                  builder: (context, validation) {
-                                    return AppTextField(
-                                      model: AppTextFieldModel(
-                                        appTextModel: AppTextModel(
-                                            style: AppFontStyleGlobal(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .locale)
-                                                .bodyRegular1
-                                                .copyWith(
-                                                  color: AppColors.primaryColor,
-                                                )),
-                                        controller: widget.viewModel.phone,
-                                        keyboardType: TextInputType.text,
-                                        textInputAction: TextInputAction.done,
-                                        borderRadius:
-                                            BorderRadius.circular(12.r),
-                                        decoration:
-                                            ComponentStyle.inputDecoration(
-                                          AppLocalizations.of(context)!.locale,
-                                        ).copyWith(
-                                          fillColor: AppColors.white,
-                                          contentPadding:
-                                              EdgeInsetsDirectional.only(
-                                                  start: 10.w),
-                                          filled: true,
-                                          hintText:
-                                              AppLocalizations.of(context)!
-                                                  .translate('phone'),
-                                        ),
-                                        errorText: validation.data.isNotEmpty
-                                            ? AppLocalizations.of(context)!
-                                                .translate(validation.data)
-                                            : null,
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                              20.h.verticalSpace,
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12.r),
-                                child: BlocBuilder<GenericCubit<String>,
-                                    GenericCubitState<String>>(
-                                  bloc: widget.viewModel.emailValidation,
-                                  builder: (context, validation) {
-                                    return AppTextField(
-                                      model: AppTextFieldModel(
-                                        appTextModel: AppTextModel(
-                                            style: AppFontStyleGlobal(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .locale)
-                                                .bodyRegular1
-                                                .copyWith(
-                                                  color: AppColors.primaryColor,
-                                                )),
-                                        controller: widget.viewModel.email,
-                                        keyboardType: TextInputType.text,
-                                        textInputAction: TextInputAction.done,
-                                        borderRadius:
-                                            BorderRadius.circular(12.r),
-                                        decoration:
-                                            ComponentStyle.inputDecoration(
-                                          AppLocalizations.of(context)!.locale,
-                                        ).copyWith(
-                                          fillColor: AppColors.white,
-                                          contentPadding:
-                                              EdgeInsetsDirectional.only(
-                                                  start: 10.w),
-                                          filled: true,
-                                          hintText:
-                                              AppLocalizations.of(context)!
-                                                  .translate('email'),
-                                        ),
-                                        errorText: validation.data.isNotEmpty
-                                            ? AppLocalizations.of(context)!
-                                                .translate(validation.data)
-                                            : null,
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                              20.h.verticalSpace,
-                              Padding(
-                                padding: EdgeInsetsDirectional.only(
-                                  bottom: 14,
-                                ),
-                                child: AppButton(
-                                  model: AppButtonModel(
-                                      child: AppText(
-                                        text: AppLocalizations.of(context)!
-                                            .translate('edit_profile'),
-                                        model: AppTextModel(
-                                            style: AppFontStyleGlobal(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .locale)
-                                                .label
-                                                .copyWith(
-                                                    color: AppColors.white)),
-                                      ),
-                                      decoration:
-                                          ComponentStyle.buttonDecoration,
-                                      buttonStyle: ButtonStyle(
-                                        fixedSize: WidgetStateProperty.all(
-                                          Size(345.w, 45.h),
-                                        ),
-                                      )),
-                                  onPressed: () {
-                                    widget.viewModel.updateProfile(context);
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.only(
-                                  bottom: 14,
-                                ),
-                                child: AppButton(
-                                  model: AppButtonModel(
-                                    child: AppText(
-                                      text: AppLocalizations.of(context)!
-                                          .translate('change_password'),
-                                      model: AppTextModel(
-                                          style: AppFontStyleGlobal(
-                                                  AppLocalizations.of(context)!
-                                                      .locale)
-                                              .label
-                                              .copyWith(
-                                                  color: AppColors.white)),
-                                    ),
-                                    decoration: ComponentStyle.buttonDecoration,
-                                    buttonStyle: ButtonStyle(
-                                      fixedSize: WidgetStateProperty.all(
-                                        Size(345.w, 45.h),
+                                Column(
+                                  children: [
+                                    20.h.verticalSpace,
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(12.r),
+                                      child: BlocBuilder<GenericCubit<String>,
+                                          GenericCubitState<String>>(
+                                        bloc: widget.viewModel.emailValidation,
+                                        builder: (context, validation) {
+                                          return AppTextField(
+                                            model: AppTextFieldModel(
+                                              appTextModel: AppTextModel(
+                                                  style: AppFontStyleGlobal(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .locale)
+                                                      .bodyRegular1
+                                                      .copyWith(
+                                                        color: AppColors
+                                                            .primaryColor,
+                                                      )),
+                                              controller: widget.viewModel.name,
+                                              keyboardType: TextInputType.text,
+                                              textInputAction:
+                                                  TextInputAction.done,
+                                              borderRadius:
+                                                  BorderRadius.circular(12.r),
+                                              decoration: ComponentStyle
+                                                  .inputDecoration(
+                                                AppLocalizations.of(context)!
+                                                    .locale,
+                                              ).copyWith(
+                                                fillColor: AppColors.white,
+                                                contentPadding:
+                                                    EdgeInsetsDirectional.only(
+                                                        start: 10.w),
+                                                filled: true,
+                                                hintText: AppLocalizations.of(
+                                                        context)!
+                                                    .translate('name'),
+                                              ),
+                                              errorText:
+                                                  validation.data.isNotEmpty
+                                                      ? AppLocalizations.of(
+                                                              context)!
+                                                          .translate(
+                                                              validation.data)
+                                                      : null,
+                                            ),
+                                          );
+                                        },
                                       ),
                                     ),
-                                  ),
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) =>
-                                          ChangePasswordDialog(
-                                        viewModel: widget.viewModel,
+                                    20.h.verticalSpace,
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(12.r),
+                                      child: BlocBuilder<GenericCubit<String>,
+                                          GenericCubitState<String>>(
+                                        bloc: widget
+                                            .viewModel.phoneNumberValidation,
+                                        builder: (context, validation) {
+                                          return AppTextField(
+                                            model: AppTextFieldModel(
+                                              appTextModel: AppTextModel(
+                                                  style: AppFontStyleGlobal(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .locale)
+                                                      .bodyRegular1
+                                                      .copyWith(
+                                                        color: AppColors
+                                                            .primaryColor,
+                                                      )),
+                                              controller:
+                                                  widget.viewModel.phone,
+                                              keyboardType: TextInputType.text,
+                                              textInputAction:
+                                                  TextInputAction.done,
+                                              borderRadius:
+                                                  BorderRadius.circular(12.r),
+                                              decoration: ComponentStyle
+                                                  .inputDecoration(
+                                                AppLocalizations.of(context)!
+                                                    .locale,
+                                              ).copyWith(
+                                                fillColor: AppColors.white,
+                                                contentPadding:
+                                                    EdgeInsetsDirectional.only(
+                                                        start: 10.w),
+                                                filled: true,
+                                                hintText: AppLocalizations.of(
+                                                        context)!
+                                                    .translate('phone'),
+                                              ),
+                                              errorText:
+                                                  validation.data.isNotEmpty
+                                                      ? AppLocalizations.of(
+                                                              context)!
+                                                          .translate(
+                                                              validation.data)
+                                                      : null,
+                                            ),
+                                          );
+                                        },
                                       ),
-                                    );
-                                  },
+                                    ),
+                                    20.h.verticalSpace,
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(12.r),
+                                      child: BlocBuilder<GenericCubit<String>,
+                                          GenericCubitState<String>>(
+                                        bloc: widget.viewModel.emailValidation,
+                                        builder: (context, validation) {
+                                          return AppTextField(
+                                            model: AppTextFieldModel(
+                                              appTextModel: AppTextModel(
+                                                  style: AppFontStyleGlobal(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .locale)
+                                                      .bodyRegular1
+                                                      .copyWith(
+                                                        color: AppColors
+                                                            .primaryColor,
+                                                      )),
+                                              controller:
+                                                  widget.viewModel.email,
+                                              keyboardType: TextInputType.text,
+                                              textInputAction:
+                                                  TextInputAction.done,
+                                              borderRadius:
+                                                  BorderRadius.circular(12.r),
+                                              decoration: ComponentStyle
+                                                  .inputDecoration(
+                                                AppLocalizations.of(context)!
+                                                    .locale,
+                                              ).copyWith(
+                                                fillColor: AppColors.white,
+                                                contentPadding:
+                                                    EdgeInsetsDirectional.only(
+                                                        start: 10.w),
+                                                filled: true,
+                                                hintText: AppLocalizations.of(
+                                                        context)!
+                                                    .translate('email'),
+                                              ),
+                                              errorText:
+                                                  validation.data.isNotEmpty
+                                                      ? AppLocalizations.of(
+                                                              context)!
+                                                          .translate(
+                                                              validation.data)
+                                                      : null,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    20.h.verticalSpace,
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.only(
+                                        bottom: 14,
+                                      ),
+                                      child: AppButton(
+                                        model: AppButtonModel(
+                                            child: AppText(
+                                              text: AppLocalizations.of(
+                                                      context)!
+                                                  .translate('edit_profile'),
+                                              model: AppTextModel(
+                                                  style: AppFontStyleGlobal(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .locale)
+                                                      .label
+                                                      .copyWith(
+                                                          color:
+                                                              AppColors.white)),
+                                            ),
+                                            decoration:
+                                                ComponentStyle.buttonDecoration,
+                                            buttonStyle: ButtonStyle(
+                                              fixedSize:
+                                                  WidgetStateProperty.all(
+                                                const Size(double.infinity, 48),
+                                              ),
+                                            )),
+                                        onPressed: () {
+                                          widget.viewModel
+                                              .updateProfile(context);
+                                        },
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.only(
+                                        bottom: 14,
+                                      ),
+                                      child: AppButton(
+                                        model: AppButtonModel(
+                                          child: AppText(
+                                            text: AppLocalizations.of(context)!
+                                                .translate('change_password'),
+                                            model: AppTextModel(
+                                                style: AppFontStyleGlobal(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .locale)
+                                                    .label
+                                                    .copyWith(
+                                                        color:
+                                                            AppColors.white)),
+                                          ),
+                                          decoration:
+                                              ComponentStyle.buttonDecoration,
+                                          buttonStyle: ButtonStyle(
+                                            fixedSize: WidgetStateProperty.all(
+                                              const Size(double.infinity, 48),
+                                            ),
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                ChangePasswordDialog(
+                                              viewModel: widget.viewModel,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(height: 40),
+                                  ],
                                 ),
-                              ),
-                              const SizedBox(height: 40),
-                            ],
+                              ],
+                            ),
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),

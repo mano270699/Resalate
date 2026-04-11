@@ -25,6 +25,7 @@
   "confirm": "Confirm",
   "name": "Name",
   "email": "Email",
+  "email_or_phone": "Email or Phone",
   "phone": "Phone Number",
   "already_have_account": "I already have account",
   "login": "Login",

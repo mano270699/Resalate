@@ -78,6 +78,25 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  double _homeCardWidth(double availableWidth) {
+    if (availableWidth >= 1200) return 340;
+    if (availableWidth >= 900) return availableWidth * 0.38;
+    if (availableWidth >= 700) return availableWidth * 0.48;
+    if (availableWidth >= 500) return availableWidth * 0.62;
+    return availableWidth * 0.82;
+  }
+
+  int _homeCardColumns(double availableWidth) {
+    if (availableWidth >= 1100) return 3;
+    if (availableWidth >= 700) return 2;
+    return 1;
+  }
+
+  double _homeCardHeight(double cardWidth) {
+    final imageHeight = (cardWidth * 0.56).clamp(112.0, 180.0).toDouble();
+    return imageHeight + 200;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -118,12 +137,15 @@ class _HomePageState extends State<HomePage> {
                       context: context,
                       builder: (BuildContext context) {
                         return LanguageDialog(
-                          currentLanguage:
-                              AppLocalizations.of(context)!.locale.languageCode,
+                          currentLanguage: AppLocalizations.of(
+                            context,
+                          )!
+                              .locale
+                              .languageCode,
                           onLanguageSelected: (String languageCode) {
-                            context
-                                .read<LocalizationCubit>()
-                                .changeLanguage(languageCode);
+                            context.read<LocalizationCubit>().changeLanguage(
+                                  languageCode,
+                                );
                             viewModel.getHomeData();
                             viewModel.getDonationsData();
                             viewModel.getLiveFeedData();
@@ -145,7 +167,8 @@ class _HomePageState extends State<HomePage> {
                     child: Center(
                       child: Text(
                         _getLanguageFlag(
-                            AppLocalizations.of(context)!.locale.languageCode),
+                          AppLocalizations.of(context)!.locale.languageCode,
+                        ),
                         style: TextStyle(fontSize: 22.sp),
                       ),
                     ),
@@ -171,7 +194,8 @@ class _HomePageState extends State<HomePage> {
                             color: Colors.grey[200], // Will shimmer
                           )
                         : CustomBannerSlider(
-                            images: state.data.home?.gallery ?? []),
+                            images: state.data.home?.gallery ?? [],
+                          ),
                     10.h.verticalSpace,
                     Center(
                       child: Padding(
@@ -181,11 +205,15 @@ class _HomePageState extends State<HomePage> {
                           child: Text(
                             "${state.data.home?.ayah1}",
                             textAlign: TextAlign.center,
-                            textDirection: AppLocalizations.of(context)!
+                            textDirection: AppLocalizations.of(
+                                          context,
+                                        )!
                                             .locale
                                             .languageCode ==
                                         'en' ||
-                                    AppLocalizations.of(context)!
+                                    AppLocalizations.of(
+                                          context,
+                                        )!
                                             .locale
                                             .languageCode ==
                                         'sv'
@@ -225,8 +253,9 @@ class _HomePageState extends State<HomePage> {
                               child: Container(
                                 height: 100.h,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.r),
-                                    color: AppColors.white),
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  color: AppColors.white,
+                                ),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -236,20 +265,24 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     10.h.verticalSpace,
                                     AppText(
-                                      text: AppLocalizations.of(context)!
+                                      text: AppLocalizations.of(
+                                        context,
+                                      )!
                                           .translate('from_mosque_to_mosque'),
                                       model: AppTextModel(
-                                          textAlign: TextAlign.center,
-                                          style: AppFontStyleGlobal(
-                                                  AppLocalizations.of(context)!
-                                                      .locale)
-                                              .subTitle1
-                                              .copyWith(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 18.sp,
-                                                height: 1,
-                                                color: AppColors.scondaryColor,
-                                              )),
+                                        textAlign: TextAlign.center,
+                                        style: AppFontStyleGlobal(
+                                          AppLocalizations.of(
+                                            context,
+                                          )!
+                                              .locale,
+                                        ).subTitle1.copyWith(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 18.sp,
+                                              height: 1,
+                                              color: AppColors.scondaryColor,
+                                            ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -268,8 +301,9 @@ class _HomePageState extends State<HomePage> {
                               child: Container(
                                 height: 100.h,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.r),
-                                    color: AppColors.white),
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  color: AppColors.white,
+                                ),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -279,26 +313,30 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     5.h.verticalSpace,
                                     AppText(
-                                      text: AppLocalizations.of(context)!
+                                      text: AppLocalizations.of(
+                                        context,
+                                      )!
                                           .translate('nearest_mosques'),
                                       model: AppTextModel(
-                                          textAlign: TextAlign.center,
-                                          style: AppFontStyleGlobal(
-                                                  AppLocalizations.of(context)!
-                                                      .locale)
-                                              .subTitle1
-                                              .copyWith(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 18.sp,
-                                                height: 1,
-                                                color: AppColors.scondaryColor,
-                                              )),
+                                        textAlign: TextAlign.center,
+                                        style: AppFontStyleGlobal(
+                                          AppLocalizations.of(
+                                            context,
+                                          )!
+                                              .locale,
+                                        ).subTitle1.copyWith(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 18.sp,
+                                              height: 1,
+                                              color: AppColors.scondaryColor,
+                                            ),
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -309,13 +347,14 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           AppText(
-                            text: AppLocalizations.of(context)!
+                            text: AppLocalizations.of(
+                              context,
+                            )!
                                 .translate('donate'),
                             model: AppTextModel(
                               style: AppFontStyleGlobal(
-                                      AppLocalizations.of(context)!.locale)
-                                  .label
-                                  .copyWith(
+                                AppLocalizations.of(context)!.locale,
+                              ).label.copyWith(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 20.sp,
                                     color: AppColors.scondaryColor,
@@ -324,16 +363,19 @@ class _HomePageState extends State<HomePage> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              widget.homeViewModel.screenIndexChanged(index: 1);
+                              widget.homeViewModel.screenIndexChanged(
+                                index: 1,
+                              );
                             },
                             child: AppText(
-                              text: AppLocalizations.of(context)!
+                              text: AppLocalizations.of(
+                                context,
+                              )!
                                   .translate('show_more'),
                               model: AppTextModel(
                                 style: AppFontStyleGlobal(
-                                        AppLocalizations.of(context)!.locale)
-                                    .subTitle2
-                                    .copyWith(
+                                  AppLocalizations.of(context)!.locale,
+                                ).subTitle2.copyWith(
                                       fontWeight: FontWeight.w500,
                                       color: AppColors.primaryColor,
                                     ),
@@ -348,6 +390,10 @@ class _HomePageState extends State<HomePage> {
                         GenericCubitState<DonationsResponse>>(
                       bloc: viewModel.donationResponse,
                       builder: (context, donationState) {
+                        final donationCardWidth =
+                            (MediaQuery.sizeOf(context).width * 0.82)
+                                .clamp(280.0, 360.0);
+
                         return Skeletonizer(
                           enabled: donationState is GenericLoadingState,
                           child: SizedBox(
@@ -355,42 +401,48 @@ class _HomePageState extends State<HomePage> {
                             child: ListView.separated(
                               clipBehavior: Clip.none,
                               scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) => DonationItem(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                      context, DonationDetailsScreen.routeName,
+                              itemBuilder: (context, index) => SizedBox(
+                                width: donationCardWidth,
+                                child: DonationItem(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      DonationDetailsScreen.routeName,
                                       arguments: {
                                         "id":
                                             donationState.data.posts![index].id,
-                                      });
-                                },
-                                percentage: donationState
-                                        .data.posts![index].donation?.percent
-                                        .toString() ??
-                                    "",
-                                title: donationState.data.posts?[index].title ??
-                                    "",
-                                image: donationState.data.posts?[index].image ??
-                                    "",
-                                desc:
-                                    donationState.data.posts?[index].excerpt ??
-                                        "",
-                                total: donationState
-                                        .data.posts![index].donation?.total
-                                        .toString() ??
-                                    "",
-                                paid: donationState
-                                        .data.posts![index].donation?.paid
-                                        .toString() ??
-                                    "",
-                                currency: donationState
-                                        .data.posts![index].donation?.currency
-                                        .toString() ??
-                                    "",
+                                      },
+                                    );
+                                  },
+                                  percentage: donationState
+                                          .data.posts![index].donation?.percent
+                                          .toString() ??
+                                      "",
+                                  title:
+                                      donationState.data.posts?[index].title ??
+                                          "",
+                                  image:
+                                      donationState.data.posts?[index].image ??
+                                          "",
+                                  desc: donationState
+                                          .data.posts?[index].excerpt ??
+                                      "",
+                                  total: donationState
+                                          .data.posts![index].donation?.total
+                                          .toString() ??
+                                      "",
+                                  paid: donationState
+                                          .data.posts![index].donation?.paid
+                                          .toString() ??
+                                      "",
+                                  currency: donationState
+                                          .data.posts![index].donation?.currency
+                                          .toString() ??
+                                      "",
+                                ),
                               ),
-                              separatorBuilder: (context, index) => SizedBox(
-                                width: 5.w,
-                              ),
+                              separatorBuilder: (context, index) =>
+                                  SizedBox(width: 5.w),
                               itemCount: donationState.data.posts?.length ?? 0,
                             ),
                           ),
@@ -404,13 +456,14 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           AppText(
-                            text: AppLocalizations.of(context)!
+                            text: AppLocalizations.of(
+                              context,
+                            )!
                                 .translate('live_feed'),
                             model: AppTextModel(
                               style: AppFontStyleGlobal(
-                                      AppLocalizations.of(context)!.locale)
-                                  .label
-                                  .copyWith(
+                                AppLocalizations.of(context)!.locale,
+                              ).label.copyWith(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 20.sp,
                                     color: AppColors.scondaryColor,
@@ -420,16 +473,19 @@ class _HomePageState extends State<HomePage> {
                           GestureDetector(
                             onTap: () {
                               Navigator.pushNamed(
-                                  context, AllFeedLiveScreen.routeName);
+                                context,
+                                AllFeedLiveScreen.routeName,
+                              );
                             },
                             child: AppText(
-                              text: AppLocalizations.of(context)!
+                              text: AppLocalizations.of(
+                                context,
+                              )!
                                   .translate('show_more'),
                               model: AppTextModel(
                                 style: AppFontStyleGlobal(
-                                        AppLocalizations.of(context)!.locale)
-                                    .subTitle2
-                                    .copyWith(
+                                  AppLocalizations.of(context)!.locale,
+                                ).subTitle2.copyWith(
                                       fontWeight: FontWeight.w500,
                                       color: AppColors.primaryColor,
                                     ),
@@ -461,9 +517,8 @@ class _HomePageState extends State<HomePage> {
                                     "https://st.depositphotos.com/1006472/1847/i/950/depositphotos_18478155-stock-photo-live-message.jpg",
                                 date: liveState.data.posts?[index].date ?? "",
                               ),
-                              separatorBuilder: (context, index) => SizedBox(
-                                width: 5.w,
-                              ),
+                              separatorBuilder: (context, index) =>
+                                  SizedBox(width: 5.w),
                               itemCount: liveState.data.posts?.length ?? 0,
                             ),
                           ),
@@ -477,13 +532,14 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           AppText(
-                            text: AppLocalizations.of(context)!
+                            text: AppLocalizations.of(
+                              context,
+                            )!
                                 .translate('lessons'),
                             model: AppTextModel(
                               style: AppFontStyleGlobal(
-                                      AppLocalizations.of(context)!.locale)
-                                  .label
-                                  .copyWith(
+                                AppLocalizations.of(context)!.locale,
+                              ).label.copyWith(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 20.sp,
                                     color: AppColors.scondaryColor,
@@ -493,16 +549,19 @@ class _HomePageState extends State<HomePage> {
                           GestureDetector(
                             onTap: () {
                               Navigator.pushNamed(
-                                  context, AllLessonsScreen.routeName);
+                                context,
+                                AllLessonsScreen.routeName,
+                              );
                             },
                             child: AppText(
-                              text: AppLocalizations.of(context)!
+                              text: AppLocalizations.of(
+                                context,
+                              )!
                                   .translate('show_more'),
                               model: AppTextModel(
                                 style: AppFontStyleGlobal(
-                                        AppLocalizations.of(context)!.locale)
-                                    .subTitle2
-                                    .copyWith(
+                                  AppLocalizations.of(context)!.locale,
+                                ).subTitle2.copyWith(
                                       fontWeight: FontWeight.w500,
                                       color: AppColors.primaryColor,
                                     ),
@@ -517,39 +576,96 @@ class _HomePageState extends State<HomePage> {
                         GenericCubitState<LessonsResponse>>(
                       bloc: viewModel.lessonsResponse,
                       builder: (context, lessonState) {
-                        return Skeletonizer(
-                          enabled: lessonState is GenericLoadingState,
-                          child: SizedBox(
-                            height: AppLocalizations.of(context)!
-                                            .locale
-                                            .languageCode ==
-                                        'sv' ||
-                                    AppLocalizations.of(context)!
-                                            .locale
-                                            .languageCode ==
-                                        'en'
-                                ? 265.h
-                                : 260.h,
-                            child: ListView.separated(
-                              clipBehavior: Clip.none,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) => LessonItem(
-                                lesson: lessonState.data.lessons?[index] ??
-                                    Lesson(),
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                      context, LessonDetailsScreen.routeName,
-                                      arguments: {
-                                        "id":
-                                            lessonState.data.lessons?[index].id
-                                      });
-                                },
-                              ),
-                              separatorBuilder: (context, index) => SizedBox(
-                                width: 5.w,
-                              ),
-                              itemCount: lessonState.data.lessons?.length ?? 0,
-                            ),
+                        final lessons = lessonState.data.lessons ?? [];
+                        final isLoading = lessonState is GenericLoadingState;
+
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.w),
+                          child: LayoutBuilder(
+                            builder: (context, constraints) {
+                              final useGrid = constraints.maxWidth >= 700;
+                              final crossAxisCount = _homeCardColumns(
+                                constraints.maxWidth,
+                              );
+                              final spacing = 12.w;
+                              final cardWidth = useGrid
+                                  ? (constraints.maxWidth -
+                                          ((crossAxisCount - 1) * spacing)) /
+                                      crossAxisCount
+                                  : _homeCardWidth(constraints.maxWidth);
+                              final cardHeight = _homeCardHeight(cardWidth);
+
+                              return Skeletonizer(
+                                enabled: isLoading,
+                                child: useGrid
+                                    ? GridView.builder(
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemCount: isLoading
+                                            ? crossAxisCount * 2
+                                            : lessons.length,
+                                        gridDelegate:
+                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: crossAxisCount,
+                                          mainAxisSpacing: 12.h,
+                                          crossAxisSpacing: spacing,
+                                          childAspectRatio:
+                                              cardWidth / cardHeight,
+                                        ),
+                                        itemBuilder: (context, index) {
+                                          final lesson = isLoading
+                                              ? Lesson()
+                                              : lessons[index];
+
+                                          return LessonItem(
+                                            lesson: lesson,
+                                            onTap: () {
+                                              if (isLoading) return;
+
+                                              Navigator.pushNamed(
+                                                context,
+                                                LessonDetailsScreen.routeName,
+                                                arguments: {"id": lesson.id},
+                                              );
+                                            },
+                                          );
+                                        },
+                                      )
+                                    : SizedBox(
+                                        height: cardHeight,
+                                        child: ListView.separated(
+                                          clipBehavior: Clip.none,
+                                          scrollDirection: Axis.horizontal,
+                                          physics:
+                                              const BouncingScrollPhysics(),
+                                          itemBuilder: (context, index) {
+                                            final lesson = isLoading
+                                                ? Lesson()
+                                                : lessons[index];
+
+                                            return LessonItem(
+                                              width: cardWidth,
+                                              lesson: lesson,
+                                              onTap: () {
+                                                if (isLoading) return;
+
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  LessonDetailsScreen.routeName,
+                                                  arguments: {"id": lesson.id},
+                                                );
+                                              },
+                                            );
+                                          },
+                                          separatorBuilder: (context, index) =>
+                                              SizedBox(width: 12.w),
+                                          itemCount:
+                                              isLoading ? 3 : lessons.length,
+                                        ),
+                                      ),
+                              );
+                            },
                           ),
                         );
                       },
@@ -561,13 +677,14 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           AppText(
-                            text: AppLocalizations.of(context)!
+                            text: AppLocalizations.of(
+                              context,
+                            )!
                                 .translate('funerals'),
                             model: AppTextModel(
                               style: AppFontStyleGlobal(
-                                      AppLocalizations.of(context)!.locale)
-                                  .label
-                                  .copyWith(
+                                AppLocalizations.of(context)!.locale,
+                              ).label.copyWith(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 20.sp,
                                     color: AppColors.scondaryColor,
@@ -577,16 +694,19 @@ class _HomePageState extends State<HomePage> {
                           GestureDetector(
                             onTap: () {
                               Navigator.pushNamed(
-                                  context, AllFuneralsScreen.routeName);
+                                context,
+                                AllFuneralsScreen.routeName,
+                              );
                             },
                             child: AppText(
-                              text: AppLocalizations.of(context)!
+                              text: AppLocalizations.of(
+                                context,
+                              )!
                                   .translate('show_more'),
                               model: AppTextModel(
                                 style: AppFontStyleGlobal(
-                                        AppLocalizations.of(context)!.locale)
-                                    .subTitle2
-                                    .copyWith(
+                                  AppLocalizations.of(context)!.locale,
+                                ).subTitle2.copyWith(
                                       fontWeight: FontWeight.w500,
                                       color: AppColors.primaryColor,
                                     ),
@@ -601,39 +721,97 @@ class _HomePageState extends State<HomePage> {
                         GenericCubitState<FuneralsResponse>>(
                       bloc: viewModel.funeralsResponse,
                       builder: (context, funeralsState) {
-                        return Skeletonizer(
-                          enabled: funeralsState is GenericLoadingState,
-                          child: SizedBox(
-                            height: AppLocalizations.of(context)!
-                                            .locale
-                                            .languageCode ==
-                                        'sv' ||
-                                    AppLocalizations.of(context)!
-                                            .locale
-                                            .languageCode ==
-                                        'en'
-                                ? 265.h
-                                : 260.h,
-                            child: ListView.separated(
-                              clipBehavior: Clip.none,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) => FuneralItem(
-                                post: funeralsState.data.posts?[index] ??
-                                    FuneralPost(),
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                      context, FuneralsDetailsScreen.routeName,
-                                      arguments: {
-                                        "id":
-                                            funeralsState.data.posts?[index].id
-                                      });
-                                },
-                              ),
-                              separatorBuilder: (context, index) => SizedBox(
-                                width: 5.w,
-                              ),
-                              itemCount: funeralsState.data.posts?.length ?? 0,
-                            ),
+                        final posts = funeralsState.data.posts ?? [];
+                        final isLoading = funeralsState is GenericLoadingState;
+
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.w),
+                          child: LayoutBuilder(
+                            builder: (context, constraints) {
+                              final useGrid = constraints.maxWidth >= 700;
+                              final crossAxisCount = _homeCardColumns(
+                                constraints.maxWidth,
+                              );
+                              final spacing = 12.w;
+                              final cardWidth = useGrid
+                                  ? (constraints.maxWidth -
+                                          ((crossAxisCount - 1) * spacing)) /
+                                      crossAxisCount
+                                  : _homeCardWidth(constraints.maxWidth);
+                              final cardHeight = _homeCardHeight(cardWidth);
+
+                              return Skeletonizer(
+                                enabled: isLoading,
+                                child: useGrid
+                                    ? GridView.builder(
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemCount: isLoading
+                                            ? crossAxisCount * 2
+                                            : posts.length,
+                                        gridDelegate:
+                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: crossAxisCount,
+                                          mainAxisSpacing: 12.h,
+                                          crossAxisSpacing: spacing,
+                                          childAspectRatio:
+                                              cardWidth / cardHeight,
+                                        ),
+                                        itemBuilder: (context, index) {
+                                          final post = isLoading
+                                              ? FuneralPost()
+                                              : posts[index];
+
+                                          return FuneralItem(
+                                            post: post,
+                                            onTap: () {
+                                              if (isLoading) return;
+
+                                              Navigator.pushNamed(
+                                                context,
+                                                FuneralsDetailsScreen.routeName,
+                                                arguments: {"id": post.id},
+                                              );
+                                            },
+                                          );
+                                        },
+                                      )
+                                    : SizedBox(
+                                        height: cardHeight,
+                                        child: ListView.separated(
+                                          clipBehavior: Clip.none,
+                                          scrollDirection: Axis.horizontal,
+                                          physics:
+                                              const BouncingScrollPhysics(),
+                                          itemBuilder: (context, index) {
+                                            final post = isLoading
+                                                ? FuneralPost()
+                                                : posts[index];
+
+                                            return FuneralItem(
+                                              width: cardWidth,
+                                              post: post,
+                                              onTap: () {
+                                                if (isLoading) return;
+
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  FuneralsDetailsScreen
+                                                      .routeName,
+                                                  arguments: {"id": post.id},
+                                                );
+                                              },
+                                            );
+                                          },
+                                          separatorBuilder: (context, index) =>
+                                              SizedBox(width: 12.w),
+                                          itemCount:
+                                              isLoading ? 3 : posts.length,
+                                        ),
+                                      ),
+                              );
+                            },
                           ),
                         );
                       },
@@ -646,13 +824,14 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         children: [
                           AppText(
-                            text: AppLocalizations.of(context)!
+                            text: AppLocalizations.of(
+                              context,
+                            )!
                                 .translate('partners'),
                             model: AppTextModel(
                               style: AppFontStyleGlobal(
-                                      AppLocalizations.of(context)!.locale)
-                                  .label
-                                  .copyWith(
+                                AppLocalizations.of(context)!.locale,
+                              ).label.copyWith(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 20.sp,
                                     color: AppColors.scondaryColor,
@@ -680,13 +859,14 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           AppText(
-                            text: AppLocalizations.of(context)!
+                            text: AppLocalizations.of(
+                              context,
+                            )!
                                 .translate('sponsors'),
                             model: AppTextModel(
                               style: AppFontStyleGlobal(
-                                      AppLocalizations.of(context)!.locale)
-                                  .label
-                                  .copyWith(
+                                AppLocalizations.of(context)!.locale,
+                              ).label.copyWith(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 20.sp,
                                     color: AppColors.scondaryColor,
@@ -724,13 +904,14 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           AppText(
-                            text: AppLocalizations.of(context)!
+                            text: AppLocalizations.of(
+                              context,
+                            )!
                                 .translate('resalty_in_numbers'),
                             model: AppTextModel(
                               style: AppFontStyleGlobal(
-                                      AppLocalizations.of(context)!.locale)
-                                  .label
-                                  .copyWith(
+                                AppLocalizations.of(context)!.locale,
+                              ).label.copyWith(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 20.sp,
                                     color: AppColors.scondaryColor,
@@ -751,11 +932,15 @@ class _HomePageState extends State<HomePage> {
                         child: Text(
                           "${state.data.home?.ayah2}",
                           textAlign: TextAlign.center,
-                          textDirection: AppLocalizations.of(context)!
+                          textDirection: AppLocalizations.of(
+                                        context,
+                                      )!
                                           .locale
                                           .languageCode ==
                                       'en' ||
-                                  AppLocalizations.of(context)!
+                                  AppLocalizations.of(
+                                        context,
+                                      )!
                                           .locale
                                           .languageCode ==
                                       'sv'

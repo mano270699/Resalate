@@ -74,8 +74,7 @@ class AuthViewModel {
     required BuildContext context,
   }) async {
     nameValidation.onUpdateData(Validation.fieldRequiredValidation(name.text));
-    phoneNumberValidation
-        .onUpdateData(Validation.fieldRequiredValidation(phone.text));
+
     emailValidation
         .onUpdateData(Validation.fieldRequiredValidation(email.text));
 
@@ -87,7 +86,6 @@ class AuthViewModel {
 
     if ((emailValidation.state.data.isEmpty) &&
         (confirmValidation.state.data.isEmpty) &&
-        (phoneNumberValidation.state.data.isEmpty) &&
         (nameValidation.state.data.isEmpty) &&
         (passwordValidation.state.data.isEmpty)) {
       try {

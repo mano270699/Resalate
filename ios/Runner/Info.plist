@@ -61,13 +61,13 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>We need access to your camera</string>
+	<string>Resalate uses the camera so you can take a profile photo, for example when updating your account picture.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app needs access to your location to find nearby masjids.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>We need access to your microphone</string>
+	<string>Resalate uses the microphone only when recording audio with the camera, for example while capturing a profile video or media inside the app.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We need access to your photo library</string>
+	<string>Resalate uses your photo library so you can choose an existing image, for example when updating your profile photo.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

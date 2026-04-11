@@ -240,7 +240,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         },
                                         child: Container(
                                           height: 40.h,
-                                          width: 150.w,
+                                          width: 180,
                                           decoration: BoxDecoration(
                                               color: AppColors.scondaryColor,
                                               borderRadius:
@@ -351,9 +351,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               //   ],
                               // ),
 
-                              Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 20.w),
+                              Center(
+                                child: ConstrainedBox(
+                                  constraints: const BoxConstraints(maxWidth: 600),
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 20.w),
                                   child: Column(children: <Widget>[
                                     BlocBuilder<GenericCubit<bool>,
                                         GenericCubitState<bool>>(
@@ -1079,7 +1082,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       },
                                     ),
                                     20.h.verticalSpace
-                                  ]))
+                                  ])),
+                                ),
+                              )
                             ],
                           ),
                         ],

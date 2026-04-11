@@ -34,16 +34,21 @@ class DonationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final donationPercent = (double.tryParse(percentage) ?? 0).clamp(0, 100);
+    final totalAmount = double.tryParse(total) ?? 0;
+    final paidAmount = double.tryParse(paid) ?? 0;
+    final remainingAmount =
+        (totalAmount - paidAmount).clamp(0, double.infinity);
+
     return Padding(
-      padding: EdgeInsetsDirectional.only(start: 10.w),
+      padding: EdgeInsets.symmetric(horizontal: 10.w),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(10),
           child: Container(
-            height: 400.h,
-            width: MediaQuery.of(context).size.width - 40.w,
+            width: double.infinity,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: AppColors.white,
@@ -51,6 +56,7 @@ class DonationItem extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ClipRRect(
@@ -60,7 +66,7 @@ class DonationItem extends StatelessWidget {
                     ),
                     child: SizedBox(
                       height: 125.h,
-                      width: MediaQuery.of(context).size.width,
+                      width: double.infinity,
                       child: image.isNotEmpty
                           ? AppCachedNetworkImage(
                               image: image,
@@ -70,7 +76,7 @@ class DonationItem extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    width: MediaQuery.of(context).size.width,
+                    width: double.infinity,
                     height: 30.h,
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.only(
@@ -89,10 +95,10 @@ class DonationItem extends StatelessWidget {
                             AppColors.primaryColor.withValues(alpha: 0.5),
                         lineHeight: 30.h,
                         padding: EdgeInsets.zero,
-                        percent: double.parse(
-                            (int.parse(percentage) / 100).toString()),
+                        percent: (donationPercent / 100).clamp(0.0, 1.0),
                         center: AppText(
-                          text: "$percentage%",
+                          text:
+                              "${donationPercent.toStringAsFixed(donationPercent % 1 == 0 ? 0 : 1)}%",
                           model: AppTextModel(
                             style: AppFontStyleGlobal(
                                     AppLocalizations.of(context)!.locale)
@@ -164,7 +170,7 @@ class DonationItem extends StatelessWidget {
                           iconColor: AppColors.primaryColor,
                           label:
                               AppLocalizations.of(context)!.translate('total'),
-                          value: "${double.parse(total)} $currency",
+                          value: "$totalAmount $currency",
                         ),
                       ),
                       5.w.horizontalSpace,
@@ -174,8 +180,7 @@ class DonationItem extends StatelessWidget {
                           iconColor: const Color(0xFFF57C00),
                           label: AppLocalizations.of(context)!
                               .translate('remaining'),
-                          value:
-                              "${(double.parse(total) - double.parse(paid))} $currency",
+                          value: "$remainingAmount $currency",
                         ),
                       ),
                       5.w.horizontalSpace,
@@ -185,12 +190,12 @@ class DonationItem extends StatelessWidget {
                           iconColor: const Color(0xFF4CAF50),
                           label:
                               AppLocalizations.of(context)!.translate('paid'),
-                          value: "${double.parse(paid)} $currency",
+                          value: "$paidAmount $currency",
                         ),
                       ),
                     ],
                   ),
-                  const Spacer(),
+                  16.h.verticalSpace,
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 10.w),
                     decoration: BoxDecoration(

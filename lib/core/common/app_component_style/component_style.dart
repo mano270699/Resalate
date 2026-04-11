@@ -31,7 +31,7 @@ class ComponentStyle {
       );
   static ButtonStyle get buttonStyle => ButtonStyle(
         fixedSize: WidgetStateProperty.all(
-          Size(325.w, 45.h),
+          const Size(double.infinity, 48),
         ),
         shape: WidgetStateProperty.all(
           RoundedRectangleBorder(

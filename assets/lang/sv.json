@@ -27,6 +27,7 @@
   "confirm": "Bekräfta",
   "name": "Namn",
   "email": "E-post",
+  "email_or_phone": "E-post eller telefonnummer",
   "phone": "Telefonnummer",
   "already_have_account": "Jag har redan ett konto",
   "login": "Logga in",

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:resalate/core/blocs/generic_cubit/generic_cubit.dart';
 import 'package:resalate/src/donation/data/models/donation_model.dart';
 import 'package:resalate/src/donation/logic/donations_view_model.dart';
@@ -23,20 +24,30 @@ class DonationListScreen extends StatefulWidget {
 }
 
 class _DonationListScreenState extends State<DonationListScreen> {
-  final viewModel = sl<DonationsViewModel>()..getDonationsData(1);
+  final viewModel = sl<DonationsViewModel>();
   final ScrollController _scrollController = ScrollController();
+  String? _lastLanguageCode;
 
   @override
   void initState() {
     super.initState();
-
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 200) {
-        // Load next page when 200px near the bottom
         viewModel.loadNextPage();
       }
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final currentLanguageCode = Localizations.localeOf(context).languageCode;
+    if (_lastLanguageCode != currentLanguageCode) {
+      _lastLanguageCode = currentLanguageCode;
+      viewModel.getDonationsData(1, isLoadMore: false);
+    }
   }
 
   @override
@@ -79,29 +90,41 @@ class _DonationListScreenState extends State<DonationListScreen> {
               return Center(
                   child: Text(donationState.responseError!.errorMessage));
             }
-
             final posts = donationState.data.posts;
             final hasMore = viewModel.hasMorePages;
 
             return Skeletonizer(
               enabled: donationState is GenericLoadingState,
               child: ListView.separated(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                padding: EdgeInsets.fromLTRB(10.w, 5.h, 10.w, 24.h),
                 controller: _scrollController,
                 itemBuilder: (context, index) {
                   final isLoading = donationState is GenericLoadingState;
 
                   // Fake placeholders when loading
                   if (isLoading) {
-                    return DonationItem(
-                      onTap: () {},
-                      percentage: "0",
-                      title: "Loading title",
-                      image: "", // skeletonizes
-                      desc: "Loading description",
-                      total: "0",
-                      paid: "0",
-                      currency: "USD",
+                    return LayoutBuilder(
+                      builder: (context, constraints) {
+                        final cardWidth = constraints.maxWidth > 720
+                            ? 720.0
+                            : constraints.maxWidth;
+
+                        return Center(
+                          child: SizedBox(
+                            width: cardWidth,
+                            child: DonationItem(
+                              onTap: () {},
+                              percentage: "0",
+                              title: "Loading title",
+                              image: "", // skeletonizes
+                              desc: "Loading description",
+                              total: "0",
+                              paid: "0",
+                              currency: "USD",
+                            ),
+                          ),
+                        );
+                      },
                     );
                   }
 
@@ -116,23 +139,36 @@ class _DonationListScreenState extends State<DonationListScreen> {
                   }
 
                   final post = posts[index];
-                  return DonationItem(
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        DonationDetailsScreen.routeName,
-                        arguments: {
-                          "id": post.id,
-                        },
+                  return LayoutBuilder(
+                    builder: (context, constraints) {
+                      final cardWidth = constraints.maxWidth > 720
+                          ? 720.0
+                          : constraints.maxWidth;
+
+                      return Center(
+                        child: SizedBox(
+                          width: cardWidth,
+                          child: DonationItem(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                DonationDetailsScreen.routeName,
+                                arguments: {
+                                  "id": post.id,
+                                },
+                              );
+                            },
+                            percentage: post.donation?.percent.toString() ?? "",
+                            title: post.title ?? "",
+                            image: post.image ?? "",
+                            desc: post.excerpt ?? "",
+                            total: post.donation?.total.toString() ?? "",
+                            paid: post.donation?.paid.toString() ?? "",
+                            currency: post.donation?.currency.toString() ?? "",
+                          ),
+                        ),
                       );
                     },
-                    percentage: post.donation?.percent.toString() ?? "",
-                    title: post.title ?? "",
-                    image: post.image ?? "",
-                    desc: post.excerpt ?? "",
-                    total: post.donation?.total.toString() ?? "",
-                    paid: post.donation?.paid.toString() ?? "",
-                    currency: post.donation?.currency.toString() ?? "",
                   );
                 },
                 separatorBuilder: (context, index) => SizedBox(height: 10.h),

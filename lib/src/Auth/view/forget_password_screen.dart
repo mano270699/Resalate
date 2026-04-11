@@ -72,7 +72,10 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: SingleChildScrollView(
-              child: Column(
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 500),
+                  child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -163,6 +166,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   10.h.verticalSpace,
                 ],
               ),
+              ),
+            ),
             ),
           ),
         ),

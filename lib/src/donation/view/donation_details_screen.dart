@@ -83,7 +83,10 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
         ),
         body: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-          child: BlocBuilder<GenericCubit<DonationsDetailsResponse>,
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 760),
+              child: BlocBuilder<GenericCubit<DonationsDetailsResponse>,
               GenericCubitState<DonationsDetailsResponse>>(
             bloc: viewModel.donationDetailsResponse,
             builder: (context, state) {
@@ -272,6 +275,8 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
               );
             },
           ),
+          ),
+        ),
         ),
       ),
     );

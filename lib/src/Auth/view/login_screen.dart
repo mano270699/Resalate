@@ -81,229 +81,237 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  25.h.verticalSpace,
-                  GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(
-                        Icons.arrow_back_ios,
-                        color: AppColors.black,
-                        size: 30,
-                      )),
-                  Center(
-                    child: SvgPicture.asset(
-                      AppLocalizations.of(context)!.locale.languageCode ==
-                                  "en" ||
-                              AppLocalizations.of(context)!
-                                      .locale
-                                      .languageCode ==
-                                  'sv'
-                          ? AppIconSvg.splashLogo
-                          : AppIconSvg.splashLogoAr,
-                      height: 200.h,
-                    ),
-                  ),
-                  20.h.verticalSpace,
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12.r),
-                    child: BlocBuilder<GenericCubit<String>,
-                            GenericCubitState<String>>(
-                        bloc: viewModel.userNameEmailValidation,
-                        builder: (context, validation) {
-                          return AppTextField(
-                            model: AppTextFieldModel(
-                              appTextModel: AppTextModel(
-                                  style: AppFontStyleGlobal(
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 500),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      25.h.verticalSpace,
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Icon(
+                            Icons.arrow_back_ios,
+                            color: AppColors.black,
+                            size: 30,
+                          )),
+                      Center(
+                        child: SvgPicture.asset(
+                          AppLocalizations.of(context)!.locale.languageCode ==
+                                      "en" ||
+                                  AppLocalizations.of(context)!
+                                          .locale
+                                          .languageCode ==
+                                      'sv'
+                              ? AppIconSvg.splashLogo
+                              : AppIconSvg.splashLogoAr,
+                          height: 200.h,
+                        ),
+                      ),
+                      20.h.verticalSpace,
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12.r),
+                        child: BlocBuilder<GenericCubit<String>,
+                                GenericCubitState<String>>(
+                            bloc: viewModel.userNameEmailValidation,
+                            builder: (context, validation) {
+                              return AppTextField(
+                                model: AppTextFieldModel(
+                                  appTextModel: AppTextModel(
+                                      style: AppFontStyleGlobal(
+                                              AppLocalizations.of(context)!
+                                                  .locale)
+                                          .bodyRegular1
+                                          .copyWith(
+                                            color: AppColors.primaryColor,
+                                          )),
+                                  controller: viewModel.userNameEmail,
+                                  keyboardType: TextInputType.emailAddress,
+                                  textInputAction: TextInputAction.done,
+                                  onChangeInput: (value) {},
+                                  borderRadius: BorderRadius.circular(12.r),
+                                  decoration: ComponentStyle.inputDecoration(
                                           AppLocalizations.of(context)!.locale)
-                                      .bodyRegular1
                                       .copyWith(
-                                        color: AppColors.primaryColor,
-                                      )),
-                              controller: viewModel.userNameEmail,
-                              keyboardType: TextInputType.emailAddress,
-                              textInputAction: TextInputAction.done,
-                              onChangeInput: (value) {},
-                              borderRadius: BorderRadius.circular(12.r),
-                              decoration: ComponentStyle.inputDecoration(
-                                      AppLocalizations.of(context)!.locale)
-                                  .copyWith(
-                                fillColor: AppColors.white,
-                                contentPadding:
-                                    EdgeInsetsDirectional.only(start: 10.w),
-                                filled: true,
-                                hintText: AppLocalizations.of(context)!
-                                    .translate('email'),
-                              ),
-                              errorText: validation.data.isNotEmpty
-                                  ? AppLocalizations.of(context)!
-                                      .translate(validation.data)
-                                  : null,
-                            ),
-                          );
-                        }),
-                  ),
-                  20.h.verticalSpace,
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12.r),
-                    child: BlocBuilder<GenericCubit<String>,
-                            GenericCubitState<String>>(
-                        bloc: viewModel.loginPasswordValidation,
-                        builder: (context, validation) {
-                          return AppTextField(
-                            model: AppTextFieldModel(
-                              obscureInputText: true,
-                              appTextModel: AppTextModel(
-                                  style: AppFontStyleGlobal(
+                                    fillColor: AppColors.white,
+                                    contentPadding:
+                                        EdgeInsetsDirectional.only(start: 10.w),
+                                    filled: true,
+                                    hintText: AppLocalizations.of(context)!
+                                        .translate('email_or_phone'),
+                                  ),
+                                  errorText: validation.data.isNotEmpty
+                                      ? AppLocalizations.of(context)!
+                                          .translate(validation.data)
+                                      : null,
+                                ),
+                              );
+                            }),
+                      ),
+                      20.h.verticalSpace,
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12.r),
+                        child: BlocBuilder<GenericCubit<String>,
+                                GenericCubitState<String>>(
+                            bloc: viewModel.loginPasswordValidation,
+                            builder: (context, validation) {
+                              return AppTextField(
+                                model: AppTextFieldModel(
+                                  obscureInputText: true,
+                                  appTextModel: AppTextModel(
+                                      style: AppFontStyleGlobal(
+                                              AppLocalizations.of(context)!
+                                                  .locale)
+                                          .bodyRegular1
+                                          .copyWith(
+                                            color: AppColors.primaryColor,
+                                          )),
+                                  controller: viewModel.loginPassword,
+                                  keyboardType: TextInputType.visiblePassword,
+                                  textInputAction: TextInputAction.done,
+                                  onChangeInput: (value) {},
+                                  borderRadius: BorderRadius.circular(12.r),
+                                  maxLines: 1,
+                                  decoration: ComponentStyle.inputDecoration(
                                           AppLocalizations.of(context)!.locale)
-                                      .bodyRegular1
                                       .copyWith(
-                                        color: AppColors.primaryColor,
-                                      )),
-                              controller: viewModel.loginPassword,
-                              keyboardType: TextInputType.visiblePassword,
-                              textInputAction: TextInputAction.done,
-                              onChangeInput: (value) {},
-                              borderRadius: BorderRadius.circular(12.r),
-                              maxLines: 1,
-                              decoration: ComponentStyle.inputDecoration(
-                                      AppLocalizations.of(context)!.locale)
-                                  .copyWith(
-                                fillColor: AppColors.white,
-                                contentPadding:
-                                    EdgeInsetsDirectional.only(start: 10.w),
-                                filled: true,
-                                hintText: AppLocalizations.of(context)!
-                                    .translate('password'),
-                              ),
-                              errorText: validation.data.isNotEmpty
-                                  ? AppLocalizations.of(context)!
-                                      .translate(validation.data)
-                                  : null,
-                            ),
+                                    fillColor: AppColors.white,
+                                    contentPadding:
+                                        EdgeInsetsDirectional.only(start: 10.w),
+                                    filled: true,
+                                    hintText: AppLocalizations.of(context)!
+                                        .translate('password'),
+                                  ),
+                                  errorText: validation.data.isNotEmpty
+                                      ? AppLocalizations.of(context)!
+                                          .translate(validation.data)
+                                      : null,
+                                ),
+                              );
+                            }),
+                      ),
+                      20.h.verticalSpace,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            ForgetPasswordScreen.routeName,
                           );
-                        }),
-                  ),
-                  20.h.verticalSpace,
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        ForgetPasswordScreen.routeName,
-                      );
-                    },
-                    child: AppText(
-                      text: AppLocalizations.of(context)!
-                          .translate("Forget_Password"),
-                      model: AppTextModel(
-                          style: AppFontStyleGlobal(
-                                  AppLocalizations.of(context)!.locale)
-                              .bodyMedium1
-                              .copyWith(
-                                  color: AppColors.scondaryColor,
-                                  fontSize: 14.sp)),
-                    ),
-                  ),
-                  20.h.verticalSpace,
-                  Padding(
-                    padding: EdgeInsetsDirectional.only(
-                        bottom: 14, start: 8.w, end: 8.w),
-                    child: AppButton(
-                      model: AppButtonModel(
+                        },
                         child: AppText(
-                          text:
-                              AppLocalizations.of(context)!.translate('login'),
+                          text: AppLocalizations.of(context)!
+                              .translate("Forget_Password"),
                           model: AppTextModel(
                               style: AppFontStyleGlobal(
                                       AppLocalizations.of(context)!.locale)
-                                  .label
-                                  .copyWith(color: AppColors.white)),
+                                  .bodyMedium1
+                                  .copyWith(
+                                      color: AppColors.scondaryColor,
+                                      fontSize: 14.sp)),
                         ),
-                        decoration: ComponentStyle.buttonDecoration,
-                        buttonStyle: ComponentStyle.buttonStyle,
                       ),
-                      onPressed: () => viewModel.login(context: context),
-                    ),
-                  ),
-                  10.h.verticalSpace,
-                  Platform.isAndroid
-                      ? Column(
+                      20.h.verticalSpace,
+                      Padding(
+                        padding: EdgeInsetsDirectional.only(
+                            bottom: 14, start: 8.w, end: 8.w),
+                        child: AppButton(
+                          model: AppButtonModel(
+                            child: AppText(
+                              text: AppLocalizations.of(context)!
+                                  .translate('login'),
+                              model: AppTextModel(
+                                  style: AppFontStyleGlobal(
+                                          AppLocalizations.of(context)!.locale)
+                                      .label
+                                      .copyWith(color: AppColors.white)),
+                            ),
+                            decoration: ComponentStyle.buttonDecoration,
+                            buttonStyle: ComponentStyle.buttonStyle,
+                          ),
+                          onPressed: () => viewModel.login(context: context),
+                        ),
+                      ),
+                      10.h.verticalSpace,
+                      Platform.isAndroid
+                          ? Column(
+                              children: [
+                                Center(
+                                  child: AppText(
+                                    text:
+                                        "------------------- ${AppLocalizations.of(context)!.translate('or')} --------------------",
+                                    model: AppTextModel(
+                                      style: AppFontStyleGlobal(
+                                              AppLocalizations.of(context)!
+                                                  .locale)
+                                          .bodyRegular1
+                                          .copyWith(
+                                            color: AppColors.gray,
+                                          ),
+                                    ),
+                                  ),
+                                ),
+                                10.h.verticalSpace,
+                                Center(
+                                  child: SocialLoginButton(
+                                    label: AppLocalizations.of(context)!
+                                        .translate('continue_with_google'),
+                                    backgroundColor: Colors.white,
+                                    textColor: Colors.black,
+                                    iconPath: Assets
+                                        .googleImage, // Add Google icon asset
+                                    onPressed: () {
+                                      viewModel.signInWithGoogle(context);
+                                    },
+                                  ),
+                                ),
+                              ],
+                            )
+                          : SizedBox.shrink(),
+                      SizedBox(
+                        height: 24,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Center(
+                            AppText(
+                              text: AppLocalizations.of(context)!
+                                  .translate('do_not_have_account'),
+                              model: AppTextModel(
+                                style: AppFontStyleGlobal(
+                                        AppLocalizations.of(context)!.locale)
+                                    .bodyRegular1
+                                    .copyWith(
+                                      color: AppColors.gray,
+                                    ),
+                              ),
+                            ),
+                            SizedBox(width: 5.w),
+                            InkWell(
+                              onTap: () => Navigator.pushNamed(
+                                context,
+                                RegesterScreen.routeName,
+                              ),
                               child: AppText(
-                                text:
-                                    "------------------- ${AppLocalizations.of(context)!.translate('or')} --------------------",
+                                text: AppLocalizations.of(context)!
+                                    .translate('register_now'),
                                 model: AppTextModel(
                                   style: AppFontStyleGlobal(
                                           AppLocalizations.of(context)!.locale)
                                       .bodyRegular1
                                       .copyWith(
-                                        color: AppColors.gray,
+                                        color: AppColors.primaryColor,
                                       ),
                                 ),
                               ),
                             ),
-                            10.h.verticalSpace,
-                            Center(
-                              child: SocialLoginButton(
-                                label: AppLocalizations.of(context)!
-                                    .translate('continue_with_google'),
-                                backgroundColor: Colors.white,
-                                textColor: Colors.black,
-                                iconPath:
-                                    Assets.googleImage, // Add Google icon asset
-                                onPressed: () {
-                                  viewModel.signInWithGoogle(context);
-                                },
-                              ),
-                            ),
                           ],
-                        )
-                      : SizedBox.shrink(),
-                  SizedBox(
-                    height: 24,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        AppText(
-                          text: AppLocalizations.of(context)!
-                              .translate('do_not_have_account'),
-                          model: AppTextModel(
-                            style: AppFontStyleGlobal(
-                                    AppLocalizations.of(context)!.locale)
-                                .bodyRegular1
-                                .copyWith(
-                                  color: AppColors.gray,
-                                ),
-                          ),
                         ),
-                        SizedBox(width: 5.w),
-                        InkWell(
-                          onTap: () => Navigator.pushNamed(
-                            context,
-                            RegesterScreen.routeName,
-                          ),
-                          child: AppText(
-                            text: AppLocalizations.of(context)!
-                                .translate('register_now'),
-                            model: AppTextModel(
-                              style: AppFontStyleGlobal(
-                                      AppLocalizations.of(context)!.locale)
-                                  .bodyRegular1
-                                  .copyWith(
-                                    color: AppColors.primaryColor,
-                                  ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
