@@ -621,24 +621,42 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                         SliverToBoxAdapter(
                             child: CustomExpansionTile(
                           content: Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 16.w,
-                            ),
-                            child: GridView.count(
-                              shrinkWrap: true,
-                              physics:
-                                  NeverScrollableScrollPhysics(), // let parent scroll
-                              crossAxisCount: 2, // 2 per row
-                              mainAxisSpacing: 10.h,
-                              crossAxisSpacing: 10.w,
-                              childAspectRatio: 3, // adjust height/width
-                              children: state.data.masjid?.services
-                                      ?.map((service) => _buildInfoCard(
-                                            " ${service.label}",
-                                            "",
-                                          ))
-                                      .toList() ??
-                                  [],
+                            padding: EdgeInsets.symmetric(horizontal: 16.w),
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                final availableWidth = constraints.maxWidth;
+                                final crossAxisCount = availableWidth >= 1050
+                                    ? 3
+                                    : availableWidth >= 560
+                                        ? 2
+                                        : 1;
+                                final mainAxisExtent = availableWidth >= 900
+                                    ? 112.0
+                                    : availableWidth >= 560
+                                        ? 104.0
+                                        : 92.0;
+
+                                return GridView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount:
+                                      state.data.masjid?.services?.length ?? 0,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: crossAxisCount,
+                                    mainAxisSpacing: 10.h,
+                                    crossAxisSpacing: 10.w,
+                                    mainAxisExtent: mainAxisExtent,
+                                  ),
+                                  itemBuilder: (context, index) {
+                                    final service =
+                                        state.data.masjid?.services?[index];
+                                    return _buildInfoCard(
+                                      service?.label?.trim() ?? "",
+                                    );
+                                  },
+                                );
+                              },
                             ),
                           ),
                           title: Padding(
@@ -867,48 +885,34 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
     );
   }
 
-  Widget _buildInfoCard(String label, String value) {
+  Widget _buildInfoCard(String label) {
+    final isLtr = AppLocalizations.of(context)!.locale.languageCode == 'en' ||
+        AppLocalizations.of(context)!.locale.languageCode == 'sv';
+
     return Container(
-      height: 60.h,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.r),
         color: AppColors.white,
       ),
-      child: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 150.w,
-              child: AppText(
-                text: label,
-                model: AppTextModel(
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style:
-                      AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                          .subTitle1
-                          .copyWith(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.black,
-                          ),
-                ),
-              ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+        child: Center(
+          child: AppText(
+            text: label,
+            model: AppTextModel(
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              textDirection: isLtr ? TextDirection.ltr : TextDirection.rtl,
+              style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
+                  .subTitle1
+                  .copyWith(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.black,
+                  ),
             ),
-            AppText(
-              text: value,
-              model: AppTextModel(
-                style: AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                    .subTitle1
-                    .copyWith(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.primaryColor,
-                    ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

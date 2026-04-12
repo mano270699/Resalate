@@ -92,9 +92,25 @@ class _HomePageState extends State<HomePage> {
     return 1;
   }
 
-  double _homeCardHeight(double cardWidth) {
+  double _lessonCardHeight(double cardWidth) {
     final imageHeight = (cardWidth * 0.56).clamp(112.0, 180.0).toDouble();
-    return imageHeight + 200;
+    if (cardWidth >= 360) return imageHeight + 260;
+    if (cardWidth >= 300) return imageHeight + 230;
+    return imageHeight + 210;
+  }
+
+  double _funeralCardHeight(double cardWidth) {
+    final imageHeight = (cardWidth * 0.56).clamp(112.0, 180.0).toDouble();
+    if (cardWidth >= 360) return imageHeight + 270;
+    if (cardWidth >= 300) return imageHeight + 240;
+    return imageHeight + 220;
+  }
+
+  double _donationCardHeight(double cardWidth) {
+    final imageHeight = (cardWidth * 0.58).clamp(132.0, 220.0).toDouble();
+    if (cardWidth >= 360) return imageHeight + 325;
+    if (cardWidth >= 300) return imageHeight + 290;
+    return imageHeight + 260;
   }
 
   @override
@@ -390,61 +406,142 @@ class _HomePageState extends State<HomePage> {
                         GenericCubitState<DonationsResponse>>(
                       bloc: viewModel.donationResponse,
                       builder: (context, donationState) {
-                        final donationCardWidth =
-                            (MediaQuery.sizeOf(context).width * 0.82)
-                                .clamp(280.0, 360.0);
+                        final donations = donationState.data.posts ?? [];
+                        final isLoading = donationState is GenericLoadingState;
 
-                        return Skeletonizer(
-                          enabled: donationState is GenericLoadingState,
-                          child: SizedBox(
-                            height: 400.h,
-                            child: ListView.separated(
-                              clipBehavior: Clip.none,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) => SizedBox(
-                                width: donationCardWidth,
-                                child: DonationItem(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      DonationDetailsScreen.routeName,
-                                      arguments: {
-                                        "id":
-                                            donationState.data.posts![index].id,
-                                      },
-                                    );
-                                  },
-                                  percentage: donationState
-                                          .data.posts![index].donation?.percent
-                                          .toString() ??
-                                      "",
-                                  title:
-                                      donationState.data.posts?[index].title ??
-                                          "",
-                                  image:
-                                      donationState.data.posts?[index].image ??
-                                          "",
-                                  desc: donationState
-                                          .data.posts?[index].excerpt ??
-                                      "",
-                                  total: donationState
-                                          .data.posts![index].donation?.total
-                                          .toString() ??
-                                      "",
-                                  paid: donationState
-                                          .data.posts![index].donation?.paid
-                                          .toString() ??
-                                      "",
-                                  currency: donationState
-                                          .data.posts![index].donation?.currency
-                                          .toString() ??
-                                      "",
-                                ),
-                              ),
-                              separatorBuilder: (context, index) =>
-                                  SizedBox(width: 5.w),
-                              itemCount: donationState.data.posts?.length ?? 0,
-                            ),
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.w),
+                          child: LayoutBuilder(
+                            builder: (context, constraints) {
+                              final useGrid = constraints.maxWidth >= 700;
+                              final crossAxisCount = _homeCardColumns(
+                                constraints.maxWidth,
+                              );
+                              const spacing = 12.0;
+                              final cardWidth = useGrid
+                                  ? (constraints.maxWidth -
+                                          ((crossAxisCount - 1) * spacing)) /
+                                      crossAxisCount
+                                  : _homeCardWidth(constraints.maxWidth);
+                              final cardHeight = _donationCardHeight(cardWidth);
+                              final loadingItemCount =
+                                  useGrid ? crossAxisCount * 2 : 3;
+
+                              return Skeletonizer(
+                                enabled: isLoading,
+                                child: useGrid
+                                    ? GridView.builder(
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemCount: isLoading
+                                            ? loadingItemCount
+                                            : donations.length,
+                                        gridDelegate:
+                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: crossAxisCount,
+                                          mainAxisSpacing: 12.h,
+                                          crossAxisSpacing: spacing,
+                                          childAspectRatio:
+                                              cardWidth / cardHeight,
+                                        ),
+                                        itemBuilder: (context, index) {
+                                          final donation = isLoading
+                                              ? null
+                                              : donations[index];
+
+                                          return DonationItem(
+                                            onTap: () {
+                                              if (donation == null) return;
+
+                                              Navigator.pushNamed(
+                                                context,
+                                                DonationDetailsScreen.routeName,
+                                                arguments: {
+                                                  "id": donation.id,
+                                                },
+                                              );
+                                            },
+                                            percentage: donation
+                                                    ?.donation?.percent
+                                                    .toString() ??
+                                                "0",
+                                            title: donation?.title ??
+                                                "Donation title",
+                                            image: donation?.image ?? "",
+                                            desc: donation?.excerpt ??
+                                                "Donation description",
+                                            total: donation?.donation?.total
+                                                    .toString() ??
+                                                "0",
+                                            paid: donation?.donation?.paid
+                                                    .toString() ??
+                                                "0",
+                                            currency: donation
+                                                    ?.donation?.currency
+                                                    .toString() ??
+                                                "",
+                                          );
+                                        },
+                                      )
+                                    : SizedBox(
+                                        height: cardHeight,
+                                        child: ListView.separated(
+                                          clipBehavior: Clip.none,
+                                          scrollDirection: Axis.horizontal,
+                                          physics:
+                                              const BouncingScrollPhysics(),
+                                          itemBuilder: (context, index) {
+                                            final donation = isLoading
+                                                ? null
+                                                : donations[index];
+
+                                            return SizedBox(
+                                              width: cardWidth,
+                                              child: DonationItem(
+                                                onTap: () {
+                                                  if (donation == null) return;
+
+                                                  Navigator.pushNamed(
+                                                    context,
+                                                    DonationDetailsScreen
+                                                        .routeName,
+                                                    arguments: {
+                                                      "id": donation.id,
+                                                    },
+                                                  );
+                                                },
+                                                percentage: donation
+                                                        ?.donation?.percent
+                                                        .toString() ??
+                                                    "0",
+                                                title: donation?.title ??
+                                                    "Donation title",
+                                                image: donation?.image ?? "",
+                                                desc: donation?.excerpt ??
+                                                    "Donation description",
+                                                total: donation?.donation?.total
+                                                        .toString() ??
+                                                    "0",
+                                                paid: donation?.donation?.paid
+                                                        .toString() ??
+                                                    "0",
+                                                currency: donation
+                                                        ?.donation?.currency
+                                                        .toString() ??
+                                                    "",
+                                              ),
+                                            );
+                                          },
+                                          separatorBuilder: (context, index) =>
+                                              const SizedBox(width: spacing),
+                                          itemCount: isLoading
+                                              ? loadingItemCount
+                                              : donations.length,
+                                        ),
+                                      ),
+                              );
+                            },
                           ),
                         );
                       },
@@ -593,7 +690,7 @@ class _HomePageState extends State<HomePage> {
                                           ((crossAxisCount - 1) * spacing)) /
                                       crossAxisCount
                                   : _homeCardWidth(constraints.maxWidth);
-                              final cardHeight = _homeCardHeight(cardWidth);
+                              final cardHeight = _lessonCardHeight(cardWidth);
 
                               return Skeletonizer(
                                 enabled: isLoading,
@@ -738,7 +835,7 @@ class _HomePageState extends State<HomePage> {
                                           ((crossAxisCount - 1) * spacing)) /
                                       crossAxisCount
                                   : _homeCardWidth(constraints.maxWidth);
-                              final cardHeight = _homeCardHeight(cardWidth);
+                              final cardHeight = _funeralCardHeight(cardWidth);
 
                               return Skeletonizer(
                                 enabled: isLoading,

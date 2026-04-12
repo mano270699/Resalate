@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/common/app_colors/app_colors.dart';
 import '../../../../core/util/localization/app_localizations.dart';
@@ -38,14 +37,18 @@ class FuneralItem extends StatelessWidget {
                 ? constraints.maxWidth
                 : MediaQuery.sizeOf(context).width;
             final imageHeight =
-                (availableWidth * 0.56).clamp(112.0, 180.0).toDouble();
+                (availableWidth * 0.54).clamp(112.0, 170.0).toDouble();
             final isCompactHomeCard =
-                hasBoundedHeight && constraints.maxHeight <= imageHeight + 192;
-            final borderRadius = BorderRadius.circular(18.r);
+                hasBoundedHeight && constraints.maxHeight <= imageHeight + 230;
+            final borderRadius = BorderRadius.circular(18);
             final titleLines = isCompactHomeCard ? 1 : 2;
             final excerptLines = isCompactHomeCard ? 1 : 2;
-            final contentSpacing = isCompactHomeCard ? 5.h : 6.h;
-            final dateSpacing = isCompactHomeCard ? 6.h : 8.h;
+            final contentSpacing = isCompactHomeCard ? 5.0 : 6.0;
+            final dateSpacing = isCompactHomeCard ? 6.0 : 8.0;
+            final titleFontSize = availableWidth >= 360 ? 18.0 : 16.0;
+            final bodyFontSize = availableWidth >= 360 ? 13.5 : 13.0;
+            final metaFontSize = availableWidth >= 360 ? 12.0 : 11.5;
+            final badgeTopInset = isCompactHomeCard ? 10.0 : 12.0;
 
             return Material(
               color: Colors.transparent,
@@ -75,7 +78,7 @@ class FuneralItem extends StatelessWidget {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(18.r),
+                              top: Radius.circular(18),
                             ),
                             child: (post.image ?? '').isNotEmpty
                                 ? CachedNetworkImage(
@@ -113,15 +116,15 @@ class FuneralItem extends StatelessWidget {
                                       child: Icon(
                                         Icons.volunteer_activism_rounded,
                                         color: AppColors.white,
-                                        size: 34.sp,
+                                        size: 34,
                                       ),
                                     ),
                                   ),
                           ),
                           if (hasDate)
                             PositionedDirectional(
-                              top: isCompactHomeCard ? 10.h : 12.h,
-                              end: 12.w,
+                              top: badgeTopInset,
+                              end: 12,
                               child: _FuneralBadge(label: post.date!.trim()),
                             ),
                         ],
@@ -130,8 +133,8 @@ class FuneralItem extends StatelessWidget {
                         Expanded(
                           child: Padding(
                             padding: EdgeInsets.symmetric(
-                              horizontal: 14.w,
-                              vertical: isCompactHomeCard ? 7.h : 8.h,
+                              horizontal: 14,
+                              vertical: isCompactHomeCard ? 7 : 8,
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,8 +147,7 @@ class FuneralItem extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                   textDirection: textDirection,
                                   style: TextStyle(
-                                    fontSize:
-                                        availableWidth >= 320 ? 16.sp : 15.sp,
+                                    fontSize: titleFontSize,
                                     fontWeight: FontWeight.w700,
                                     color: AppColors.lightBlack,
                                     height: 1.25,
@@ -160,7 +162,7 @@ class FuneralItem extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                   textDirection: textDirection,
                                   style: TextStyle(
-                                    fontSize: 13.sp,
+                                    fontSize: bodyFontSize,
                                     color: Colors.black54,
                                     height: 1.45,
                                   ),
@@ -172,6 +174,7 @@ class FuneralItem extends StatelessWidget {
                                     icon: Icons.event_note_rounded,
                                     label: post.date!.trim(),
                                     textDirection: textDirection,
+                                    fontSize: metaFontSize,
                                   ),
                                 ],
                               ],
@@ -181,8 +184,8 @@ class FuneralItem extends StatelessWidget {
                       else
                         Padding(
                           padding: EdgeInsets.symmetric(
-                            horizontal: 14.w,
-                            vertical: 8.h,
+                            horizontal: 14,
+                            vertical: 8,
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,14 +198,13 @@ class FuneralItem extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                                 textDirection: textDirection,
                                 style: TextStyle(
-                                  fontSize:
-                                      availableWidth >= 320 ? 16.sp : 15.sp,
+                                  fontSize: titleFontSize,
                                   fontWeight: FontWeight.w700,
                                   color: AppColors.lightBlack,
                                   height: 1.25,
                                 ),
                               ),
-                              SizedBox(height: 6.h),
+                              SizedBox(height: 6),
                               Text(
                                 post.excerpt?.trim().isNotEmpty == true
                                     ? post.excerpt!.trim()
@@ -211,17 +213,18 @@ class FuneralItem extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                                 textDirection: textDirection,
                                 style: TextStyle(
-                                  fontSize: 13.sp,
+                                  fontSize: bodyFontSize,
                                   color: Colors.black54,
                                   height: 1.45,
                                 ),
                               ),
                               if (hasDate) ...[
-                                SizedBox(height: 8.h),
+                                SizedBox(height: 8),
                                 _FuneralMetaRow(
                                   icon: Icons.event_note_rounded,
                                   label: post.date!.trim(),
                                   textDirection: textDirection,
+                                  fontSize: metaFontSize,
                                 ),
                               ],
                             ],
@@ -231,13 +234,13 @@ class FuneralItem extends StatelessWidget {
                         Container(
                           width: double.infinity,
                           padding: EdgeInsets.symmetric(
-                            horizontal: 14.w,
-                            vertical: isCompactHomeCard ? 7.h : 8.h,
+                            horizontal: 14,
+                            vertical: isCompactHomeCard ? 7 : 8,
                           ),
                           decoration: BoxDecoration(
                             color: AppColors.primaryColor.withAlpha(9),
                             borderRadius: BorderRadius.vertical(
-                              bottom: Radius.circular(18.r),
+                              bottom: Radius.circular(18),
                             ),
                             border: Border(
                               top: BorderSide(
@@ -250,7 +253,7 @@ class FuneralItem extends StatelessWidget {
                               _FuneralMasjidAvatar(
                                 imageUrl: post.masjid!.photo,
                               ),
-                              SizedBox(width: 10.w),
+                              SizedBox(width: 10),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -264,12 +267,12 @@ class FuneralItem extends StatelessWidget {
                                       overflow: TextOverflow.ellipsis,
                                       textDirection: textDirection,
                                       style: TextStyle(
-                                        fontSize: 12.5.sp,
+                                        fontSize: 12.5,
                                         fontWeight: FontWeight.w700,
                                         color: AppColors.scondaryColor,
                                       ),
                                     ),
-                                    SizedBox(height: 2.h),
+                                    SizedBox(height: 2),
                                     Text(
                                       post.masjid!.email?.trim().isNotEmpty ==
                                               true
@@ -279,7 +282,7 @@ class FuneralItem extends StatelessWidget {
                                       overflow: TextOverflow.ellipsis,
                                       textDirection: textDirection,
                                       style: TextStyle(
-                                        fontSize: 11.5.sp,
+                                        fontSize: 11.5,
                                         color: Colors.black54,
                                       ),
                                     ),
@@ -309,18 +312,18 @@ class _FuneralBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints(maxWidth: 160.w),
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+      constraints: const BoxConstraints(maxWidth: 160),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
         color: AppColors.white.withAlpha(235),
-        borderRadius: BorderRadius.circular(999.r),
+        borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
         label,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(
-          fontSize: 11.5.sp,
+          fontSize: 11.5,
           fontWeight: FontWeight.w700,
           color: AppColors.scondaryColor,
         ),
@@ -334,18 +337,20 @@ class _FuneralMetaRow extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.textDirection,
+    required this.fontSize,
   });
 
   final IconData icon;
   final String label;
   final TextDirection textDirection;
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 14.sp, color: AppColors.primaryColor),
-        SizedBox(width: 6.w),
+        Icon(icon, size: 14, color: AppColors.primaryColor),
+        const SizedBox(width: 6),
         Expanded(
           child: Text(
             label,
@@ -353,7 +358,7 @@ class _FuneralMetaRow extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             textDirection: textDirection,
             style: TextStyle(
-              fontSize: 11.5.sp,
+              fontSize: fontSize,
               fontWeight: FontWeight.w600,
               color: AppColors.primaryColor,
             ),
@@ -374,8 +379,8 @@ class _FuneralMasjidAvatar extends StatelessWidget {
     final hasImage = (imageUrl ?? '').isNotEmpty;
 
     return Container(
-      height: 38.h,
-      width: 38.h,
+      height: 38,
+      width: 38,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: AppColors.primaryColor.withAlpha(24),
@@ -389,13 +394,13 @@ class _FuneralMasjidAvatar extends StatelessWidget {
                 errorWidget: (ctx, _, __) => Icon(
                   Icons.location_city_rounded,
                   color: AppColors.primaryColor,
-                  size: 18.sp,
+                  size: 18,
                 ),
               )
             : Icon(
                 Icons.location_city_rounded,
                 color: AppColors.primaryColor,
-                size: 18.sp,
+                size: 18,
               ),
       ),
     );

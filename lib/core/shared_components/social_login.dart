@@ -24,39 +24,45 @@ class SocialLoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 20.w),
+      padding: EdgeInsets.symmetric(vertical: 14.h),
       child: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
             backgroundColor: backgroundColor,
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+            minimumSize: Size(0, 52.h),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
           ),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Social Media Icon
               Image.asset(
                 iconPath,
-                height: 32,
-                width: 32,
+                height: 24,
+                width: 24,
               ),
-              SizedBox(width: 12.h),
-              // Button Label
-
-              AppText(
-                text: label,
-                model: AppTextModel(
-                  style:
-                      AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
-                          .bodyRegular1
-                          .copyWith(
+              SizedBox(width: 12.w),
+              Flexible(
+                child: AppText(
+                  text: label,
+                  model: AppTextModel(
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style:
+                        AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
+                            .bodyRegular1
+                            .copyWith(
                               fontWeight: FontWeight.bold,
                               color: textColor,
-                              fontSize: 16.sp),
+                              fontSize: 16.sp,
+                            ),
+                  ),
                 ),
               ),
             ],

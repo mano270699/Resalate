@@ -307,7 +307,7 @@ class _InfoRow extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 4.h),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, color: AppColors.primaryColor, size: 18.sp),
           SizedBox(width: 10.w),
@@ -326,6 +326,8 @@ class _InfoRow extends StatelessWidget {
                 SizedBox(height: 2.h),
                 Text(
                   value,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
@@ -383,7 +385,7 @@ class _LinkRow extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 4.h),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, color: AppColors.primaryColor, size: 18.sp),
           SizedBox(width: 10.w),
@@ -411,7 +413,7 @@ class _LinkRow extends StatelessWidget {
                       decoration: TextDecoration.underline,
                       decorationColor: AppColors.primaryColor,
                     ),
-                    maxLines: 1,
+                    maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
