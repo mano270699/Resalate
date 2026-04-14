@@ -168,7 +168,6 @@ class FuneralItem extends StatelessWidget {
                                   ),
                                 ),
                                 if (hasDate) ...[
-                                  const Spacer(),
                                   SizedBox(height: dateSpacing),
                                   _FuneralMetaRow(
                                     icon: Icons.event_note_rounded,

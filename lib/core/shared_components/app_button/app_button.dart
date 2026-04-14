@@ -16,8 +16,12 @@ class AppButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: model.padding ?? const EdgeInsets.symmetric(vertical: 8),
-      child: SizedBox(
-        width: model.width,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: model.width ?? double.infinity,
+          minWidth: model.width ?? 0.0,
+          maxHeight: 60.0, // Prevent huge buttons on tablets
+        ),
         child: Container(
           decoration: model.decoration,
           child: TextButton(

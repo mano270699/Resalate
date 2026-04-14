@@ -18,6 +18,7 @@ import '../../../core/util/loading.dart';
 import '../../../core/util/localization/app_localizations.dart';
 import '../data/models/follow_masjed_model.dart';
 import '../data/models/masjed_details_model.dart';
+import '../../../core/util/responsive_utils.dart';
 import 'widgets/custom_expantion_tile.dart';
 import 'widgets/donation_item.dart';
 import 'widgets/from_masjed_to_masjed.dart';
@@ -804,7 +805,7 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                           itemCount: state.data.posts?.donations?.length ?? 0,
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
+                            crossAxisCount: ResponsiveUtils.isTablet(context) ? 3 : 2,
                             childAspectRatio: 0.79,
                             crossAxisSpacing: 10,
                             mainAxisSpacing: 10,
@@ -821,7 +822,7 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                               state.data.posts?.masjidToMasjid?.length ?? 0,
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
+                            crossAxisCount: ResponsiveUtils.isTablet(context) ? 4 : 2,
                             childAspectRatio: 0.66,
                             crossAxisSpacing: 10,
                             mainAxisSpacing: 10,
@@ -843,7 +844,7 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                           itemCount: state.data.posts?.funerals?.length ?? 0,
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
+                            crossAxisCount: ResponsiveUtils.isTablet(context) ? 4 : 2,
                             childAspectRatio: 0.70,
                             crossAxisSpacing: 10,
                             mainAxisSpacing: 10,

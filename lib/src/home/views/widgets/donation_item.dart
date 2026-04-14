@@ -51,7 +51,7 @@ class DonationItem extends StatelessWidget {
               (availableWidth * 0.58).clamp(132.0, 220.0).toDouble();
           final progressHeight = availableWidth >= 360 ? 34.0 : 30.0;
           final isCompactCard =
-              hasBoundedHeight && constraints.maxHeight <= imageHeight + 290;
+              hasBoundedHeight && constraints.maxHeight <= imageHeight + 320;
           final titleFontSize = availableWidth >= 360 ? 18.0 : 16.0;
           final descriptionFontSize = availableWidth >= 360 ? 13.5 : 12.5;
           final buttonFontSize = availableWidth >= 360 ? 16.0 : 14.0;

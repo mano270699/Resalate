@@ -23,6 +23,7 @@ import '../../../core/shared_components/text_form_field/app_text_field.dart';
 import '../../../core/shared_components/text_form_field/models/app_text_field_model.dart';
 import '../../../core/util/loading.dart';
 import '../../../core/util/localization/app_localizations.dart';
+import '../../../core/util/responsive_utils.dart';
 import '../../layout/screens/user_bottom_navigation_screen.dart';
 import '../data/models/login_model.dart';
 import '../logic/auth_view_model.dart';
@@ -83,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: SingleChildScrollView(
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 500),
+                  constraints: BoxConstraints(maxWidth: ResponsiveUtils.maxWidth),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,

@@ -178,7 +178,6 @@ class LessonItem extends StatelessWidget {
                                   ),
                                 ),
                                 if (hasDate) ...[
-                                  const Spacer(),
                                   SizedBox(height: dateSpacing),
                                   _LessonMetaRow(
                                     icon: Icons.schedule_rounded,

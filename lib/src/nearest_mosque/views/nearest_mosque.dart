@@ -14,6 +14,7 @@ import '../../../core/shared_components/app_text/models/app_text_model.dart';
 import '../../../core/shared_components/text_form_field/app_text_field.dart';
 import '../../../core/shared_components/text_form_field/models/app_text_field_model.dart';
 import '../../../core/util/localization/app_localizations.dart';
+import '../../../core/util/responsive_utils.dart';
 import 'widget/mosque_item.dart';
 
 class NearestMosque extends StatefulWidget {
@@ -258,8 +259,8 @@ class _NearestMosqueState extends State<NearestMosque> {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          childAspectRatio: showItem == 2 ? 0.65 : 1.5,
-          crossAxisCount: showItem,
+          childAspectRatio: showItem == 2 ? 0.65 : (ResponsiveUtils.isTablet(context) ? 1.0 : 1.5),
+          crossAxisCount: ResponsiveUtils.isTablet(context) ? (showItem == 1 ? 2 : 3) : showItem,
           crossAxisSpacing: 10.w,
           mainAxisSpacing: 10.h,
         ),

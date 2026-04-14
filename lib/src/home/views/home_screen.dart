@@ -40,6 +40,7 @@ import 'widgets/live_feed_item.dart';
 import 'widgets/partenar_section.dart';
 import 'widgets/resalty_numbers_item.dart';
 import '../../layout/screens/main_screen_view_model.dart';
+import '../../../core/util/responsive_utils.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.homeViewModel});
@@ -81,36 +82,37 @@ class _HomePageState extends State<HomePage> {
   double _homeCardWidth(double availableWidth) {
     if (availableWidth >= 1200) return 340;
     if (availableWidth >= 900) return availableWidth * 0.38;
-    if (availableWidth >= 700) return availableWidth * 0.48;
+    if (availableWidth >= ResponsiveUtils.mobileLayoutWidth) return availableWidth * 0.48;
     if (availableWidth >= 500) return availableWidth * 0.62;
     return availableWidth * 0.82;
   }
 
   int _homeCardColumns(double availableWidth) {
-    if (availableWidth >= 1100) return 3;
-    if (availableWidth >= 700) return 2;
+    if (availableWidth >= 1100) return 4;
+    if (availableWidth >= 800) return 3;
+    if (availableWidth >= ResponsiveUtils.mobileLayoutWidth) return 2;
     return 1;
   }
 
   double _lessonCardHeight(double cardWidth) {
     final imageHeight = (cardWidth * 0.56).clamp(112.0, 180.0).toDouble();
-    if (cardWidth >= 360) return imageHeight + 260;
-    if (cardWidth >= 300) return imageHeight + 230;
-    return imageHeight + 210;
+    if (cardWidth >= 360) return imageHeight + 180;
+    if (cardWidth >= 300) return imageHeight + 160;
+    return imageHeight + 150;
   }
 
   double _funeralCardHeight(double cardWidth) {
     final imageHeight = (cardWidth * 0.56).clamp(112.0, 180.0).toDouble();
-    if (cardWidth >= 360) return imageHeight + 270;
-    if (cardWidth >= 300) return imageHeight + 240;
-    return imageHeight + 220;
+    if (cardWidth >= 360) return imageHeight + 180;
+    if (cardWidth >= 300) return imageHeight + 160;
+    return imageHeight + 150;
   }
 
   double _donationCardHeight(double cardWidth) {
     final imageHeight = (cardWidth * 0.58).clamp(132.0, 220.0).toDouble();
-    if (cardWidth >= 360) return imageHeight + 325;
-    if (cardWidth >= 300) return imageHeight + 290;
-    return imageHeight + 260;
+    if (cardWidth >= 360) return imageHeight + 350;
+    if (cardWidth >= 300) return imageHeight + 320;
+    return imageHeight + 290;
   }
 
   @override
@@ -254,106 +256,111 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     15.h.verticalSpace,
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  FromMosqueToMosqueScreen.routeName,
-                                );
-                              },
-                              child: Container(
-                                height: 100.h,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.r),
-                                  color: AppColors.white,
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset(
-                                      AppIconSvg.fromMosque,
-                                      height: 35.h,
+                    Center(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: ResponsiveUtils.mobileLayoutWidth),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.w),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      FromMosqueToMosqueScreen.routeName,
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 100.h,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                      color: AppColors.white,
                                     ),
-                                    10.h.verticalSpace,
-                                    AppText(
-                                      text: AppLocalizations.of(
-                                        context,
-                                      )!
-                                          .translate('from_mosque_to_mosque'),
-                                      model: AppTextModel(
-                                        textAlign: TextAlign.center,
-                                        style: AppFontStyleGlobal(
-                                          AppLocalizations.of(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset(
+                                          AppIconSvg.fromMosque,
+                                          height: 35.h,
+                                        ),
+                                        10.h.verticalSpace,
+                                        AppText(
+                                          text: AppLocalizations.of(
                                             context,
                                           )!
-                                              .locale,
-                                        ).subTitle1.copyWith(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 18.sp,
-                                              height: 1,
-                                              color: AppColors.scondaryColor,
-                                            ),
-                                      ),
+                                              .translate('from_mosque_to_mosque'),
+                                          model: AppTextModel(
+                                            textAlign: TextAlign.center,
+                                            style: AppFontStyleGlobal(
+                                              AppLocalizations.of(
+                                                context,
+                                              )!
+                                                  .locale,
+                                            ).subTitle1.copyWith(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 18.sp,
+                                                  height: 1,
+                                                  color: AppColors.scondaryColor,
+                                                ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                          10.w.horizontalSpace,
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  NearestMosque.routeName,
-                                );
-                              },
-                              child: Container(
-                                height: 100.h,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.r),
-                                  color: AppColors.white,
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset(
-                                      AppIconSvg.mosqueLocation,
-                                      height: 35.h,
+                              10.w.horizontalSpace,
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      NearestMosque.routeName,
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 100.h,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                      color: AppColors.white,
                                     ),
-                                    5.h.verticalSpace,
-                                    AppText(
-                                      text: AppLocalizations.of(
-                                        context,
-                                      )!
-                                          .translate('nearest_mosques'),
-                                      model: AppTextModel(
-                                        textAlign: TextAlign.center,
-                                        style: AppFontStyleGlobal(
-                                          AppLocalizations.of(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset(
+                                          AppIconSvg.mosqueLocation,
+                                          height: 35.h,
+                                        ),
+                                        5.h.verticalSpace,
+                                        AppText(
+                                          text: AppLocalizations.of(
                                             context,
                                           )!
-                                              .locale,
-                                        ).subTitle1.copyWith(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 18.sp,
-                                              height: 1,
-                                              color: AppColors.scondaryColor,
-                                            ),
-                                      ),
+                                              .translate('nearest_mosques'),
+                                          model: AppTextModel(
+                                            textAlign: TextAlign.center,
+                                            style: AppFontStyleGlobal(
+                                              AppLocalizations.of(
+                                                context,
+                                              )!
+                                                  .locale,
+                                            ).subTitle1.copyWith(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 18.sp,
+                                                  height: 1,
+                                                  color: AppColors.scondaryColor,
+                                                ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                     15.h.verticalSpace,

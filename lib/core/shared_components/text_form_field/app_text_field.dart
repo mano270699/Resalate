@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../util/responsive_utils.dart';
 
 import '../../common/app_colors/app_colors.dart';
 import '../../common/app_font_style/app_font_style_global.dart';
@@ -30,18 +31,23 @@ class AppTextField extends StatelessWidget {
               height: 8.h,
             ),
           ],
-          TextFormField(
-            controller: model.controller,
-            initialValue: model.initialValue,
-            inputFormatters: model.inputFormatter,
-            obscureText: model.obscureInputText,
-            readOnly: model.readOnly,
-            onChanged: model.onChangeInput,
-            onTap: model.onTap,
-            maxLines: model.maxLines,
-            keyboardType: model.keyboardType,
-            decoration: model.decoration,
-            style: model.style,
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: ResponsiveUtils.mobileLayoutWidth,
+            ),
+            child: TextFormField(
+              controller: model.controller,
+              initialValue: model.initialValue,
+              inputFormatters: model.inputFormatter,
+              obscureText: model.obscureInputText,
+              readOnly: model.readOnly,
+              onChanged: model.onChangeInput,
+              onTap: model.onTap,
+              maxLines: model.maxLines,
+              keyboardType: model.keyboardType,
+              decoration: model.decoration,
+              style: model.style,
+            ),
           ),
           if (model.helperText != null || model.helperTextModel != null)
             SizedBox(

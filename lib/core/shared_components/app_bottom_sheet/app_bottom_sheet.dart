@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../util/responsive_utils.dart';
 
 import 'models/app_bottom_sheet_model.dart';
 
@@ -14,24 +15,29 @@ class AppBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return BackdropFilter(
       filter: model.imageFilter,
-      child: Container(
-        decoration: model.uperContanerDecoration,
-        child: Container(
-          decoration: model.belowContanerDecoration,
-          child: Padding(
-            padding: MediaQuery.of(context).viewInsets,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    height: 4.h,
-                    width: 67.w,
-                    margin: const EdgeInsets.only(top: 8.0),
-                    decoration: model.deviderDecoration,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: ResponsiveUtils.mobileLayoutWidth),
+          child: Container(
+            decoration: model.uperContanerDecoration,
+            child: Container(
+              decoration: model.belowContanerDecoration,
+              child: Padding(
+                padding: MediaQuery.of(context).viewInsets,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        height: 4.h,
+                        width: 67.w,
+                        margin: const EdgeInsets.only(top: 8.0),
+                        decoration: model.deviderDecoration,
+                      ),
+                      model.child,
+                    ],
                   ),
-                  model.child,
-                ],
+                ),
               ),
             ),
           ),
