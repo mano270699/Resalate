@@ -18,7 +18,6 @@ import '../../../core/util/loading.dart';
 import '../../../core/util/localization/app_localizations.dart';
 import '../data/models/follow_masjed_model.dart';
 import '../data/models/masjed_details_model.dart';
-import '../../../core/util/responsive_utils.dart';
 import 'widgets/custom_expantion_tile.dart';
 import 'widgets/donation_item.dart';
 import 'widgets/from_masjed_to_masjed.dart';
@@ -799,80 +798,193 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                     body: TabBarView(
                       controller: _tabController,
                       children: [
-                        GridView.builder(
-                          shrinkWrap: true,
-                          padding: EdgeInsets.all(12.w),
-                          itemCount: state.data.posts?.donations?.length ?? 0,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: ResponsiveUtils.isTablet(context) ? 3 : 2,
-                            childAspectRatio: 0.79,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                          ),
-                          itemBuilder: (_, index) => DonationItem(
-                            donation: state.data.posts?.donations?[index] ??
-                                Donation(),
-                          ),
+                        /// Donation cases tab
+                        LayoutBuilder(
+                          builder: (context, constraints) {
+                            final w = constraints.maxWidth;
+                            final crossAxisCount = w >= 1100
+                                ? 4
+                                : w >= 800
+                                    ? 3
+                                    : 2;
+                            const spacing = 10.0;
+                            final cardWidth = (w - 24 - ((crossAxisCount - 1) * spacing)) / crossAxisCount;
+                            // Donation cards: image(70h) + progress(15h) + text + button ≈ ratio
+                            final cardHeight = cardWidth * 1.28;
+
+                            return GridView.builder(
+                              padding: EdgeInsets.all(12.w),
+                              itemCount: state.data.posts?.donations?.length ?? 0,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: crossAxisCount,
+                                childAspectRatio: cardWidth / cardHeight,
+                                crossAxisSpacing: spacing,
+                                mainAxisSpacing: spacing,
+                              ),
+                              itemBuilder: (_, index) => DonationItem(
+                                donation: state.data.posts?.donations?[index] ??
+                                    Donation(),
+                              ),
+                            );
+                          },
                         ),
-                        GridView.builder(
-                          shrinkWrap: true,
-                          padding: EdgeInsets.all(12.w),
-                          itemCount:
-                              state.data.posts?.masjidToMasjid?.length ?? 0,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: ResponsiveUtils.isTablet(context) ? 4 : 2,
-                            childAspectRatio: 0.66,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                          ),
-                          itemBuilder: (_, index) => FromMasjedToMasjed(
-                            postItem:
-                                state.data.posts?.masjidToMasjid?[index] ??
+
+                        /// From Mosque To Mosque tab
+                        LayoutBuilder(
+                          builder: (context, constraints) {
+                            final w = constraints.maxWidth;
+                            final crossAxisCount = w >= 1100
+                                ? 4
+                                : w >= 800
+                                    ? 3
+                                    : 2;
+                            const spacing = 10.0;
+                            final cardWidth = (w - 24 - ((crossAxisCount - 1) * spacing)) / crossAxisCount;
+                            final cardHeight = cardWidth * 1.52;
+
+                            return GridView.builder(
+                              padding: EdgeInsets.all(12.w),
+                              itemCount:
+                                  state.data.posts?.masjidToMasjid?.length ?? 0,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: crossAxisCount,
+                                childAspectRatio: cardWidth / cardHeight,
+                                crossAxisSpacing: spacing,
+                                mainAxisSpacing: spacing,
+                              ),
+                              itemBuilder: (_, index) => FromMasjedToMasjed(
+                                postItem:
+                                    state.data.posts?.masjidToMasjid?[index] ??
+                                        PostItem(),
+                                whatsAppLink:
+                                    state.data.masjid?.socialMedia?.whatsappUrl ??
+                                        "",
+                              ),
+                            );
+                          },
+                        ),
+
+                        /// Funerals tab
+                        LayoutBuilder(
+                          builder: (context, constraints) {
+                            final w = constraints.maxWidth;
+                            final crossAxisCount = w >= 1100
+                                ? 4
+                                : w >= 800
+                                    ? 3
+                                    : 2;
+                            const spacing = 10.0;
+                            final cardWidth = (w - 24 - ((crossAxisCount - 1) * spacing)) / crossAxisCount;
+                            final cardHeight = cardWidth * 1.45;
+
+                            return GridView.builder(
+                              padding: EdgeInsets.all(12.w),
+                              itemCount: state.data.posts?.funerals?.length ?? 0,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: crossAxisCount,
+                                childAspectRatio: cardWidth / cardHeight,
+                                crossAxisSpacing: spacing,
+                                mainAxisSpacing: spacing,
+                              ),
+                              itemBuilder: (_, index) => FuneralsItem(
+                                postItem: state.data.posts?.funerals?[index] ??
                                     PostItem(),
-                            whatsAppLink:
-                                state.data.masjid?.socialMedia?.whatsappUrl ??
-                                    "",
-                          ),
+                              ),
+                            );
+                          },
                         ),
 
-                        /// Funerals
-                        GridView.builder(
-                          shrinkWrap: true,
-                          padding: EdgeInsets.all(12.w),
-                          itemCount: state.data.posts?.funerals?.length ?? 0,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: ResponsiveUtils.isTablet(context) ? 4 : 2,
-                            childAspectRatio: 0.70,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                          ),
-                          itemBuilder: (_, index) => FuneralsItem(
-                            postItem: state.data.posts?.funerals?[index] ??
-                                PostItem(),
-                          ),
+                        /// Live feed tab
+                        LayoutBuilder(
+                          builder: (context, constraints) {
+                            final w = constraints.maxWidth;
+                            final crossAxisCount = w >= 1100
+                                ? 3
+                                : w >= 700
+                                    ? 2
+                                    : 1;
+
+                            if (crossAxisCount == 1) {
+                              return ListView.separated(
+                                padding: EdgeInsets.all(12.w),
+                                itemCount: state.data.posts?.liveFeed?.length ?? 0,
+                                itemBuilder: (_, index) => LiveFeedItem(
+                                  postItem: state.data.posts?.liveFeed?[index] ??
+                                      PostItem(),
+                                ),
+                                separatorBuilder: (_, __) => SizedBox(height: 10.h),
+                              );
+                            }
+
+                            const spacing = 10.0;
+                            final cardWidth = (w - 24 - ((crossAxisCount - 1) * spacing)) / crossAxisCount;
+                            // Live feed: image(120h) + title + desc ≈ ratio
+                            final cardHeight = cardWidth * 0.7;
+
+                            return GridView.builder(
+                              padding: EdgeInsets.all(12.w),
+                              itemCount: state.data.posts?.liveFeed?.length ?? 0,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: crossAxisCount,
+                                childAspectRatio: cardWidth / cardHeight,
+                                crossAxisSpacing: spacing,
+                                mainAxisSpacing: spacing,
+                              ),
+                              itemBuilder: (_, index) => LiveFeedItem(
+                                postItem: state.data.posts?.liveFeed?[index] ??
+                                    PostItem(),
+                              ),
+                            );
+                          },
                         ),
 
-                        /// Live feed
-                        ListView.separated(
-                          padding: EdgeInsets.all(12.w),
-                          itemCount: state.data.posts?.liveFeed?.length ?? 0,
-                          itemBuilder: (_, index) => LiveFeedItem(
-                            postItem: state.data.posts?.liveFeed?[index] ??
-                                PostItem(),
-                          ),
-                          separatorBuilder: (_, __) => 10.h.verticalSpace,
-                        ),
-                        ListView.separated(
-                          padding: EdgeInsets.all(12.w),
-                          itemCount: state.data.posts?.lessons?.length ?? 0,
-                          itemBuilder: (_, index) => LessonItem(
-                            lesson:
-                                state.data.posts?.lessons?[index] ?? Lesson(),
-                          ),
-                          separatorBuilder: (_, __) => 10.h.verticalSpace,
+                        /// Lessons tab
+                        LayoutBuilder(
+                          builder: (context, constraints) {
+                            final w = constraints.maxWidth;
+                            final crossAxisCount = w >= 1100
+                                ? 3
+                                : w >= 700
+                                    ? 2
+                                    : 1;
+
+                            if (crossAxisCount == 1) {
+                              return ListView.separated(
+                                padding: EdgeInsets.all(12.w),
+                                itemCount: state.data.posts?.lessons?.length ?? 0,
+                                itemBuilder: (_, index) => LessonItem(
+                                  lesson:
+                                      state.data.posts?.lessons?[index] ?? Lesson(),
+                                ),
+                                separatorBuilder: (_, __) => SizedBox(height: 10.h),
+                              );
+                            }
+
+                            const spacing = 10.0;
+                            final cardWidth = (w - 24 - ((crossAxisCount - 1) * spacing)) / crossAxisCount;
+                            // Lessons: image(100h) + title + desc + date ≈ ratio
+                            final cardHeight = cardWidth * 0.75;
+
+                            return GridView.builder(
+                              padding: EdgeInsets.all(12.w),
+                              itemCount: state.data.posts?.lessons?.length ?? 0,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: crossAxisCount,
+                                childAspectRatio: cardWidth / cardHeight,
+                                crossAxisSpacing: spacing,
+                                mainAxisSpacing: spacing,
+                              ),
+                              itemBuilder: (_, index) => LessonItem(
+                                lesson:
+                                    state.data.posts?.lessons?[index] ?? Lesson(),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),

@@ -37,23 +37,24 @@ class FuneralsItem extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10), color: AppColors.white),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
             children: [
-              ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10)),
-                  child: SizedBox(
-                      height: 100.h,
-                      width: double.infinity,
-                      child: Image.network(
-                        postItem.image ?? "",
-                        fit: BoxFit.cover,
-                      ))),
-              10.h.verticalSpace,
+              Expanded(
+                flex: 4,
+                child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10)),
+                    child: SizedBox(
+                        width: double.infinity,
+                        child: Image.network(
+                          postItem.image ?? "",
+                          fit: BoxFit.cover,
+                        ))),
+              ),
+              const SizedBox(height: 6),
               AppText(
                 text: "${postItem.title}",
                 model: AppTextModel(
@@ -64,28 +65,30 @@ class FuneralsItem extends StatelessWidget {
                             AppLocalizations.of(context)!.locale)
                         .heading1
                         .copyWith(
-                          fontSize: 16.sp,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
                           color: AppColors.primaryColor,
                         )),
               ),
-              10.h.verticalSpace,
-              AppText(
-                text: "${postItem.excerpt}",
-                model: AppTextModel(
-                    textDirection: textDir,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppFontStyleGlobal(
-                            AppLocalizations.of(context)!.locale)
-                        .subTitle1
-                        .copyWith(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.gray,
-                        )),
+              const SizedBox(height: 4),
+              Flexible(
+                child: AppText(
+                  text: "${postItem.excerpt}",
+                  model: AppTextModel(
+                      textDirection: textDir,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppFontStyleGlobal(
+                              AppLocalizations.of(context)!.locale)
+                          .subTitle1
+                          .copyWith(
+                            fontSize: 11.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.gray,
+                          )),
+                ),
               ),
-              10.h.verticalSpace,
+              const SizedBox(height: 4),
               AppText(
                 text: postItem.date ?? "",
                 model: AppTextModel(

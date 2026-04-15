@@ -33,6 +33,7 @@ import '../util/localization/cubit/localization_cubit.dart';
 import '../util/localization/localization_cache_helper.dart';
 import '../util/localization/models/localization_model.dart';
 import '../util/network_service.dart';
+import '../util/remote_config.dart';
 import '../util/routes/routes_reader.dart';
 import 'route_genrator.dart';
 
@@ -61,6 +62,9 @@ Future<void> init() async {
       )..interceptors.add(
           ApiInterceptor(),
         ));
+  // ─── Remote Config ───
+  sl.registerLazySingleton<RemoteConfigService>(() => RemoteConfigService());
+  await sl<RemoteConfigService>().initialize();
 
   /// VIEW Repository
   sl.registerFactory(() => AuthRepositoryImpl(sl()));

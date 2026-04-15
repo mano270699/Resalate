@@ -19,11 +19,10 @@ class LessonItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textDir =
-        AppLocalizations.of(context)!.locale.languageCode == 'en' ||
-                AppLocalizations.of(context)!.locale.languageCode == 'sv'
-            ? TextDirection.ltr
-            : TextDirection.rtl;
+    final textDir = AppLocalizations.of(context)!.locale.languageCode == 'en' ||
+            AppLocalizations.of(context)!.locale.languageCode == 'sv'
+        ? TextDirection.ltr
+        : TextDirection.rtl;
 
     return GestureDetector(
       onTap: () {
@@ -35,77 +34,95 @@ class LessonItem extends StatelessWidget {
           },
         );
       },
-      child: Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10), color: AppColors.white),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ClipRRect(
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10)),
-                child: SizedBox(
-                    height: 100.h,
-                    width: double.infinity,
-                    child: CachedNetworkImage(
-                      imageUrl: lesson.image ?? "",
-                      fit: BoxFit.cover,
-                    ))),
-            10.h.verticalSpace,
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.w),
-              child: AppText(
-                text: lesson.title ?? "",
-                model: AppTextModel(
-                    textDirection: textDir,
-                    style: AppFontStyleGlobal(
-                            AppLocalizations.of(context)!.locale)
-                        .headingMedium2
-                        .copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.primaryColor,
-                        )),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final hasBoundedHeight = constraints.hasBoundedHeight;
+
+          final image = ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+            ),
+            child: SizedBox(
+              width: double.infinity,
+              child: CachedNetworkImage(
+                imageUrl: lesson.image ?? "",
+                fit: BoxFit.cover,
               ),
             ),
-            10.h.verticalSpace,
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.w),
-              child: AppText(
-                text: lesson.excerpt ?? "",
-                model: AppTextModel(
-                    textDirection: textDir,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppFontStyleGlobal(
-                            AppLocalizations.of(context)!.locale)
-                        .subTitle2
-                        .copyWith(
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.primaryColor,
-                        )),
-              ),
+          );
+
+          final excerpt = Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            child: AppText(
+              text: lesson.excerpt ?? "",
+              model: AppTextModel(
+                  textDirection: textDir,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style:
+                      AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
+                          .subTitle2
+                          .copyWith(
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.primaryColor,
+                          )),
             ),
-            10.h.verticalSpace,
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.w),
-              child: AppText(
-                text: lesson.date ?? "",
-                model: AppTextModel(
-                    textDirection: textDir,
-                    style: AppFontStyleGlobal(
-                            AppLocalizations.of(context)!.locale)
-                        .smallTab
-                        .copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.scondaryColor,
-                        )),
-              ),
+          );
+
+          return Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: AppColors.white),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (hasBoundedHeight)
+                  Expanded(flex: 4, child: image)
+                else
+                  SizedBox(height: 180.h, width: double.infinity, child: image),
+                const SizedBox(height: 8),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w),
+                  child: AppText(
+                    text: lesson.title ?? "",
+                    model: AppTextModel(
+                        textDirection: textDir,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppFontStyleGlobal(
+                                AppLocalizations.of(context)!.locale)
+                            .headingMedium2
+                            .copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.primaryColor,
+                            )),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                if (hasBoundedHeight) Flexible(child: excerpt) else excerpt,
+                const SizedBox(height: 6),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w),
+                  child: AppText(
+                    text: lesson.date ?? "",
+                    model: AppTextModel(
+                        textDirection: textDir,
+                        style: AppFontStyleGlobal(
+                                AppLocalizations.of(context)!.locale)
+                            .smallTab
+                            .copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.scondaryColor,
+                            )),
+                  ),
+                ),
+                const SizedBox(height: 8),
+              ],
             ),
-            10.h.verticalSpace
-          ],
-        ),
+          );
+        },
       ),
     );
   }

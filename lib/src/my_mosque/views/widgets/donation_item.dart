@@ -38,26 +38,28 @@ class DonationItem extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10), color: AppColors.white),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10)),
-                  child: SizedBox(
-                      height: 70.h,
-                      width: double.infinity,
-                      child: (donation.image != null && donation.image!.isNotEmpty)
-                          ? AppCachedNetworkImage(
-                              image: donation.image!,
-                              fit: BoxFit.cover,
-                            )
-                          : SvgPicture.asset(AppIconSvg.splashLogo))),
+              Expanded(
+                flex: 3,
+                child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10)),
+                    child: SizedBox(
+                        width: double.infinity,
+                        child: (donation.image != null && donation.image!.isNotEmpty)
+                            ? AppCachedNetworkImage(
+                                image: donation.image!,
+                                fit: BoxFit.cover,
+                              )
+                            : SvgPicture.asset(AppIconSvg.splashLogo))),
+              ),
               Container(
                 width: double.infinity,
-                height: 15.h,
+                height: 14,
                 decoration: BoxDecoration(
                     borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(10),
@@ -69,7 +71,7 @@ class DonationItem extends StatelessWidget {
                       bottomRight: Radius.circular(10)),
                   child: LinearPercentIndicator(
                     fillColor: AppColors.primaryColor.withValues(alpha: 0.5),
-                    lineHeight: 30.h,
+                    lineHeight: 14,
                     padding: EdgeInsets.zero,
                     percent: 0.5,
                     center: AppText(
@@ -81,6 +83,7 @@ class DonationItem extends StatelessWidget {
                               .label
                               .copyWith(
                                 fontWeight: FontWeight.w500,
+                                fontSize: 10.sp,
                                 color: AppColors.white,
                               )),
                     ),
@@ -88,8 +91,9 @@ class DonationItem extends StatelessWidget {
                   ),
                 ),
               ),
-              4.h.verticalSpace,
+              const SizedBox(height: 4),
               Expanded(
+                flex: 2,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -103,89 +107,97 @@ class DonationItem extends StatelessWidget {
                                   AppLocalizations.of(context)!.locale)
                               .subTitle1
                               .copyWith(
-                                fontSize: 16.sp,
+                                fontSize: 14.sp,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.primaryColor,
                               )),
                     ),
-                    4.h.verticalSpace,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              AppText(
-                                text: AppLocalizations.of(context)!.translate('total'),
-                                model: AppTextModel(
-                                    textDirection: textDir,
-                                    style: AppFontStyleGlobal(
-                                            AppLocalizations.of(context)!.locale)
-                                        .subTitle1
-                                        .copyWith(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.primaryColor,
-                                        )),
-                              ),
-                              AppText(
-                                text:
-                                    " ${donation.totalAmount.toString()} ${donation.currency}",
-                                model: AppTextModel(
-                                    textDirection: textDir,
-                                    style: AppFontStyleGlobal(
-                                            AppLocalizations.of(context)!.locale)
-                                        .smallTab
-                                        .copyWith(
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.scondaryColor,
-                                        )),
-                              ),
-                            ],
+                    const SizedBox(height: 2),
+                    Flexible(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                AppText(
+                                  text: AppLocalizations.of(context)!.translate('total'),
+                                  model: AppTextModel(
+                                      textDirection: textDir,
+                                      style: AppFontStyleGlobal(
+                                              AppLocalizations.of(context)!.locale)
+                                          .subTitle1
+                                          .copyWith(
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.primaryColor,
+                                          )),
+                                ),
+                                AppText(
+                                  text:
+                                      " ${donation.totalAmount.toString()} ${donation.currency}",
+                                  model: AppTextModel(
+                                      textDirection: textDir,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: AppFontStyleGlobal(
+                                              AppLocalizations.of(context)!.locale)
+                                          .smallTab
+                                          .copyWith(
+                                            fontSize: 10.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.scondaryColor,
+                                          )),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              AppText(
-                                text: AppLocalizations.of(context)!.translate('paid'),
-                                model: AppTextModel(
-                                    textDirection: textDir,
-                                    style: AppFontStyleGlobal(
-                                            AppLocalizations.of(context)!.locale)
-                                        .subTitle1
-                                        .copyWith(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.primaryColor,
-                                        )),
-                              ),
-                              AppText(
-                                text:
-                                    " ${donation.amountPaid.toString()} ${donation.currency}",
-                                model: AppTextModel(
-                                    textDirection: textDir,
-                                    style: AppFontStyleGlobal(
-                                            AppLocalizations.of(context)!.locale)
-                                        .smallTab
-                                        .copyWith(
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.scondaryColor,
-                                        )),
-                              ),
-                            ],
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                AppText(
+                                  text: AppLocalizations.of(context)!.translate('paid'),
+                                  model: AppTextModel(
+                                      textDirection: textDir,
+                                      style: AppFontStyleGlobal(
+                                              AppLocalizations.of(context)!.locale)
+                                          .subTitle1
+                                          .copyWith(
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.primaryColor,
+                                          )),
+                                ),
+                                AppText(
+                                  text:
+                                      " ${donation.amountPaid.toString()} ${donation.currency}",
+                                  model: AppTextModel(
+                                      textDirection: textDir,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: AppFontStyleGlobal(
+                                              AppLocalizations.of(context)!.locale)
+                                          .smallTab
+                                          .copyWith(
+                                            fontSize: 10.sp,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.scondaryColor,
+                                          )),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
-              6.h.verticalSpace,
+              const SizedBox(height: 4),
               GestureDetector(
                 onTap: () {
                   Navigator.pushNamed(
@@ -197,7 +209,7 @@ class DonationItem extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: AppColors.scondaryColor,
                       borderRadius: BorderRadius.circular(8)),
-                  height: 40.h,
+                  height: 36,
                   width: double.infinity,
                   child: Center(
                     child: AppText(

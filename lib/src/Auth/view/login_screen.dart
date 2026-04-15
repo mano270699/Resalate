@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:resalate/core/util/remote_config.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -84,7 +86,8 @@ class _LoginScreenState extends State<LoginScreen> {
             child: SingleChildScrollView(
               child: Center(
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: ResponsiveUtils.maxWidth),
+                  constraints:
+                      BoxConstraints(maxWidth: ResponsiveUtils.maxWidth),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -236,8 +239,43 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       10.h.verticalSpace,
-                      Platform.isAndroid
-                          ? Column(
+                      Platform.isIOS
+                          ? sl<RemoteConfigService>().showGoogleAuth
+                              ? Column(
+                                  children: [
+                                    Center(
+                                      child: AppText(
+                                        text:
+                                            "------------------- ${AppLocalizations.of(context)!.translate('or')} --------------------",
+                                        model: AppTextModel(
+                                          style: AppFontStyleGlobal(
+                                                  AppLocalizations.of(context)!
+                                                      .locale)
+                                              .bodyRegular1
+                                              .copyWith(
+                                                color: AppColors.gray,
+                                              ),
+                                        ),
+                                      ),
+                                    ),
+                                    10.h.verticalSpace,
+                                    Center(
+                                      child: SocialLoginButton(
+                                        label: AppLocalizations.of(context)!
+                                            .translate('continue_with_google'),
+                                        backgroundColor: Colors.white,
+                                        textColor: Colors.black,
+                                        iconPath: Assets
+                                            .googleImage, // Add Google icon asset
+                                        onPressed: () {
+                                          viewModel.signInWithGoogle(context);
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : SizedBox.shrink()
+                          : Column(
                               children: [
                                 Center(
                                   child: AppText(
@@ -269,8 +307,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                               ],
-                            )
-                          : SizedBox.shrink(),
+                            ),
                       SizedBox(
                         height: 24,
                         child: Row(

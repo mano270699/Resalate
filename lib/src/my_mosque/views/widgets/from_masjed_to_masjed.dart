@@ -42,23 +42,26 @@ class FromMasjedToMasjed extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10), color: AppColors.white),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10)),
-                  child: SizedBox(
-                      height: 100.h,
-                      width: double.infinity,
-                      child: AppCachedNetworkImage(
-                        image: postItem.image ?? "",
-                        fit: BoxFit.cover,
-                      ))),
-              8.h.verticalSpace,
               Expanded(
+                flex: 4,
+                child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10)),
+                    child: SizedBox(
+                        width: double.infinity,
+                        child: AppCachedNetworkImage(
+                          image: postItem.image ?? "",
+                          fit: BoxFit.cover,
+                        ))),
+              ),
+              const SizedBox(height: 6),
+              Expanded(
+                flex: 3,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -76,25 +79,27 @@ class FromMasjedToMasjed extends StatelessWidget {
                                 color: AppColors.primaryColor,
                               )),
                     ),
-                    6.h.verticalSpace,
-                    AppText(
-                      text: postItem.excerpt ?? "",
-                      model: AppTextModel(
-                          textDirection: textDir,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppFontStyleGlobal(
-                                  AppLocalizations.of(context)!.locale)
-                              .smallTab
-                              .copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.gray,
-                              )),
+                    const SizedBox(height: 4),
+                    Flexible(
+                      child: AppText(
+                        text: postItem.excerpt ?? "",
+                        model: AppTextModel(
+                            textDirection: textDir,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppFontStyleGlobal(
+                                    AppLocalizations.of(context)!.locale)
+                                .smallTab
+                                .copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.gray,
+                                )),
+                      ),
                     ),
                   ],
                 ),
               ),
-              8.h.verticalSpace,
+              const SizedBox(height: 6),
               GestureDetector(
                 onTap: () {
                   openWhatsApp(whatsAppLink);
@@ -104,7 +109,7 @@ class FromMasjedToMasjed extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: Colors.green,
                       borderRadius: BorderRadius.circular(8)),
-                  height: 40.h,
+                  height: 36,
                   width: double.infinity,
                   child: Center(
                     child: AppText(
