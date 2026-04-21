@@ -168,8 +168,8 @@ class _FromMosqueToMosqueDetailsScreenState
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                  color:
-                                      AppColors.primaryColor.withValues(alpha: 0.3),
+                                  color: AppColors.primaryColor
+                                      .withValues(alpha: 0.3),
                                   width: 2,
                                 ),
                               ),
@@ -254,7 +254,8 @@ class _FromMosqueToMosqueDetailsScreenState
                               padding: EdgeInsets.symmetric(
                                   horizontal: 12.w, vertical: 6.h),
                               decoration: BoxDecoration(
-                                color: AppColors.primaryColor.withValues(alpha: 0.08),
+                                color: AppColors.primaryColor
+                                    .withValues(alpha: 0.08),
                                 borderRadius: BorderRadius.circular(20.r),
                               ),
                               child: Row(
@@ -283,8 +284,8 @@ class _FromMosqueToMosqueDetailsScreenState
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 10.w, vertical: 5.h),
                                 decoration: BoxDecoration(
-                                  color:
-                                      AppColors.scondaryColor.withValues(alpha: 0.08),
+                                  color: AppColors.scondaryColor
+                                      .withValues(alpha: 0.08),
                                   borderRadius: BorderRadius.circular(20.r),
                                   border: Border.all(
                                     color: AppColors.scondaryColor
@@ -404,7 +405,7 @@ class _FromMosqueToMosqueDetailsScreenState
                           ),
                         ),
 
-                      SizedBox(height: 20.h),
+                      SizedBox(height: 60.h),
                     ],
                   ),
                 ),

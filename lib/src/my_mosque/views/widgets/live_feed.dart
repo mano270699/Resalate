@@ -1,6 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:resalate/core/shared_components/app_cached_network_image.dart';
 import 'package:resalate/src/live_feed/view/live_feed_details_screen.dart';
 
 import '../../../../core/common/app_colors/app_colors.dart';
@@ -45,9 +45,8 @@ class LiveFeedItem extends StatelessWidget {
             ),
             child: SizedBox(
               width: double.infinity,
-              child: CachedNetworkImage(
-                imageUrl: postItem.image ??
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/960px-Placeholder_view_vector.svg.png",
+              child: AppCachedNetworkImage(
+                image: postItem.image,
                 fit: BoxFit.cover,
               ),
             ),

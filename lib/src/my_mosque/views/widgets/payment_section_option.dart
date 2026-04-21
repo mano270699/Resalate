@@ -12,6 +12,24 @@ class PaymentOptionsSection extends StatelessWidget {
 
   const PaymentOptionsSection({super.key, required this.paymentInfo});
 
+  String _buildPayPalUrl(String paypalUser) {
+    final trimmedValue = paypalUser.trim();
+    final parsedUri = Uri.tryParse(trimmedValue);
+
+    if (parsedUri != null && parsedUri.hasScheme) {
+      return trimmedValue;
+    }
+
+    if (trimmedValue.contains('@')) {
+      return Uri.https('www.paypal.com', '/cgi-bin/webscr', {
+        'cmd': '_xclick',
+        'business': trimmedValue,
+      }).toString();
+    }
+
+    return Uri.https('www.paypal.me', '/$trimmedValue').toString();
+  }
+
   Future<void> _launchUrl(String url) async {
     if (url.isEmpty) return;
     final uri = Uri.parse(url);
@@ -52,6 +70,7 @@ class PaymentOptionsSection extends StatelessWidget {
     final paypalUser = paymentInfo.paypalUser ?? "";
     final switchInfo = paymentInfo.switchData;
     final bankInfo = paymentInfo.bankAccount;
+    final paypalUrl = _buildPayPalUrl(paypalUser);
 
     final sections = <Widget>[];
 
@@ -63,10 +82,12 @@ class PaymentOptionsSection extends StatelessWidget {
           iconColor: const Color(0xFF003087),
           title: AppLocalizations.of(context)!.translate("paypal"),
           children: [
-            _InfoRow(
-              icon: Icons.person_outline_rounded,
+            _LinkRow(
+              icon: Icons.link_rounded,
               label: AppLocalizations.of(context)!.translate("user"),
-              value: paypalUser,
+              url: paypalUrl,
+              displayText: paypalUser,
+              onTap: () => _launchUrl(paypalUrl),
               onCopy: () => _copyToClipboard(context, paypalUser),
             ),
           ],
@@ -369,6 +390,7 @@ class _LinkRow extends StatelessWidget {
   final IconData icon;
   final String label;
   final String url;
+  final String? displayText;
   final VoidCallback onTap;
   final VoidCallback onCopy;
 
@@ -376,6 +398,7 @@ class _LinkRow extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.url,
+    this.displayText,
     required this.onTap,
     required this.onCopy,
   });
@@ -405,7 +428,7 @@ class _LinkRow extends StatelessWidget {
                 GestureDetector(
                   onTap: onTap,
                   child: Text(
-                    url,
+                    displayText ?? url,
                     style: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w500,

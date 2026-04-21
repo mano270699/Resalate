@@ -23,14 +23,17 @@ class AppCachedNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (image == null) {
-      return SizedBox(
-        height: height ?? 70.h,
-        width: width ?? MediaQuery.sizeOf(context).width,
-      );
+    final imageUrl = image?.trim() ?? '';
+    final uri = Uri.tryParse(imageUrl);
+    final hasValidNetworkImage = uri != null &&
+        (uri.scheme == 'http' || uri.scheme == 'https') &&
+        uri.host.isNotEmpty;
+
+    if (!hasValidNetworkImage) {
+      return _fallbackImage(context);
     }
     return CachedNetworkImage(
-      imageUrl: image!,
+      imageUrl: imageUrl,
       fit: fit,
       height: height,
       width: width,
@@ -54,14 +57,18 @@ class AppCachedNetworkImage extends StatelessWidget {
             ),
       errorWidget: (context, url, error) {
         debugPrint("Error::$error");
-        return Container(
-          height: height ?? 70.h,
-          width: width ?? MediaQuery.sizeOf(context).width,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(12.r)),
-          alignment: Alignment.center,
-          child: Image.asset(Assets.placeholderImage),
-        );
+        return _fallbackImage(context);
       },
+    );
+  }
+
+  Widget _fallbackImage(BuildContext context) {
+    return Container(
+      height: height ?? 70.h,
+      width: width ?? MediaQuery.sizeOf(context).width,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12.r)),
+      alignment: Alignment.center,
+      child: Image.asset(Assets.placeholderImage, fit: BoxFit.cover),
     );
   }
 }

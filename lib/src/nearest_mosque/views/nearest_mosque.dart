@@ -254,22 +254,26 @@ class _NearestMosqueState extends State<NearestMosque> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
       child: GridView.builder(
-        padding: EdgeInsets.zero,
+        padding: EdgeInsets.only(top: 5.h, bottom: 80.h),
         itemCount: mosques.length,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          childAspectRatio: showItem == 2 ? 0.65 : (ResponsiveUtils.isTablet(context) ? 1.0 : 1.5),
-          crossAxisCount: ResponsiveUtils.isTablet(context) ? (showItem == 1 ? 2 : 3) : showItem,
+          childAspectRatio: showItem == 2
+              ? 0.65
+              : (ResponsiveUtils.isTablet(context) ? 1.0 : 1.5),
+          crossAxisCount: ResponsiveUtils.isTablet(context)
+              ? (showItem == 1 ? 2 : 3)
+              : showItem,
           crossAxisSpacing: 10.w,
           mainAxisSpacing: 10.h,
         ),
         itemBuilder: (BuildContext context, int index) {
           final masjid = mosques[index];
           return MosqueItem(
+            id: masjid.id ?? 0,
             distance: masjid.distance ?? "",
-            address:
-                "${masjid.country} ,${masjid.province} ,${masjid.city}", // Or masjid.address if you have it
+            address: "${masjid.country} ,${masjid.province} ,${masjid.city}",
             lat: masjid.lat.toString(),
             long: masjid.lng.toString(),
             image: masjid.image ?? "",

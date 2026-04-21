@@ -10,6 +10,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../core/common/app_colors/app_colors.dart';
 import '../../../core/common/app_font_style/app_font_style_global.dart';
+import '../../../core/shared_components/app_cached_network_image.dart';
 import '../../../core/shared_components/app_text/app_text.dart';
 import '../../../core/shared_components/app_text/models/app_text_model.dart';
 import '../../../core/util/localization/app_localizations.dart';
@@ -192,8 +193,8 @@ class _AnnouncementDetailsScreenState extends State<AnnouncementDetailsScreen> {
                                 top: Radius.circular(24.r)),
                           ),
                           child: Padding(
-                            padding: EdgeInsets.fromLTRB(
-                                16.w, 24.h, 16.w, 20.h),
+                            padding:
+                                EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 20.h),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -219,20 +220,16 @@ class _AnnouncementDetailsScreenState extends State<AnnouncementDetailsScreen> {
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Icon(
-                                                Icons
-                                                    .calendar_today_rounded,
+                                            Icon(Icons.calendar_today_rounded,
                                                 size: 13.sp,
-                                                color:
-                                                    AppColors.primaryColor),
+                                                color: AppColors.primaryColor),
                                             SizedBox(width: 6.w),
                                             Text(
                                               announcement!.date!,
                                               style: TextStyle(
                                                 fontSize: 12.sp,
                                                 fontWeight: FontWeight.w600,
-                                                color:
-                                                    AppColors.primaryColor,
+                                                color: AppColors.primaryColor,
                                               ),
                                             ),
                                           ],
@@ -248,8 +245,7 @@ class _AnnouncementDetailsScreenState extends State<AnnouncementDetailsScreen> {
                                   padding: EdgeInsets.all(14.w),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius:
-                                        BorderRadius.circular(16.r),
+                                    borderRadius: BorderRadius.circular(16.r),
                                     border: Border.all(
                                       color: AppColors.scondaryColor
                                           .withValues(alpha: 0.08),
@@ -278,14 +274,14 @@ class _AnnouncementDetailsScreenState extends State<AnnouncementDetailsScreen> {
                                             ],
                                           ),
                                         ),
-                                        child: CircleAvatar(
-                                          radius: 26.r,
-                                          backgroundImage: NetworkImage(
-                                            announcement?.masjid?.photo ??
-                                                "",
+                                        child: ClipOval(
+                                          child: AppCachedNetworkImage(
+                                            image: announcement?.masjid?.photo,
+                                            width: 52.r,
+                                            height: 52.r,
+                                            fit: BoxFit.cover,
+                                            showLoader: false,
                                           ),
-                                          backgroundColor:
-                                              Colors.grey.shade100,
                                         ),
                                       ),
                                       SizedBox(width: 12.w),
@@ -295,9 +291,9 @@ class _AnnouncementDetailsScreenState extends State<AnnouncementDetailsScreen> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             AppText(
-                                              text: announcement
-                                                      ?.masjid?.name ??
-                                                  "",
+                                              text:
+                                                  announcement?.masjid?.name ??
+                                                      "",
                                               model: AppTextModel(
                                                 textDirection: _locale
                                                                 .languageCode ==
@@ -306,39 +302,37 @@ class _AnnouncementDetailsScreenState extends State<AnnouncementDetailsScreen> {
                                                             'sv'
                                                     ? TextDirection.ltr
                                                     : TextDirection.rtl,
-                                                style: AppFontStyleGlobal(
-                                                        _locale)
-                                                    .headingMedium2
-                                                    .copyWith(
-                                                      fontSize: 15.sp,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      color: AppColors
-                                                          .scondaryColor,
-                                                    ),
+                                                style:
+                                                    AppFontStyleGlobal(_locale)
+                                                        .headingMedium2
+                                                        .copyWith(
+                                                          fontSize: 15.sp,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          color: AppColors
+                                                              .scondaryColor,
+                                                        ),
                                               ),
                                             ),
                                             SizedBox(height: 4.h),
                                             Row(
                                               children: [
-                                                Icon(
-                                                    Icons.email_outlined,
+                                                Icon(Icons.email_outlined,
                                                     size: 13.sp,
                                                     color: AppColors.gray),
                                                 SizedBox(width: 4.w),
                                                 Expanded(
                                                   child: Text(
-                                                    announcement?.masjid
-                                                            ?.email ??
+                                                    announcement
+                                                            ?.masjid?.email ??
                                                         "",
                                                     style: TextStyle(
                                                       fontSize: 12.sp,
-                                                      color:
-                                                          AppColors.gray,
+                                                      color: AppColors.gray,
                                                     ),
                                                     maxLines: 1,
-                                                    overflow: TextOverflow
-                                                        .ellipsis,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                   ),
                                                 ),
                                               ],
@@ -380,8 +374,7 @@ class _AnnouncementDetailsScreenState extends State<AnnouncementDetailsScreen> {
                                             .copyWith(
                                               fontSize: 16.sp,
                                               fontWeight: FontWeight.w700,
-                                              color:
-                                                  AppColors.scondaryColor,
+                                              color: AppColors.scondaryColor,
                                             ),
                                       ),
                                     ),
@@ -397,8 +390,7 @@ class _AnnouncementDetailsScreenState extends State<AnnouncementDetailsScreen> {
                                   decoration: BoxDecoration(
                                     color: AppColors.lightGray
                                         .withValues(alpha: 0.5),
-                                    borderRadius:
-                                        BorderRadius.circular(16.r),
+                                    borderRadius: BorderRadius.circular(16.r),
                                     border: Border.all(
                                       color: Colors.grey.shade200,
                                       width: 0.5,
@@ -410,8 +402,7 @@ class _AnnouncementDetailsScreenState extends State<AnnouncementDetailsScreen> {
                                       "body": Style(
                                         direction:
                                             _locale.languageCode == 'en' ||
-                                                    _locale.languageCode ==
-                                                        'sv'
+                                                    _locale.languageCode == 'sv'
                                                 ? TextDirection.ltr
                                                 : TextDirection.rtl,
                                         fontSize: FontSize(14.sp),

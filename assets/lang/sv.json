@@ -59,9 +59,9 @@
   "paypal": "Paypal: ",
   "user": "Användare: ",
   "Copied": "Kopierad: ",
-  "switch": "Växel ",
+  "switch": "Swish ",
   "link": "Länk",
-  "switch_number": "Växelnummer",
+  "swish_number": "Swishnummer",
   "bank_account": "Bankkonto",
   "Name": "Namn ",
   "Account_No": "Kontonummer",
@@ -122,5 +122,10 @@
   "announcement": "Meddelande",
   "announcement_details": "Meddelandedetaljer",
   "read_more": "Läs mer",
+  "no_donation_cases_found": "Inga donationsärenden hittades",
+  "no_from_mosque_to_mosque_posts_found": "Inga inlägg från moské till moské hittades",
+  "no_funerals_found": "Inga begravningar hittades",
+  "no_live_feed_found": "Ingen direktsändning hittades",
+  "no_lessons_found": "Inga lektioner hittades",
   "details": "Detaljer"
 }

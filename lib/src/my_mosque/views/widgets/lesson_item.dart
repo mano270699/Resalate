@@ -1,6 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:resalate/core/shared_components/app_cached_network_image.dart';
 import 'package:resalate/src/lessons/view/lesson_details_screen.dart';
 
 import '../../../../core/common/app_colors/app_colors.dart';
@@ -45,8 +45,8 @@ class LessonItem extends StatelessWidget {
             ),
             child: SizedBox(
               width: double.infinity,
-              child: CachedNetworkImage(
-                imageUrl: lesson.image ?? "",
+              child: AppCachedNetworkImage(
+                image: lesson.image,
                 fit: BoxFit.cover,
               ),
             ),

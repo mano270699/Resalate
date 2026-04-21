@@ -1,3 +1,34 @@
+String? _stringOrNull(dynamic value) =>
+    value is String || value is num ? '$value' : null;
+
+double? _doubleOrNull(dynamic value) =>
+    value is num ? value.toDouble() : double.tryParse('${value ?? ''}');
+
+bool? _boolOrNull(dynamic value) {
+  if (value is bool) return value;
+  if (value is num) return value != 0;
+  if (value is String) {
+    final normalized = value.toLowerCase();
+    if (normalized == 'true' || normalized == '1') return true;
+    if (normalized == 'false' || normalized == '0') return false;
+  }
+  return null;
+}
+
+List<T>? _parseList<T>(
+  dynamic value,
+  T Function(Map<String, dynamic> json) fromJson,
+) {
+  if (value is! List) return null;
+  return value
+      .whereType<Map<String, dynamic>>()
+      .map((item) => fromJson(item))
+      .toList();
+}
+
+Map<String, dynamic>? _mapOrNull(dynamic value) =>
+    value is Map<String, dynamic> ? value : null;
+
 class MasjidDetailsResponse {
   final String? status;
   final Masjid? masjid;
@@ -8,8 +39,12 @@ class MasjidDetailsResponse {
   factory MasjidDetailsResponse.fromJson(Map<String, dynamic> json) {
     return MasjidDetailsResponse(
       status: json['status'],
-      masjid: json['masjid'] != null ? Masjid.fromJson(json['masjid']) : null,
-      posts: json['posts'] != null ? Posts.fromJson(json['posts']) : null,
+      masjid: _mapOrNull(json['masjid']) != null
+          ? Masjid.fromJson(_mapOrNull(json['masjid'])!)
+          : null,
+      posts: _mapOrNull(json['posts']) != null
+          ? Posts.fromJson(_mapOrNull(json['posts'])!)
+          : null,
     );
   }
 
@@ -68,34 +103,29 @@ class Masjid {
   factory Masjid.fromJson(Map<String, dynamic> json) {
     return Masjid(
       id: json['id'],
-      name: json['name'],
-      image: json['image'],
-      cover: json['cover'],
-      description: json['description'],
-      email: json['email'],
-      phone: json['phone'],
-      languages: (json['languages'] as List<dynamic>?)
-          ?.map((e) => Language.fromJson(e))
-          .toList(),
-      country: json['country'],
-      province: json['province'],
-      city: json['city'],
-      socialMedia: json['social_media'] != null
-          ? SocialMedia.fromJson(json['social_media'])
+      name: _stringOrNull(json['name']),
+      image: _stringOrNull(json['image']),
+      cover: _stringOrNull(json['cover']),
+      description: _stringOrNull(json['description']),
+      email: _stringOrNull(json['email']),
+      phone: _stringOrNull(json['phone']),
+      languages: _parseList(json['languages'], Language.fromJson),
+      country: _stringOrNull(json['country']),
+      province: _stringOrNull(json['province']),
+      city: _stringOrNull(json['city']),
+      socialMedia: _mapOrNull(json['social_media']) != null
+          ? SocialMedia.fromJson(_mapOrNull(json['social_media'])!)
           : null,
-      services: (json['services'] as List<dynamic>?)
-          ?.map((e) => Service.fromJson(e))
-          .toList(),
-      paymentInfo: json['payment_info'] != null
-          ? PaymentInfo.fromJson(json['payment_info'])
+      services: _parseList(json['services'], Service.fromJson),
+      paymentInfo: _mapOrNull(json['payment_info']) != null
+          ? PaymentInfo.fromJson(_mapOrNull(json['payment_info'])!)
           : null,
-      memorizationDates: (json['memorization_dates'] as List<dynamic>?)
-          ?.map((e) => MemorizationDate.fromJson(e))
-          .toList(),
-      location: json['location'],
-      isFollowing: json['is_following'],
-      lat: json["lat"],
-      lng: json["lng"],
+      memorizationDates:
+          _parseList(json['memorization_dates'], MemorizationDate.fromJson),
+      location: _stringOrNull(json['location']),
+      isFollowing: _boolOrNull(json['is_following']),
+      lat: _doubleOrNull(json["lat"]),
+      lng: _doubleOrNull(json["lng"]),
     );
   }
 
@@ -129,7 +159,7 @@ class Language {
   Language({this.title});
 
   factory Language.fromJson(Map<String, dynamic> json) =>
-      Language(title: json['title']);
+      Language(title: _stringOrNull(json['title']));
 
   Map<String, dynamic> toJson() => {"title": title};
 }
@@ -140,8 +170,10 @@ class Service {
 
   Service({this.value, this.label});
 
-  factory Service.fromJson(Map<String, dynamic> json) =>
-      Service(value: json['value'], label: json['label']);
+  factory Service.fromJson(Map<String, dynamic> json) => Service(
+        value: _stringOrNull(json['value']),
+        label: _stringOrNull(json['label']),
+      );
 
   Map<String, dynamic> toJson() => {"value": value, "label": label};
 }
@@ -170,15 +202,15 @@ class SocialMedia {
   });
 
   factory SocialMedia.fromJson(Map<String, dynamic> json) => SocialMedia(
-        facebookUrl: json['facebook_url'],
-        xUrl: json['x_url'],
-        instagramUrl: json['instagram_url'],
-        youtubeUrl: json['youtube_url'],
-        tiktokUrl: json['tiktok_url'],
-        linkedinUrl: json['linkedin_url'],
-        telegramUrl: json['telegram_url'],
-        whatsappUrl: json['whatsapp_url'],
-        snapchatUrl: json['snapchat_url'],
+        facebookUrl: _stringOrNull(json['facebook_url']),
+        xUrl: _stringOrNull(json['x_url']),
+        instagramUrl: _stringOrNull(json['instagram_url']),
+        youtubeUrl: _stringOrNull(json['youtube_url']),
+        tiktokUrl: _stringOrNull(json['tiktok_url']),
+        linkedinUrl: _stringOrNull(json['linkedin_url']),
+        telegramUrl: _stringOrNull(json['telegram_url']),
+        whatsappUrl: _stringOrNull(json['whatsapp_url']),
+        snapchatUrl: _stringOrNull(json['snapchat_url']),
       );
 
   Map<String, dynamic> toJson() => {
@@ -201,7 +233,10 @@ class MemorizationDate {
   MemorizationDate({this.date, this.description});
 
   factory MemorizationDate.fromJson(Map<String, dynamic> json) =>
-      MemorizationDate(date: json['date'], description: json['description']);
+      MemorizationDate(
+        date: _stringOrNull(json['date']),
+        description: _stringOrNull(json['description']),
+      );
 
   Map<String, dynamic> toJson() => {"date": date, "description": description};
 }
@@ -215,11 +250,12 @@ class PaymentInfo {
   PaymentInfo({this.paypalUser, this.switchData, this.bankAccount});
 
   factory PaymentInfo.fromJson(Map<String, dynamic> json) => PaymentInfo(
-        paypalUser: json['paypal_user'],
-        switchData:
-            json['switch'] != null ? SwitchData.fromJson(json['switch']) : null,
-        bankAccount: json['bank_account'] != null
-            ? BankAccount.fromJson(json['bank_account'])
+        paypalUser: _stringOrNull(json['paypal_user']),
+        switchData: _mapOrNull(json['switch']) != null
+            ? SwitchData.fromJson(_mapOrNull(json['switch'])!)
+            : null,
+        bankAccount: _mapOrNull(json['bank_account']) != null
+            ? BankAccount.fromJson(_mapOrNull(json['bank_account'])!)
             : null,
       );
 
@@ -238,10 +274,11 @@ class SwitchData {
   SwitchData({this.number, this.url, this.qrCode});
 
   factory SwitchData.fromJson(Map<String, dynamic> json) => SwitchData(
-        number: json['number'],
-        url: json['url'],
-        qrCode:
-            json['qr_code'] != null ? QrCode.fromJson(json['qr_code']) : null,
+        number: _stringOrNull(json['number']),
+        url: _stringOrNull(json['url']),
+        qrCode: _mapOrNull(json['qr_code']) != null
+            ? QrCode.fromJson(_mapOrNull(json['qr_code'])!)
+            : null,
       );
 
   Map<String, dynamic> toJson() =>
@@ -275,15 +312,17 @@ class QrCode {
 
   factory QrCode.fromJson(Map<String, dynamic> json) => QrCode(
         id: json['id'],
-        title: json['title'],
-        filename: json['filename'],
+        title: _stringOrNull(json['title']),
+        filename: _stringOrNull(json['filename']),
         filesize: json['filesize'],
-        url: json['url'],
-        link: json['link'],
-        mimeType: json['mime_type'],
+        url: _stringOrNull(json['url']),
+        link: _stringOrNull(json['link']),
+        mimeType: _stringOrNull(json['mime_type']),
         width: json['width'],
         height: json['height'],
-        sizes: json['sizes'] != null ? Sizes.fromJson(json['sizes']) : null,
+        sizes: _mapOrNull(json['sizes']) != null
+            ? Sizes.fromJson(_mapOrNull(json['sizes'])!)
+            : null,
       );
 
   Map<String, dynamic> toJson() => {
@@ -330,16 +369,16 @@ class Sizes {
   });
 
   factory Sizes.fromJson(Map<String, dynamic> json) => Sizes(
-        thumbnail: json['thumbnail'],
+        thumbnail: _stringOrNull(json['thumbnail']),
         thumbnailWidth: json['thumbnail-width'],
         thumbnailHeight: json['thumbnail-height'],
-        medium: json['medium'],
+        medium: _stringOrNull(json['medium']),
         mediumWidth: json['medium-width'],
         mediumHeight: json['medium-height'],
-        mediumLarge: json['medium_large'],
+        mediumLarge: _stringOrNull(json['medium_large']),
         mediumLargeWidth: json['medium_large-width'],
         mediumLargeHeight: json['medium_large-height'],
-        large: json['large'],
+        large: _stringOrNull(json['large']),
         largeWidth: json['large-width'],
         largeHeight: json['large-height'],
       );
@@ -369,10 +408,10 @@ class BankAccount {
   BankAccount({this.name, this.accountNumber, this.iban, this.swiftCode});
 
   factory BankAccount.fromJson(Map<String, dynamic> json) => BankAccount(
-        name: json['name'],
-        accountNumber: json['account_number'],
-        iban: json['iban'],
-        swiftCode: json['swift_code'],
+        name: _stringOrNull(json['name']),
+        accountNumber: _stringOrNull(json['account_number']),
+        iban: _stringOrNull(json['iban']),
+        swiftCode: _stringOrNull(json['swift_code']),
       );
 
   Map<String, dynamic> toJson() => {
@@ -400,21 +439,11 @@ class Posts {
   });
 
   factory Posts.fromJson(Map<String, dynamic> json) => Posts(
-        donations: (json['donations'] as List<dynamic>?)
-            ?.map((e) => Donation.fromJson(e))
-            .toList(),
-        masjidToMasjid: (json['masjid-to-masjid'] as List<dynamic>?)
-            ?.map((e) => PostItem.fromJson(e))
-            .toList(),
-        funerals: (json['funerals'] as List<dynamic>?)
-            ?.map((e) => PostItem.fromJson(e))
-            .toList(),
-        lessons: (json['lessons'] as List<dynamic>?)
-            ?.map((e) => Lesson.fromJson(e))
-            .toList(),
-        liveFeed: (json['live-feed'] as List<dynamic>?)
-            ?.map((e) => PostItem.fromJson(e))
-            .toList(),
+        donations: _parseList(json['donations'], Donation.fromJson),
+        masjidToMasjid: _parseList(json['masjid-to-masjid'], PostItem.fromJson),
+        funerals: _parseList(json['funerals'], PostItem.fromJson),
+        lessons: _parseList(json['lessons'], Lesson.fromJson),
+        liveFeed: _parseList(json['live-feed'], PostItem.fromJson),
       );
 
   Map<String, dynamic> toJson() => {
@@ -439,11 +468,11 @@ class PostItem {
 
   factory PostItem.fromJson(Map<String, dynamic> json) => PostItem(
         id: json['id'],
-        title: json['title'],
-        excerpt: json['excerpt'],
-        image: json['image'],
-        date: json['date'],
-        link: json['link'],
+        title: _stringOrNull(json['title']),
+        excerpt: _stringOrNull(json['excerpt']),
+        image: _stringOrNull(json['image']),
+        date: _stringOrNull(json['date']),
+        link: _stringOrNull(json['link']),
       );
 
   Map<String, dynamic> toJson() => {
@@ -475,14 +504,14 @@ class Donation extends PostItem {
 
   factory Donation.fromJson(Map<String, dynamic> json) => Donation(
         id: json['id'],
-        title: json['title'],
-        excerpt: json['excerpt'],
-        image: json['image'],
-        date: json['date'],
-        link: json['link'],
-        totalAmount: json['total_amount'],
-        amountPaid: json['amount_paid'],
-        currency: json['currency'],
+        title: _stringOrNull(json['title']),
+        excerpt: _stringOrNull(json['excerpt']),
+        image: _stringOrNull(json['image']),
+        date: _stringOrNull(json['date']),
+        link: _stringOrNull(json['link']),
+        totalAmount: _stringOrNull(json['total_amount']),
+        amountPaid: _stringOrNull(json['amount_paid']),
+        currency: _stringOrNull(json['currency']),
       );
 
   @override
@@ -509,14 +538,12 @@ class Lesson extends PostItem {
 
   factory Lesson.fromJson(Map<String, dynamic> json) => Lesson(
         id: json['id'],
-        title: json['title'],
-        excerpt: json['excerpt'],
-        image: json['image'],
-        date: json['date'],
-        link: json['link'],
-        categories: (json['categories'] as List<dynamic>?)
-            ?.map((e) => Category.fromJson(e))
-            .toList(),
+        title: _stringOrNull(json['title']),
+        excerpt: _stringOrNull(json['excerpt']),
+        image: _stringOrNull(json['image']),
+        date: _stringOrNull(json['date']),
+        link: _stringOrNull(json['link']),
+        categories: _parseList(json['categories'], Category.fromJson),
       );
 
   @override
@@ -533,8 +560,11 @@ class Category {
 
   Category({this.id, this.name, this.slug});
 
-  factory Category.fromJson(Map<String, dynamic> json) =>
-      Category(id: json['id'], name: json['name'], slug: json['slug']);
+  factory Category.fromJson(Map<String, dynamic> json) => Category(
+        id: json['id'],
+        name: _stringOrNull(json['name']),
+        slug: _stringOrNull(json['slug']),
+      );
 
   Map<String, dynamic> toJson() => {"id": id, "name": name, "slug": slug};
 }

@@ -57,10 +57,10 @@
   "paypal": "Paypal: ",
   "user": "User: ",
   "Copied": "Copied: ",
-  "switch": "Switch ",
+  "switch": "Swish ",
   "link": "Link",
   "learn_more": "learn more",
-  "switch_number": "Switch Number",
+  "switch_number": "Swish Number",
   "bank_account": "Bank Account",
   "Name": "Name ",
   "Account_No": "Account No",
@@ -122,5 +122,10 @@
   "announcement": "Announcement",
   "announcement_details": "Announcement Details",
   "read_more": "Read More",
+  "no_donation_cases_found": "No donation cases found",
+  "no_from_mosque_to_mosque_posts_found": "No mosque-to-mosque posts found",
+  "no_funerals_found": "No funerals found",
+  "no_live_feed_found": "No live feed found",
+  "no_lessons_found": "No lessons found",
   "details": "Details"
 }

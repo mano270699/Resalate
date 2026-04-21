@@ -381,7 +381,7 @@ class _LiveFeedDetailsScreenState extends State<LiveFeedDetailsScreen> {
                     ),
                   ),
 
-                  SizedBox(height: 20.h),
+                  SizedBox(height: 50.h),
                 ],
               ),
             ),

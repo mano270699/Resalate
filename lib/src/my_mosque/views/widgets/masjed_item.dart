@@ -170,10 +170,14 @@ class _MasjidItemState extends State<MasjidItem> {
                   child: CircleAvatar(
                     radius: 40,
                     backgroundColor: Colors.white,
-                    child: CircleAvatar(
-                      radius: 36,
-                      backgroundImage: NetworkImage(widget.masjid.image ??
-                          "https://praysalat.com/assets/images/placeholder-2.jpg"),
+                    child: ClipOval(
+                      child: AppCachedNetworkImage(
+                        image: widget.masjid.image,
+                        height: 72,
+                        width: 72,
+                        fit: BoxFit.cover,
+                        showLoader: false,
+                      ),
                     ),
                   ),
                 ),

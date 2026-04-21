@@ -54,9 +54,9 @@ class _AllFuneralsScreenState extends State<AllFuneralsScreen> {
     return Directionality(
       textDirection:
           AppLocalizations.of(context)!.locale.languageCode == 'en' ||
-              AppLocalizations.of(context)!.locale.languageCode == 'sv'
-          ? TextDirection.ltr
-          : TextDirection.rtl,
+                  AppLocalizations.of(context)!.locale.languageCode == 'sv'
+              ? TextDirection.ltr
+              : TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
           title: AppText(
@@ -68,92 +68,86 @@ class _AllFuneralsScreenState extends State<AllFuneralsScreen> {
             ),
           ),
         ),
-        body:
-            BlocBuilder<
-              GenericCubit<FuneralsResponse>,
-              GenericCubitState<FuneralsResponse>
-            >(
-              bloc: viewModel.allFuneralsRes,
-              builder: (context, funeralsState) {
-                // if (donationState is GenericLoadingState) {
-                //   return const Center(child: CircularProgressIndicator());
-                // }
+        body: BlocBuilder<GenericCubit<FuneralsResponse>,
+            GenericCubitState<FuneralsResponse>>(
+          bloc: viewModel.allFuneralsRes,
+          builder: (context, funeralsState) {
+            // if (donationState is GenericLoadingState) {
+            //   return const Center(child: CircularProgressIndicator());
+            // }
 
-                if (funeralsState is GenericErrorState) {
-                  return Center(
-                    child: Text(funeralsState.responseError!.errorMessage),
-                  );
-                }
+            if (funeralsState is GenericErrorState) {
+              return Center(
+                child: Text(funeralsState.responseError!.errorMessage),
+              );
+            }
 
-                final posts = funeralsState.data.posts;
-                final hasMore = viewModel.hasMorePages;
+            final posts = funeralsState.data.posts;
+            final hasMore = viewModel.hasMorePages;
 
-                return Skeletonizer(
-                  enabled: funeralsState is GenericLoadingState,
-                  child: ListView.separated(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16.w,
-                      vertical: 12.h,
-                    ),
-                    controller: _scrollController,
-                    itemBuilder: (context, index) {
-                      final isLoading = funeralsState is GenericLoadingState;
+            return Skeletonizer(
+              enabled: funeralsState is GenericLoadingState,
+              child: ListView.separated(
+                padding: EdgeInsets.only(
+                    right: 10.w, left: 10.w, top: 5.h, bottom: 50.h),
+                controller: _scrollController,
+                itemBuilder: (context, index) {
+                  final isLoading = funeralsState is GenericLoadingState;
 
-                      // Fake placeholders when loading
-                      if (isLoading) {
-                        return Align(
-                          alignment: Alignment.topCenter,
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(maxWidth: 760),
-                            child: FuneralItem(
-                              post: FuneralPost(),
-                              onTap: () {},
-                            ),
-                          ),
-                        );
-                      }
-
-                      // Normal state
-                      if (index == posts!.length) {
-                        return hasMore
-                            ? const Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    color: AppColors.primaryColor,
-                                  ),
-                                ),
-                              )
-                            : const SizedBox.shrink();
-                      }
-
-                      final post = posts[index];
-                      return Align(
-                        alignment: Alignment.topCenter,
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 760),
-                          child: FuneralItem(
-                            post: post,
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                FuneralsDetailsScreen.routeName,
-                                arguments: {"id": post.id},
-                              );
-                            },
-                          ),
+                  // Fake placeholders when loading
+                  if (isLoading) {
+                    return Align(
+                      alignment: Alignment.topCenter,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 760),
+                        child: FuneralItem(
+                          post: FuneralPost(),
+                          onTap: () {},
                         ),
-                      );
-                    },
-                    separatorBuilder: (context, index) =>
-                        SizedBox(height: 14.h),
-                    itemCount: (funeralsState is GenericLoadingState)
-                        ? 5
-                        : posts!.length + (hasMore ? 1 : 0),
-                  ),
-                );
-              },
-            ),
+                      ),
+                    );
+                  }
+
+                  // Normal state
+                  if (index == posts!.length) {
+                    return hasMore
+                        ? const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.primaryColor,
+                              ),
+                            ),
+                          )
+                        : const SizedBox.shrink();
+                  }
+
+                  final post = posts[index];
+                  return Align(
+                    alignment: Alignment.topCenter,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 760),
+                      child: FuneralItem(
+                        post: post,
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            FuneralsDetailsScreen.routeName,
+                            arguments: {"id": post.id},
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                },
+                separatorBuilder: (context, index) => SizedBox(height: 14.h),
+                itemCount: (funeralsState is GenericLoadingState)
+                    ? 5
+                    : posts!.length + (hasMore ? 1 : 0),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

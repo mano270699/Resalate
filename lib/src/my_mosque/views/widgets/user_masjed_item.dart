@@ -169,9 +169,14 @@ class _UserMasjidItemState extends State<UserMasjidItem> {
                   child: CircleAvatar(
                     radius: 40,
                     backgroundColor: Colors.white,
-                    child: CircleAvatar(
-                      radius: 36,
-                      backgroundImage: NetworkImage(widget.masjid.image ?? ""),
+                    child: ClipOval(
+                      child: AppCachedNetworkImage(
+                        image: widget.masjid.image,
+                        height: 72,
+                        width: 72,
+                        fit: BoxFit.cover,
+                        showLoader: false,
+                      ),
                     ),
                   ),
                 ),

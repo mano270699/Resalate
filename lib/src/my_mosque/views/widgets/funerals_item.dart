@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:resalate/core/shared_components/app_cached_network_image.dart';
 import 'package:resalate/src/funerals/view/funerals_details_screen.dart';
 
 import '../../../../core/common/app_colors/app_colors.dart';
@@ -17,11 +18,10 @@ class FuneralsItem extends StatelessWidget {
   final PostItem postItem;
   @override
   Widget build(BuildContext context) {
-    final textDir =
-        AppLocalizations.of(context)!.locale.languageCode == 'en' ||
-                AppLocalizations.of(context)!.locale.languageCode == 'sv'
-            ? TextDirection.ltr
-            : TextDirection.rtl;
+    final textDir = AppLocalizations.of(context)!.locale.languageCode == 'en' ||
+            AppLocalizations.of(context)!.locale.languageCode == 'sv'
+        ? TextDirection.ltr
+        : TextDirection.rtl;
 
     return GestureDetector(
       onTap: () {
@@ -49,8 +49,8 @@ class FuneralsItem extends StatelessWidget {
                         topRight: Radius.circular(10)),
                     child: SizedBox(
                         width: double.infinity,
-                        child: Image.network(
-                          postItem.image ?? "",
+                        child: AppCachedNetworkImage(
+                          image: postItem.image,
                           fit: BoxFit.cover,
                         ))),
               ),
@@ -61,14 +61,14 @@ class FuneralsItem extends StatelessWidget {
                     textDirection: textDir,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: AppFontStyleGlobal(
-                            AppLocalizations.of(context)!.locale)
-                        .heading1
-                        .copyWith(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.primaryColor,
-                        )),
+                    style:
+                        AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
+                            .heading1
+                            .copyWith(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.primaryColor,
+                            )),
               ),
               const SizedBox(height: 4),
               Flexible(
@@ -93,13 +93,13 @@ class FuneralsItem extends StatelessWidget {
                 text: postItem.date ?? "",
                 model: AppTextModel(
                     textDirection: textDir,
-                    style: AppFontStyleGlobal(
-                            AppLocalizations.of(context)!.locale)
-                        .smallTab
-                        .copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.scondaryColor,
-                        )),
+                    style:
+                        AppFontStyleGlobal(AppLocalizations.of(context)!.locale)
+                            .smallTab
+                            .copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.scondaryColor,
+                            )),
               ),
             ],
           ),

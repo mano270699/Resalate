@@ -170,7 +170,11 @@ class _MasjedListScreenState extends State<MasjedListScreen> {
                       viewModel: viewModel,
                       onTap: () {
                         Navigator.pushNamed(context, MyMosqueScreen.routeName,
-                            arguments: {"id": post.id});
+                            arguments: {"id": post.id}).then((on) {
+                          viewModel.getMasjedsData(1);
+                          viewModel.getLocationsList();
+                      
+                        });
                       },
                       masjid: post,
                     );

@@ -87,93 +87,95 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 760),
               child: BlocBuilder<GenericCubit<DonationsDetailsResponse>,
-              GenericCubitState<DonationsDetailsResponse>>(
-            bloc: viewModel.donationDetailsResponse,
-            builder: (context, state) {
-              final data = state.data.post;
+                  GenericCubitState<DonationsDetailsResponse>>(
+                bloc: viewModel.donationDetailsResponse,
+                builder: (context, state) {
+                  final data = state.data.post;
 
-              if (state is GenericLoadingState) {
-                return Padding(
-                    padding: EdgeInsets.only(top: 150.h),
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.primaryColor,
-                      ),
-                    ));
-              }
+                  if (state is GenericLoadingState) {
+                    return Padding(
+                        padding: EdgeInsets.only(top: 150.h),
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.primaryColor,
+                          ),
+                        ));
+                  }
 
-              if (data == null && state is GenericUpdatedState) {
-                return Center(
-                  child: AppText(
-                    text: _tr("no_donation_details_found"),
-                    model: AppTextModel(
-                      style: AppFontStyleGlobal(_locale)
-                          .bodyMedium1
-                          .copyWith(color: AppColors.gray),
-                    ),
-                  ),
-                );
-              }
-
-              return Skeletonizer(
-                enabled: state is GenericLoadingState,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    /// ── Post Image with gradient overlay ──
-                    if ((data?.image ?? "").isNotEmpty)
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16.r),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.12),
-                              blurRadius: 16,
-                              offset: const Offset(0, 6),
-                            ),
-                          ],
+                  if (data == null && state is GenericUpdatedState) {
+                    return Center(
+                      child: AppText(
+                        text: _tr("no_donation_details_found"),
+                        model: AppTextModel(
+                          style: AppFontStyleGlobal(_locale)
+                              .bodyMedium1
+                              .copyWith(color: AppColors.gray),
                         ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16.r),
-                          child: Stack(
-                            children: [
-                              Image.network(
-                                data!.image!,
-                                width: double.infinity,
-                                height: 220.h,
-                                fit: BoxFit.cover,
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                left: 0,
-                                right: 0,
-                                child: Container(
-                                  height: 80.h,
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [
-                                        Colors.transparent,
-                                        Colors.black.withValues(alpha: 0.45),
-                                      ],
+                      ),
+                    );
+                  }
+
+                  return Skeletonizer(
+                    enabled: state is GenericLoadingState,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        /// ── Post Image with gradient overlay ──
+                        if ((data?.image ?? "").isNotEmpty)
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16.r),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.12),
+                                  blurRadius: 16,
+                                  offset: const Offset(0, 6),
+                                ),
+                              ],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(16.r),
+                              child: Stack(
+                                children: [
+                                  Image.network(
+                                    data!.image!,
+                                    width: double.infinity,
+                                    height: 220.h,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  Positioned(
+                                    bottom: 0,
+                                    left: 0,
+                                    right: 0,
+                                    child: Container(
+                                      height: 80.h,
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          colors: [
+                                            Colors.transparent,
+                                            Colors.black
+                                                .withValues(alpha: 0.45),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
 
-                    SizedBox(height: 16.h),
+                        SizedBox(height: 16.h),
 
-                    /// ── Title ──
-                    AppText(
-                      text: data?.title ?? "",
-                      model: AppTextModel(
-                        textDirection:
-                            AppLocalizations.of(context)!.locale.languageCode ==
+                        /// ── Title ──
+                        AppText(
+                          text: data?.title ?? "",
+                          model: AppTextModel(
+                            textDirection: AppLocalizations.of(context)!
+                                            .locale
+                                            .languageCode ==
                                         'en' ||
                                     AppLocalizations.of(context)!
                                             .locale
@@ -181,69 +183,75 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
                                         'sv'
                                 ? TextDirection.ltr
                                 : TextDirection.rtl,
-                        style:
-                            AppFontStyleGlobal(_locale).headingMedium2.copyWith(
+                            style: AppFontStyleGlobal(_locale)
+                                .headingMedium2
+                                .copyWith(
                                   fontSize: 22.sp,
                                   fontWeight: FontWeight.bold,
                                   color: AppColors.black,
                                 ),
-                      ),
-                    ),
-
-                    SizedBox(height: 10.h),
-
-                    /// ── Date chip ──
-                    if ((data?.date ?? '').isNotEmpty)
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 12.w, vertical: 6.h),
-                        decoration: BoxDecoration(
-                          color: AppColors.primaryColor.withValues(alpha: 0.08),
-                          borderRadius: BorderRadius.circular(20.r),
+                          ),
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.calendar_today_rounded,
-                                size: 14.sp, color: AppColors.primaryColor),
-                            SizedBox(width: 6.w),
-                            Text(
-                              data!.date!,
-                              textDirection: AppLocalizations.of(context)!
-                                              .locale
-                                              .languageCode ==
-                                          'en' ||
-                                      AppLocalizations.of(context)!
-                                              .locale
-                                              .languageCode ==
-                                          'sv'
-                                  ? TextDirection.ltr
-                                  : TextDirection.rtl,
-                              style: TextStyle(
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.primaryColor,
-                              ),
+
+                        SizedBox(height: 10.h),
+
+                        /// ── Date chip ──
+                        if ((data?.date ?? '').isNotEmpty)
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 12.w, vertical: 6.h),
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryColor
+                                  .withValues(alpha: 0.08),
+                              borderRadius: BorderRadius.circular(20.r),
                             ),
-                          ],
-                        ),
-                      ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.calendar_today_rounded,
+                                    size: 14.sp, color: AppColors.primaryColor),
+                                SizedBox(width: 6.w),
+                                Text(
+                                  data!.date!,
+                                  textDirection: AppLocalizations.of(context)!
+                                                  .locale
+                                                  .languageCode ==
+                                              'en' ||
+                                          AppLocalizations.of(context)!
+                                                  .locale
+                                                  .languageCode ==
+                                              'sv'
+                                      ? TextDirection.ltr
+                                      : TextDirection.rtl,
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
 
-                    SizedBox(height: 16.h),
+                        SizedBox(height: 16.h),
 
-                    /// ── Divider ──
-                    Divider(
-                        height: 1, thickness: 0.5, color: Colors.grey.shade200),
+                        /// ── Divider ──
+                        Divider(
+                            height: 1,
+                            thickness: 0.5,
+                            color: Colors.grey.shade200),
 
-                    SizedBox(height: 16.h),
+                        SizedBox(height: 16.h),
 
-                    /// ── Content ──
-                    AppText(
-                      text: data?.content?.replaceAll(RegExp(r"<[^>]*>"), "") ??
-                          "",
-                      model: AppTextModel(
-                        textDirection:
-                            AppLocalizations.of(context)!.locale.languageCode ==
+                        /// ── Content ──
+                        AppText(
+                          text: data?.content
+                                  ?.replaceAll(RegExp(r"<[^>]*>"), "") ??
+                              "",
+                          model: AppTextModel(
+                            textDirection: AppLocalizations.of(context)!
+                                            .locale
+                                            .languageCode ==
                                         'en' ||
                                     AppLocalizations.of(context)!
                                             .locale
@@ -251,32 +259,36 @@ class _DonationDetailsScreenState extends State<DonationDetailsScreen> {
                                         'sv'
                                 ? TextDirection.ltr
                                 : TextDirection.rtl,
-                        style: AppFontStyleGlobal(_locale).bodyMedium1.copyWith(
-                              fontSize: 15.sp,
-                              height: 1.6,
-                              color: AppColors.lightBlack,
-                            ),
-                      ),
+                            style: AppFontStyleGlobal(_locale)
+                                .bodyMedium1
+                                .copyWith(
+                                  fontSize: 15.sp,
+                                  height: 1.6,
+                                  color: AppColors.lightBlack,
+                                ),
+                          ),
+                        ),
+
+                        SizedBox(height: 24.h),
+
+                        /// ── Donation progress ──
+                        if (data?.donation != null)
+                          _buildDonationSection(data!.donation!),
+
+                        SizedBox(height: 24.h),
+
+                        /// ── Masjid Info ──
+                        if (data?.masjid != null)
+                          _buildMasjidSection(data!.masjid!),
+
+                        SizedBox(height: 50.h),
+                      ],
                     ),
-
-                    SizedBox(height: 24.h),
-
-                    /// ── Donation progress ──
-                    if (data?.donation != null)
-                      _buildDonationSection(data!.donation!),
-
-                    SizedBox(height: 24.h),
-
-                    /// ── Masjid Info ──
-                    if (data?.masjid != null)
-                      _buildMasjidSection(data!.masjid!),
-                  ],
-                ),
-              );
-            },
+                  );
+                },
+              ),
+            ),
           ),
-          ),
-        ),
         ),
       ),
     );

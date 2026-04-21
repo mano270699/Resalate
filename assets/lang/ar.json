@@ -58,10 +58,10 @@
   "payment_options": "خيارات الدفع",
   "user": "المستخدم: ",
   "Copied": "تم النسخ: ",
-  "switch": "سوتش ",
+  "switch": "سويش ",
   "link": "الرابط",
   "paypal": "بايبال: ",
-  "switch_number": "رقم سويتش: ",
+  "switch_number": "رقم سويش: ",
   "bank_account": "الحساب البنكي",
   "Name": "الاسم: ",
   "Account_No": "رقم الحساب:",
@@ -122,5 +122,10 @@
   "announcement": "إعلان",
   "announcement_details": "تفاصيل الإعلان",
   "read_more": "اقرأ المزيد",
+  "no_donation_cases_found": "لا توجد حالات تبرع",
+  "no_from_mosque_to_mosque_posts_found": "لا توجد منشورات من مسجد إلى مسجد",
+  "no_funerals_found": "لا توجد جنائز",
+  "no_live_feed_found": "لا يوجد بث مباشر",
+  "no_lessons_found": "لا توجد دروس",
   "details": "التفاصيل"
 }

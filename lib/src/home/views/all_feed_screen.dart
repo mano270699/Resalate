@@ -88,7 +88,8 @@ class _AllFeedLiveScreenState extends State<AllFeedLiveScreen> {
             return Skeletonizer(
               enabled: liveFeedState is GenericLoadingState,
               child: ListView.separated(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                padding: EdgeInsets.only(
+                    right: 10.w, left: 10.w, top: 5.h, bottom: 50.h),
                 controller: _scrollController,
                 itemBuilder: (context, index) {
                   final isLoading = liveFeedState is GenericLoadingState;

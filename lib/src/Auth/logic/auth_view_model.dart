@@ -1,7 +1,7 @@
 // import 'package:dartz/dartz.dart';
 import 'dart:async';
-import 'dart:convert';
-import 'package:crypto/crypto.dart';
+// import 'dart:convert';
+// import 'package:crypto/crypto.dart';
 
 import 'package:dartz/dartz.dart';
 
@@ -270,11 +270,11 @@ class AuthViewModel {
     }
   }
 
-  String sha256ofString(String input) {
-    final bytes = utf8.encode(input);
-    final digest = sha256.convert(bytes);
-    return digest.toString();
-  }
+  // String sha256ofString(String input) {
+  //   final bytes = utf8.encode(input);
+  //   final digest = sha256.convert(bytes);
+  //   return digest.toString();
+  // }
 
   // signInWithApple(BuildContext context) async {
   //   final rawNonce = generateNonce();

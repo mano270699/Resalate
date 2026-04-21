@@ -57,8 +57,15 @@ class MasjidRepositoryImpl extends MasjidRepository {
     required String country,
   }) async {
     try {
+      final userId = await UserIdUtil.getUserIdFromMemory();
+
+      LocalizationCacheHelper localizationCacheHelper =
+          LocalizationCacheHelper();
+
       final response = await _networkService.get(
-        "masjids?province=$province&city=$city&per_page=10&page=$page&country=$country",
+        userId.isNotEmpty
+            ? "masjids?province=$province&city=$city&per_page=10&page=$page&country=$country&user_id=$userId&lang=${localizationCacheHelper.getLanguageCode()}"
+            : "masjids?province=$province&city=$city&per_page=10&page=$page&country=$country&lang=${localizationCacheHelper.getLanguageCode()}",
       );
       MasjidListResponse res = MasjidListResponse.fromJson(response.data);
       return Right(res);
@@ -72,11 +79,12 @@ class MasjidRepositoryImpl extends MasjidRepository {
   Future<Either<String, MasjidDetailsResponse>> getMasjedsDetails(
       {required int id}) async {
     final userId = await UserIdUtil.getUserIdFromMemory();
+    LocalizationCacheHelper localizationCacheHelper = LocalizationCacheHelper();
     try {
       final response = await _networkService.get(
         userId.isNotEmpty
-            ? "masjid/$id?user_id=${await UserIdUtil.getUserIdFromMemory()}"
-            : "masjid/$id",
+            ? "masjid/$id?user_id=${await UserIdUtil.getUserIdFromMemory()}&lang=${localizationCacheHelper.getLanguageCode()}"
+            : "masjid/$id?lang=${localizationCacheHelper.getLanguageCode()}",
       );
       MasjidDetailsResponse res = MasjidDetailsResponse.fromJson(response.data);
       return Right(res);
@@ -206,8 +214,7 @@ class MasjidRepositoryImpl extends MasjidRepository {
       final response = await _networkService.get(
         "announcements?lang=${localizationCacheHelper.getLanguageCode()}&user=$userId",
       );
-      AnnouncementsResponse res =
-          AnnouncementsResponse.fromJson(response.data);
+      AnnouncementsResponse res = AnnouncementsResponse.fromJson(response.data);
       return Right(res);
     } catch (e, t) {
       debugPrint("error:$e-- trace $t");

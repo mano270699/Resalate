@@ -82,7 +82,8 @@ class _HomePageState extends State<HomePage> {
   double _homeCardWidth(double availableWidth) {
     if (availableWidth >= 1200) return 340;
     if (availableWidth >= 900) return availableWidth * 0.38;
-    if (availableWidth >= ResponsiveUtils.mobileLayoutWidth) return availableWidth * 0.48;
+    if (availableWidth >= ResponsiveUtils.mobileLayoutWidth)
+      return availableWidth * 0.48;
     if (availableWidth >= 500) return availableWidth * 0.62;
     return availableWidth * 0.82;
   }
@@ -258,7 +259,8 @@ class _HomePageState extends State<HomePage> {
                     15.h.verticalSpace,
                     Center(
                       child: ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: ResponsiveUtils.mobileLayoutWidth),
+                        constraints: BoxConstraints(
+                            maxWidth: ResponsiveUtils.mobileLayoutWidth),
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16.w),
                           child: Row(
@@ -278,7 +280,8 @@ class _HomePageState extends State<HomePage> {
                                       color: AppColors.white,
                                     ),
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         SvgPicture.asset(
                                           AppIconSvg.fromMosque,
@@ -289,7 +292,8 @@ class _HomePageState extends State<HomePage> {
                                           text: AppLocalizations.of(
                                             context,
                                           )!
-                                              .translate('from_mosque_to_mosque'),
+                                              .translate(
+                                                  'from_mosque_to_mosque'),
                                           model: AppTextModel(
                                             textAlign: TextAlign.center,
                                             style: AppFontStyleGlobal(
@@ -301,7 +305,8 @@ class _HomePageState extends State<HomePage> {
                                                   fontWeight: FontWeight.w600,
                                                   fontSize: 18.sp,
                                                   height: 1,
-                                                  color: AppColors.scondaryColor,
+                                                  color:
+                                                      AppColors.scondaryColor,
                                                 ),
                                           ),
                                         ),
@@ -326,7 +331,8 @@ class _HomePageState extends State<HomePage> {
                                       color: AppColors.white,
                                     ),
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         SvgPicture.asset(
                                           AppIconSvg.mosqueLocation,
@@ -349,7 +355,8 @@ class _HomePageState extends State<HomePage> {
                                                   fontWeight: FontWeight.w600,
                                                   fontSize: 18.sp,
                                                   height: 1,
-                                                  color: AppColors.scondaryColor,
+                                                  color:
+                                                      AppColors.scondaryColor,
                                                 ),
                                           ),
                                         ),
@@ -945,7 +952,7 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
-                    20.h.verticalSpace,
+                    10.h.verticalSpace,
                     BlocBuilder<GenericCubit<PartnersResponse>,
                         GenericCubitState<PartnersResponse>>(
                       bloc: viewModel.partnersResponse,
@@ -993,7 +1000,7 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
-                    20.h.verticalSpace,
+                    10.h.verticalSpace,
                     SizedBox(
                       height: 100.h,
                       child: _AutoScrollingSponsorList(
@@ -1168,7 +1175,7 @@ class _AutoScrollingSponsorListState extends State<_AutoScrollingSponsorList> {
             borderRadius: BorderRadius.circular(12.r),
             child: SizedBox(
               height: 100.h,
-              width: 100.w,
+              // width: 100.w,
               child: url.toLowerCase().endsWith(".svg")
                   ? SvgPicture.network(
                       url,
@@ -1284,7 +1291,7 @@ class _AutoScrollingPartnerListState extends State<_AutoScrollingPartnerList> {
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
-          height: 130.h,
+          height: 100.h,
           child: ListView.separated(
             controller: _scrollController,
             scrollDirection: Axis.horizontal,
@@ -1305,7 +1312,7 @@ class _AutoScrollingPartnerListState extends State<_AutoScrollingPartnerList> {
                     onTap: () => _launchUrl(partnerUrl),
                     child: SizedBox(
                       height: 200.h,
-                      width: 200.w,
+                      // width: 200.w,
                       child: _buildImage(imageUrl),
                     ),
                   ),

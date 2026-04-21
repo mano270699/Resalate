@@ -102,6 +102,57 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
     }
   }
 
+  bool _isValidNetworkImage(String? value) {
+    final imageUrl = value?.trim() ?? '';
+    final uri = Uri.tryParse(imageUrl);
+    return uri != null &&
+        (uri.scheme == 'http' || uri.scheme == 'https') &&
+        uri.host.isNotEmpty;
+  }
+
+  Widget _buildCoverImage(String? cover) {
+    final coverUrl = cover?.trim();
+    if (_isValidNetworkImage(coverUrl)) {
+      return Image.network(
+        coverUrl!,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => _buildCoverFallback(),
+      );
+    }
+
+    return _buildCoverFallback();
+  }
+
+  Widget _buildCoverFallback() {
+    return Container(
+      color: Colors.white,
+      alignment: Alignment.center,
+      child: SvgPicture.asset(
+        'assets/icons/splash_logo.svg',
+        fit: BoxFit.contain,
+      ),
+    );
+  }
+
+  Widget _buildMasjidAvatar(String? image) {
+    final imageUrl = image?.trim();
+    final hasImage = _isValidNetworkImage(imageUrl);
+
+    return CircleAvatar(
+      radius: 20,
+      backgroundColor: AppColors.lightGray,
+      foregroundImage: hasImage ? NetworkImage(imageUrl!) : null,
+      onForegroundImageError: hasImage ? (_, __) {} : null,
+      child: hasImage
+          ? null
+          : Icon(
+              Icons.mosque_rounded,
+              color: AppColors.scondaryColor,
+              size: 20.sp,
+            ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -172,20 +223,13 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                                   //   fit: BoxFit.cover,
                                   // ),
 
-                                  Image.network(
-                                    "${state.data.masjid?.cover}",
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return SvgPicture.asset(
-                                          'assets/icons/splash_logo.svg');
-                                    },
-                                  ),
+                                  _buildCoverImage(state.data.masjid?.cover),
 
                                   FlexibleSpaceBar(
                                     collapseMode: CollapseMode.pin,
                                     title: collapsed
                                         ? AppText(
-                                            text: "${state.data.masjid?.name}",
+                                            text: state.data.masjid?.name ?? "",
                                             model: AppTextModel(
                                               style: AppFontStyleGlobal(
                                                       AppLocalizations.of(
@@ -250,11 +294,8 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                                     Flexible(
                                       child: Row(
                                         children: [
-                                          CircleAvatar(
-                                            radius: 20,
-                                            backgroundImage: NetworkImage(
-                                                state.data.masjid?.image ?? ""),
-                                          ),
+                                          _buildMasjidAvatar(
+                                              state.data.masjid?.image),
                                           SizedBox(width: 8.w),
                                           Flexible(
                                             child: AppText(
@@ -480,38 +521,6 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                           ),
 
                         SliverToBoxAdapter(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.w),
-                            child: AppText(
-                              text: AppLocalizations.of(context)!
-                                  .translate('annoncements'),
-                              model: AppTextModel(
-                                textDirection: AppLocalizations.of(context)!
-                                                .locale
-                                                .languageCode ==
-                                            'en' ||
-                                        AppLocalizations.of(context)!
-                                                .locale
-                                                .languageCode ==
-                                            'sv'
-                                    ? TextDirection.ltr
-                                    : TextDirection.rtl,
-                                style: AppFontStyleGlobal(
-                                        AppLocalizations.of(context)!.locale)
-                                    .label
-                                    .copyWith(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 20.sp,
-                                      color: AppColors.scondaryColor,
-                                    ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SliverToBoxAdapter(
-                          child: SizedBox(height: 10.h),
-                        ),
-                        SliverToBoxAdapter(
                           child: BlocBuilder<
                               GenericCubit<AnnouncementsResponse>,
                               GenericCubitState<AnnouncementsResponse>>(
@@ -522,59 +531,97 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                               // if (announcements.isEmpty) {
                               //   return const SizedBox.shrink();
                               // }
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Skeletonizer(
-                                    enabled: announcementState
-                                        is GenericLoadingState,
-                                    child: SizedBox(
-                                      height: 300.h,
-                                      child: ListView.separated(
-                                        scrollDirection: Axis.horizontal,
-                                        clipBehavior: Clip.none,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 16.w),
-                                        itemCount: announcementState
-                                                is GenericLoadingState
-                                            ? 3
-                                            : announcements.length,
-                                        separatorBuilder: (_, __) =>
-                                            SizedBox(width: 10.w),
-                                        itemBuilder: (context, index) {
-                                          final item = announcementState
-                                                  is GenericLoadingState
-                                              ? Announcement(
-                                                  title:
-                                                      'Loading announcement title',
-                                                  excerpt:
-                                                      'Loading excerpt text here',
-                                                  date: '2026-01-01',
-                                                )
-                                              : announcements[index];
-                                          return AnnouncementItem(
-                                            announcement: item,
-                                            onTap: () {
-                                              if (announcementState
-                                                  is! GenericLoadingState) {
-                                                Navigator.pushNamed(
-                                                  context,
-                                                  AnnouncementDetailsScreen
-                                                      .routeName,
-                                                  arguments: {
-                                                    "id":
-                                                        announcements[index].id,
+                              return announcements.isNotEmpty
+                                  ? Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(height: 10.h),
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 16.w),
+                                          child: AppText(
+                                            text: AppLocalizations.of(context)!
+                                                .translate('annoncements'),
+                                            model: AppTextModel(
+                                              textDirection: AppLocalizations
+                                                                  .of(context)!
+                                                              .locale
+                                                              .languageCode ==
+                                                          'en' ||
+                                                      AppLocalizations.of(
+                                                                  context)!
+                                                              .locale
+                                                              .languageCode ==
+                                                          'sv'
+                                                  ? TextDirection.ltr
+                                                  : TextDirection.rtl,
+                                              style: AppFontStyleGlobal(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .locale)
+                                                  .label
+                                                  .copyWith(
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 20.sp,
+                                                    color:
+                                                        AppColors.scondaryColor,
+                                                  ),
+                                            ),
+                                          ),
+                                        ),
+                                        Skeletonizer(
+                                          enabled: announcementState
+                                              is GenericLoadingState,
+                                          child: SizedBox(
+                                            height: 300.h,
+                                            child: ListView.separated(
+                                              scrollDirection: Axis.horizontal,
+                                              clipBehavior: Clip.none,
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 16.w),
+                                              itemCount: announcementState
+                                                      is GenericLoadingState
+                                                  ? 3
+                                                  : announcements.length,
+                                              separatorBuilder: (_, __) =>
+                                                  SizedBox(width: 10.w),
+                                              itemBuilder: (context, index) {
+                                                final item = announcementState
+                                                        is GenericLoadingState
+                                                    ? Announcement(
+                                                        title:
+                                                            'Loading announcement title',
+                                                        excerpt:
+                                                            'Loading excerpt text here',
+                                                        date: '2026-01-01',
+                                                      )
+                                                    : announcements[index];
+                                                return AnnouncementItem(
+                                                  announcement: item,
+                                                  onTap: () {
+                                                    if (announcementState
+                                                        is! GenericLoadingState) {
+                                                      Navigator.pushNamed(
+                                                        context,
+                                                        AnnouncementDetailsScreen
+                                                            .routeName,
+                                                        arguments: {
+                                                          "id": announcements[
+                                                                  index]
+                                                              .id,
+                                                        },
+                                                      );
+                                                    }
                                                   },
                                                 );
-                                              }
-                                            },
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : SizedBox.shrink();
                             },
                           ),
                         ),
@@ -801,6 +848,15 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                         /// Donation cases tab
                         LayoutBuilder(
                           builder: (context, constraints) {
+                            final donations = state.data.posts?.donations ?? [];
+
+                            if (donations.isEmpty) {
+                              return _buildTabEmptyState(
+                                icon: Icons.volunteer_activism_outlined,
+                                messageKey: 'no_donation_cases_found',
+                              );
+                            }
+
                             final w = constraints.maxWidth;
                             final crossAxisCount = w >= 1100
                                 ? 4
@@ -808,13 +864,15 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                                     ? 3
                                     : 2;
                             const spacing = 10.0;
-                            final cardWidth = (w - 24 - ((crossAxisCount - 1) * spacing)) / crossAxisCount;
+                            final cardWidth =
+                                (w - 24 - ((crossAxisCount - 1) * spacing)) /
+                                    crossAxisCount;
                             // Donation cards: image(70h) + progress(15h) + text + button ≈ ratio
                             final cardHeight = cardWidth * 1.28;
 
                             return GridView.builder(
                               padding: EdgeInsets.all(12.w),
-                              itemCount: state.data.posts?.donations?.length ?? 0,
+                              itemCount: donations.length,
                               gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: crossAxisCount,
@@ -823,8 +881,7 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                                 mainAxisSpacing: spacing,
                               ),
                               itemBuilder: (_, index) => DonationItem(
-                                donation: state.data.posts?.donations?[index] ??
-                                    Donation(),
+                                donation: donations[index],
                               ),
                             );
                           },
@@ -833,6 +890,17 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                         /// From Mosque To Mosque tab
                         LayoutBuilder(
                           builder: (context, constraints) {
+                            final masjidToMasjid =
+                                state.data.posts?.masjidToMasjid ?? [];
+
+                            if (masjidToMasjid.isEmpty) {
+                              return _buildTabEmptyState(
+                                icon: Icons.mosque_outlined,
+                                messageKey:
+                                    'no_from_mosque_to_mosque_posts_found',
+                              );
+                            }
+
                             final w = constraints.maxWidth;
                             final crossAxisCount = w >= 1100
                                 ? 4
@@ -840,13 +908,14 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                                     ? 3
                                     : 2;
                             const spacing = 10.0;
-                            final cardWidth = (w - 24 - ((crossAxisCount - 1) * spacing)) / crossAxisCount;
+                            final cardWidth =
+                                (w - 24 - ((crossAxisCount - 1) * spacing)) /
+                                    crossAxisCount;
                             final cardHeight = cardWidth * 1.52;
 
                             return GridView.builder(
                               padding: EdgeInsets.all(12.w),
-                              itemCount:
-                                  state.data.posts?.masjidToMasjid?.length ?? 0,
+                              itemCount: masjidToMasjid.length,
                               gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: crossAxisCount,
@@ -855,12 +924,10 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                                 mainAxisSpacing: spacing,
                               ),
                               itemBuilder: (_, index) => FromMasjedToMasjed(
-                                postItem:
-                                    state.data.posts?.masjidToMasjid?[index] ??
-                                        PostItem(),
-                                whatsAppLink:
-                                    state.data.masjid?.socialMedia?.whatsappUrl ??
-                                        "",
+                                postItem: masjidToMasjid[index],
+                                whatsAppLink: state.data.masjid?.socialMedia
+                                        ?.whatsappUrl ??
+                                    "",
                               ),
                             );
                           },
@@ -869,6 +936,15 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                         /// Funerals tab
                         LayoutBuilder(
                           builder: (context, constraints) {
+                            final funerals = state.data.posts?.funerals ?? [];
+
+                            if (funerals.isEmpty) {
+                              return _buildTabEmptyState(
+                                icon: Icons.article_outlined,
+                                messageKey: 'no_funerals_found',
+                              );
+                            }
+
                             final w = constraints.maxWidth;
                             final crossAxisCount = w >= 1100
                                 ? 4
@@ -876,12 +952,14 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                                     ? 3
                                     : 2;
                             const spacing = 10.0;
-                            final cardWidth = (w - 24 - ((crossAxisCount - 1) * spacing)) / crossAxisCount;
+                            final cardWidth =
+                                (w - 24 - ((crossAxisCount - 1) * spacing)) /
+                                    crossAxisCount;
                             final cardHeight = cardWidth * 1.45;
 
                             return GridView.builder(
                               padding: EdgeInsets.all(12.w),
-                              itemCount: state.data.posts?.funerals?.length ?? 0,
+                              itemCount: funerals.length,
                               gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: crossAxisCount,
@@ -890,8 +968,7 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                                 mainAxisSpacing: spacing,
                               ),
                               itemBuilder: (_, index) => FuneralsItem(
-                                postItem: state.data.posts?.funerals?[index] ??
-                                    PostItem(),
+                                postItem: funerals[index],
                               ),
                             );
                           },
@@ -900,6 +977,15 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                         /// Live feed tab
                         LayoutBuilder(
                           builder: (context, constraints) {
+                            final liveFeed = state.data.posts?.liveFeed ?? [];
+
+                            if (liveFeed.isEmpty) {
+                              return _buildTabEmptyState(
+                                icon: Icons.live_tv_outlined,
+                                messageKey: 'no_live_feed_found',
+                              );
+                            }
+
                             final w = constraints.maxWidth;
                             final crossAxisCount = w >= 1100
                                 ? 3
@@ -910,23 +996,25 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                             if (crossAxisCount == 1) {
                               return ListView.separated(
                                 padding: EdgeInsets.all(12.w),
-                                itemCount: state.data.posts?.liveFeed?.length ?? 0,
+                                itemCount: liveFeed.length,
                                 itemBuilder: (_, index) => LiveFeedItem(
-                                  postItem: state.data.posts?.liveFeed?[index] ??
-                                      PostItem(),
+                                  postItem: liveFeed[index],
                                 ),
-                                separatorBuilder: (_, __) => SizedBox(height: 10.h),
+                                separatorBuilder: (_, __) =>
+                                    SizedBox(height: 10.h),
                               );
                             }
 
                             const spacing = 10.0;
-                            final cardWidth = (w - 24 - ((crossAxisCount - 1) * spacing)) / crossAxisCount;
+                            final cardWidth =
+                                (w - 24 - ((crossAxisCount - 1) * spacing)) /
+                                    crossAxisCount;
                             // Live feed: image(120h) + title + desc ≈ ratio
                             final cardHeight = cardWidth * 0.7;
 
                             return GridView.builder(
                               padding: EdgeInsets.all(12.w),
-                              itemCount: state.data.posts?.liveFeed?.length ?? 0,
+                              itemCount: liveFeed.length,
                               gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: crossAxisCount,
@@ -935,8 +1023,7 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                                 mainAxisSpacing: spacing,
                               ),
                               itemBuilder: (_, index) => LiveFeedItem(
-                                postItem: state.data.posts?.liveFeed?[index] ??
-                                    PostItem(),
+                                postItem: liveFeed[index],
                               ),
                             );
                           },
@@ -945,6 +1032,15 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                         /// Lessons tab
                         LayoutBuilder(
                           builder: (context, constraints) {
+                            final lessons = state.data.posts?.lessons ?? [];
+
+                            if (lessons.isEmpty) {
+                              return _buildTabEmptyState(
+                                icon: Icons.menu_book_outlined,
+                                messageKey: 'no_lessons_found',
+                              );
+                            }
+
                             final w = constraints.maxWidth;
                             final crossAxisCount = w >= 1100
                                 ? 3
@@ -955,23 +1051,25 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                             if (crossAxisCount == 1) {
                               return ListView.separated(
                                 padding: EdgeInsets.all(12.w),
-                                itemCount: state.data.posts?.lessons?.length ?? 0,
+                                itemCount: lessons.length,
                                 itemBuilder: (_, index) => LessonItem(
-                                  lesson:
-                                      state.data.posts?.lessons?[index] ?? Lesson(),
+                                  lesson: lessons[index],
                                 ),
-                                separatorBuilder: (_, __) => SizedBox(height: 10.h),
+                                separatorBuilder: (_, __) =>
+                                    SizedBox(height: 10.h),
                               );
                             }
 
                             const spacing = 10.0;
-                            final cardWidth = (w - 24 - ((crossAxisCount - 1) * spacing)) / crossAxisCount;
+                            final cardWidth =
+                                (w - 24 - ((crossAxisCount - 1) * spacing)) /
+                                    crossAxisCount;
                             // Lessons: image(100h) + title + desc + date ≈ ratio
                             final cardHeight = cardWidth * 0.75;
 
                             return GridView.builder(
                               padding: EdgeInsets.all(12.w),
-                              itemCount: state.data.posts?.lessons?.length ?? 0,
+                              itemCount: lessons.length,
                               gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: crossAxisCount,
@@ -980,8 +1078,7 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
                                 mainAxisSpacing: spacing,
                               ),
                               itemBuilder: (_, index) => LessonItem(
-                                lesson:
-                                    state.data.posts?.lessons?[index] ?? Lesson(),
+                                lesson: lessons[index],
                               ),
                             );
                           },
@@ -993,6 +1090,41 @@ class _MyMosqueScreenState extends State<MyMosqueScreen>
               },
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTabEmptyState({
+    required IconData icon,
+    required String messageKey,
+  }) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 24.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 64.sp,
+              color: AppColors.gray.withValues(alpha: 0.75),
+            ),
+            SizedBox(height: 12.h),
+            AppText(
+              text: AppLocalizations.of(context)!.translate(messageKey),
+              model: AppTextModel(
+                textAlign: TextAlign.center,
+                style: AppFontStyleGlobal(
+                  AppLocalizations.of(context)!.locale,
+                ).bodyMedium1.copyWith(
+                      color: Colors.grey,
+                      fontSize: 16.sp,
+                    ),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -69,10 +69,12 @@ class Masjids {
     country = json['country'];
     province = json['province'];
     city = json['city'];
-    if (json['languages'] != null) {
+    if (json['languages'] is List) {
       languages = <MasjidLanguage>[];
       json['languages'].forEach((v) {
-        languages!.add(MasjidLanguage.fromJson(v));
+        if (v is Map<String, dynamic>) {
+          languages!.add(MasjidLanguage.fromJson(v));
+        }
       });
     }
     lat = (json['lat'] as num?)?.toDouble();
